@@ -4,14 +4,15 @@ import MangaPage from "./mangapage";
 
 export default function CheckPage({
   params,
+  totalPages,
 }: {
   params: { slug: string; volume: string };
+  totalPages: number;
 }) {
   const { slug, volume } = params;
 
   const getInitialPageNumber = () => {
     if (typeof window !== "undefined") {
-      // Vérifiez si window est défini (c'est-à-dire, si nous sommes côté client)
       const storedState = localStorage.getItem("mangaInfo");
       if (storedState) {
         const mangaInfos = JSON.parse(storedState);
@@ -36,6 +37,7 @@ export default function CheckPage({
       slug={slug}
       volume={volume}
       initialPageNumber={initialPageNumber}
+      totalPages={totalPages}
     />
   );
 }

@@ -1,13 +1,14 @@
 // app/manga/[slug]/[volume]/page.tsx
 import CheckPage from "@/app/components/checkpage";
-import VolumeButton from "@/app/components/volumebutton";
+import VolumeSelect from "@/app/components/volumeselect";
 import fs from "fs";
-import Link from "next/link";
 import path from "path";
 import "../../../noscrollbar.css";
 
 type Volume = {
   name: string;
+  firstImage: string;
+  totalPages: number;
 };
 
 export default function Page({
@@ -17,26 +18,41 @@ export default function Page({
 }) {
   const mangaDirectory = path.join(process.cwd(), "public", params.slug);
   const volumes: Volume[] = fs.readdirSync(mangaDirectory).map((volume) => {
-    return { name: volume };
+    const volumeDirectory = path.join(mangaDirectory, volume);
+    const images = fs.readdirSync(volumeDirectory);
+    const firstImage =
+      images.find((image) => /^(\d+)-001/.test(image)) ?? "01-001.webp";
+    const volumeNumber = volume.match(/\d+/)?.[0] || ""; // Extrait le numéro du volume
+    const totalPages = images.length; // Compte le nombre total de pages
+    return { name: volumeNumber, firstImage, totalPages };
   });
+
+  const decodedVolume = decodeURIComponent(params.volume);
+
+  const volumeDirectory = path.join(
+    process.cwd(),
+    "public",
+    params.slug,
+    decodedVolume
+  );
+  const images = fs.readdirSync(volumeDirectory);
+  const totalPages = images.length;
 
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
       <div className="flex flex-wrap justify-center text-white">
         <h1 className="w-full text-center text-2xl mb-8">
-          {params.slug} - {params.volume.replace(/%20/g, " ")}
+          {params.slug} - {decodedVolume}
         </h1>
 
-        {volumes.map((volume, index) => (
-          <Link key={index} href={`/manga/${params.slug}/${volume.name}`}>
-            <VolumeButton params={params} volume={volume} />
-          </Link>
-        ))}
-
-        {/* Manga pages */}
+        <VolumeSelect
+          volumes={volumes}
+          slug={params.slug}
+          currentVolume={decodedVolume}
+        />
       </div>
       <div className="flex justify-center">
-        <CheckPage params={params} />
+        <CheckPage params={params} totalPages={totalPages} />
       </div>
     </div>
   );

@@ -1,0 +1,26 @@
+{
+  "icons": [
+    {
+      "src": "https://static.thenounproject.com/png/4415190-200.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://p1.hiclipart.com/preview/16/216/1002/sharingan-icons-1-5-itachi-alt-512-png-icon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpg",
+      "purpose": "maskable"
+    }
+  ],
+  "background_color": "#000000",
+  "display": "standalone",
+  "name": "mangaboiboi",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "mangaboiboi",
+  "start_url": "/",
+  "theme_color": "#000000",
+  "id": "boiboi",
+  "description": "mangaboiboi - app for reading local manga"
+}

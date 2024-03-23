@@ -8,12 +8,14 @@ type MangaPageProps = {
   slug: string;
   volume: string;
   initialPageNumber: number;
+  totalPages: number;
 };
 
 export default function MangaPage({
   slug,
   volume,
   initialPageNumber,
+  totalPages,
 }: MangaPageProps) {
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
   const volumeWithSpace = volume.replace(/%20/g, " ");
@@ -50,7 +52,7 @@ export default function MangaPage({
     checkNextPageExists();
   }, [checkNextPageExists, formattedVolume, pageNumber, slug, volume]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     for (let i = 1; i <= 3; i++) {
       const nextFormattedPageNumber = String(pageNumber + i).padStart(3, "0");
       const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
@@ -60,7 +62,7 @@ export default function MangaPage({
       link.href = `/${slug}/${volume}/${nextImageName}.webp`;
       document.head.appendChild(link);
     }
-  }, [formattedVolume, pageNumber, slug, volume]);
+  }, [formattedVolume, pageNumber, slug, volume]); */
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -71,6 +73,8 @@ export default function MangaPage({
         case "ArrowRight":
           if (nextPageExists) {
             nextPage();
+          } else {
+            alert("last page");
           }
           break;
       }
@@ -129,11 +133,14 @@ export default function MangaPage({
   return (
     <div>
       <div className="flex justify-center text-white">
-        <p className="text-xl m-4"> Page {pageNumber} </p>
+        <p className="text-xl m-4">
+          {" "}
+          Page {pageNumber} / {totalPages}{" "}
+        </p>
         <button
           className="justify-center"
           onClick={goFullScreen}
-          title="Plein écran"
+          title="Fullscreen"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -157,25 +164,17 @@ export default function MangaPage({
           alt={`Page ${pageNumber}`}
           layout="fill"
           objectFit="contain"
-          priority={true}
+          placeholder="blur"
+          priority
         />
-        {pageNumber > 1 && (
-          <Image
-            src={`/${slug}/${volume}/${previousImageName}.webp`}
-            alt={`Page ${pageNumber - 1}`}
-            layout="fill"
-            objectFit="contain"
-            priority={true}
-            className="hidden"
-          />
-        )}
         {nextPageExists && (
           <Image
             src={`/${slug}/${volume}/${nextImageName}.webp`}
             alt={`Page ${pageNumber + 1}`}
             layout="fill"
             objectFit="contain"
-            priority={true}
+            placeholder="blur"
+            priority
             className="hidden"
           />
         )}
