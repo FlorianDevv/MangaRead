@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 
 import withSerwistInit from "@serwist/next";
-
+const isBuild = process.env.NODE_ENV === "production";
 const withSerwist = withSerwistInit({
   // Note: This is only an example. If you use Pages Router,
   // use something else that works, such as "service-worker/index.ts".
   swSrc: "app/sw.ts",
   swDest: "public/sw.js",
+  disablePrecacheManifest: isBuild,
+  disablePrecacheManifest: true, // Put 2 disable idk if one works or not so put both to be sure
+  maximumFileSizeToCacheInBytes: 10000,
 });
 
 const nextConfig = {
