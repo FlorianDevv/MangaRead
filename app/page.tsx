@@ -2,6 +2,7 @@ import fs from "fs";
 import Link from "next/link";
 import path from "path";
 import DynamicBlur from "./components/dynamicBlur";
+import ResumeReading from "./components/resumereading";
 import "./scrollbar.css";
 
 export default function Home() {
@@ -17,7 +18,7 @@ export default function Home() {
         <h2 className="w-full text-center text-3xl mb-4 mt-6">
           Reprendre la lecture
         </h2>
-        {/* <ResumeReading /> */}
+        <ResumeReading />
       </div>
       <hr className="my-8" />
       <h2 className="text-center text-3xl mb-4">Tous les Mangas disponible</h2>
