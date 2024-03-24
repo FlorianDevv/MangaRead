@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 
+import withPlaiceholder from "@plaiceholder/next";
 import withSerwistInit from "@serwist/next";
 const isBuild = process.env.NODE_ENV === "production";
 const withSerwist = withSerwistInit({
@@ -19,4 +20,4 @@ const nextConfig = {
   },
 };
 
-export default withSerwist(nextConfig);
+export default withSerwist(withPlaiceholder(nextConfig));
