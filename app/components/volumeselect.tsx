@@ -45,6 +45,13 @@ export default function VolumeSelect({
     .toString()
     .padStart(2, "0");
 
+  const formatVolume = (volume: string) => {
+    if (volume.startsWith("Tome ")) {
+      return volume.slice(5);
+    }
+    return volume;
+  };
+
   return (
     <div className="flex flex-wrap">
       {currentVolume && (
@@ -72,7 +79,7 @@ export default function VolumeSelect({
           </option>
         ))}
       </select>
-      <Link href={`/manga/${slug}/${selectedVolume}`}>
+      <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
         <p className="inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none">
           Go to volume
         </p>
