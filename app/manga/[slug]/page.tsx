@@ -21,7 +21,12 @@ export default function Page({ params }: { params: { slug: string } }) {
     <div className="flex flex-wrap justify-center text-white">
       <h1 className="w-full text-center text-2xl mb-8">{params.slug}</h1>
       <h1 className="w-full text-center text-2xl mb-8">Liste des Tomes</h1>
-      <VolumeSelect volumes={volumes} slug={params.slug} currentVolume="" />
+      <VolumeSelect
+        volumes={volumes}
+        slug={params.slug}
+        currentVolume=""
+        isPage={false}
+      />
       <p className="w-full text-center text-2xl mb-8">
         number of volumes: {volumes.length}
       </p>

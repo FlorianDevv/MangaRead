@@ -12,10 +12,12 @@ export default function VolumeSelect({
   volumes,
   slug,
   currentVolume,
+  isPage,
 }: {
   volumes: Volume[];
   slug: string;
   currentVolume: string;
+  isPage: boolean;
 }) {
   const [selectedVolume, setSelectedVolume] = useState(currentVolume || "");
   const [currentVolumeFromUrl, setCurrentVolumeFromUrl] = useState("");
@@ -69,7 +71,7 @@ export default function VolumeSelect({
         </div>
       )}
       <select
-        value={selectedVolume}
+        value={isPage ? formatVolume(selectedVolume) : selectedVolume}
         onChange={handleChange}
         className="mx-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
       >

@@ -22,8 +22,8 @@ export default function Page({
     const images = fs.readdirSync(volumeDirectory);
     const firstImage =
       images.find((image) => /^(\d+)-001/.test(image)) ?? "01-001.webp";
-    const volumeNumber = volume.match(/\d+/)?.[0] || ""; // Extrait le numéro du volume
-    const totalPages = images.length; // Compte le nombre total de pages
+    const volumeNumber = volume.match(/\d+/)?.[0] || "";
+    const totalPages = images.length;
     return { name: volumeNumber, firstImage, totalPages };
   });
 
@@ -49,6 +49,7 @@ export default function Page({
           volumes={volumes}
           slug={params.slug}
           currentVolume={decodedVolume}
+          isPage={true}
         />
       </div>
       <div className="flex justify-center">
