@@ -52,17 +52,18 @@ export default function MangaPage({
     checkNextPageExists();
   }, [checkNextPageExists, formattedVolume, pageNumber, slug, volume]);
 
-  /* useEffect(() => {
-    for (let i = 1; i <= 3; i++) {
+  useEffect(() => {
+    for (let i = 2; i <= 8; i++) {
       const nextFormattedPageNumber = String(pageNumber + i).padStart(3, "0");
       const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
       const link = document.createElement("link");
       link.rel = "preload";
       link.as = "image";
       link.href = `/${slug}/${volume}/${nextImageName}.webp`;
+      link.crossOrigin = "anonymous";
       document.head.appendChild(link);
     }
-  }, [formattedVolume, pageNumber, slug, volume]); */
+  }, [formattedVolume, pageNumber, slug, volume]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -94,26 +95,21 @@ export default function MangaPage({
       page: pageNumber,
     };
 
-    // Récupérer le tableau existant
     let existingMangaInfo = JSON.parse(
       localStorage.getItem("mangaInfo") || "[]"
     );
 
-    // Vérifier si existingMangaInfo est un tableau
     if (!Array.isArray(existingMangaInfo)) {
       existingMangaInfo = [];
     }
 
-    // Vérifier si le manga existe déjà
     const existingMangaIndex = existingMangaInfo.findIndex(
       (info: { manga: string }) => info.manga === slug
     );
 
     if (existingMangaIndex !== -1) {
-      // Si le manga existe déjà, le mettre à jour
       existingMangaInfo[existingMangaIndex] = mangaInfo;
     } else {
-      // Sinon, ajouter le nouvel objet
       existingMangaInfo.push(mangaInfo);
     }
 
@@ -161,25 +157,27 @@ export default function MangaPage({
       <div className="relative h-screen w-screen">
         <Image
           src={`/${slug}/${volume}/${imageName}.webp`}
-          alt={`Page ${pageNumber}`}
-          layout="fill"
-          objectFit="contain"
-          placeholder="blur"
+          alt={`${slug} Page ${pageNumber}`}
+          style={{ objectFit: "contain" }}
+          sizes="100vw"
+          quality={100}
+          fill
           priority
         />
         {nextPageExists && (
           <Image
             src={`/${slug}/${volume}/${nextImageName}.webp`}
-            alt={`Page ${pageNumber + 1}`}
-            layout="fill"
-            objectFit="contain"
-            placeholder="blur"
+            alt={`${slug} Page ${pageNumber + 1}`}
+            style={{ objectFit: "contain" }}
+            sizes="100vw"
+            quality={100}
+            fill
             priority
             className="hidden"
           />
         )}
         <button
-          className="absolute top-1/2 left-0 transform -translate-y-1/2 w-1/10 h-full opacity-0 hover:opacity-100 flex items-center justify-start ml-4"
+          className="absolute top-1/2 left-0 transform -translate-y-1/2 w-1/5 h-full opacity-0 hover:opacity-70 flex items-center justify-start ml-4"
           onClick={previousPage}
           title="Page précédente"
         >
@@ -188,7 +186,7 @@ export default function MangaPage({
             fill="none"
             viewBox="0 0 24 24"
             stroke="blue"
-            className="h-12 w-12"
+            className="h-16 w-16"
           >
             <path
               strokeLinecap="round"
@@ -199,7 +197,7 @@ export default function MangaPage({
           </svg>
         </button>
         <button
-          className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-1/10 h-full opacity-0 hover:opacity-100 flex items-center justify-end mr-4 ${
+          className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-1/5 h-full opacity-0 hover:opacity-70 flex items-center justify-end mr-4 ${
             nextPageExists ? "" : "opacity-50 cursor-not-allowed"
           }`}
           onClick={nextPageExists ? nextPage : undefined}
@@ -210,7 +208,7 @@ export default function MangaPage({
             fill="none"
             viewBox="0 0 24 24"
             stroke="blue"
-            className="h-12 w-12"
+            className="h-16 w-16"
           >
             <path
               strokeLinecap="round"

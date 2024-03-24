@@ -38,8 +38,10 @@ export default function ResumeReading() {
               <Image
                 src={`/${mangaInfo.manga}/Tome 01/01-001.webp`}
                 alt={mangaInfo.manga}
-                layout="fill"
-                objectFit="cover"
+                quality={1}
+                fill
+                style={{ objectFit: "cover" }}
+                sizes="70vw"
                 className="transition-all duration-500 ease-in-out transform 5  "
               />
             </div>
