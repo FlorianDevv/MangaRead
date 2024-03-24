@@ -15,12 +15,8 @@ export default function Home() {
   return (
     <div className="text-white">
       <div className="flex flex-wrap justify-center items-center ">
-        <h2 className="w-full text-center text-3xl mb-4 mt-6">
-          Reprendre la lecture
-        </h2>
         <ResumeReading />
       </div>
-      <hr className="my-8" />
       <h2 className="text-center text-3xl mb-4">Tous les Mangas disponible</h2>
       <div className="flex flex-nowrap justify-center items-center overflow-x-auto mx-8">
         {mangaNames.map((mangaName) => (
