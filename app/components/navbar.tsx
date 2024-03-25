@@ -30,7 +30,7 @@ export default function Navbar() {
               GitHub
             </p>
           </a>
-          <p className="text-white ml-4">Version {process.env.version}</p>
+          {/* <p className="text-white ml-4">Version {process.env.version}</p> */}
         </div>
       </div>
     </nav>
