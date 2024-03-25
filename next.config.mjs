@@ -2,8 +2,8 @@
 
 import withPlaiceholder from "@plaiceholder/next";
 import withSerwistInit from "@serwist/next";
-import pkg from "./package.json" assert { type: "json" };
-const { version } = pkg;
+// import pkg from "./package.json" assert { type: "json" };
+// const { version } = pkg;
 const isBuild = process.env.NODE_ENV === "production";
 const withSerwist = withSerwistInit({
   // Note: This is only an example. If you use Pages Router,
@@ -20,9 +20,9 @@ const nextConfig = {
     formats: ["image/webp"],
     minimumCacheTTL: 60,
   },
-  env: {
-    version,
-  },
+  // env: {
+  //   version,
+  // },
 };
 
 export default withSerwist(withPlaiceholder(nextConfig));
