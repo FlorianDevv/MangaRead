@@ -1,5 +1,13 @@
 // components/Navbar.tsx
+import fs from "fs";
 import Link from "next/link";
+import path from "path";
+import SearchBar from "./searchbar";
+
+const mangaDirectory = path.join(process.cwd(), "public");
+const mangaNames: string[] = JSON.parse(
+  fs.readFileSync(path.join(mangaDirectory, "manga.json"), "utf-8")
+);
 
 export default function Navbar() {
   return (
@@ -12,6 +20,7 @@ export default function Navbar() {
           </div>
         </Link>
         <div className="flex flex-warp items-center">
+          <SearchBar mangaNames={mangaNames} />
           <a
             href="https://github.com/FlorianDevv/MangaRead"
             target="_blank"
