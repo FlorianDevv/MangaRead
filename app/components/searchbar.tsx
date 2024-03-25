@@ -30,22 +30,22 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
   };
 
   return (
-    <>
-      <div className="flex items-center justify-center flex-col">
+    <div className="relative">
+      <div className="flex items-center justify-center flex-col mr-6">
         <input
-          type="text"
+          type="search"
           placeholder="Search"
-          className="p-2 mx-2 rounded-md text-black"
+          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <div className="absolute bg-white w-full mt-36 z-10">
+      <div className="absolute w-full mt-2  z-10 bg-black bg-opacity-90 h-auto z-99 rounded shadow-lg shadow-black border-1 border-white border-opacity-50">
         {search !== "" &&
           results.map((result) => (
             <Link key={result} href={`/manga/${result}`}>
               <p
-                className="block p-4 m-2 bg-gray-200 rounded-md text-lg hover:bg-gray-300"
+                className="flex rounded border-t-2 border-sky-600 hover:bg-gray-700 text-white hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
                 onClick={resetSearch}
               >
                 {result}
@@ -53,6 +53,6 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
             </Link>
           ))}
       </div>
-    </>
+    </div>
   );
 }

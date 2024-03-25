@@ -17,11 +17,17 @@ type Manga = {
 export default function Page({ params }: { params: { slug: string } }) {
   const mangaDirectory = path.join(process.cwd(), "public", params.slug);
 
-  const synopsis = JSON.parse(
-    fs.readFileSync(path.join(mangaDirectory, "resume.json"), "utf-8")
-  ).en.synopsis;
-  const banner = path.join(mangaDirectory, "banner.webp");
+  let synopsis: string | undefined;
+  const synopsisPath = path.join(mangaDirectory, "resume.json");
+  if (fs.existsSync(synopsisPath)) {
+    synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).en.synopsis;
+  }
 
+  let banner: string | undefined;
+  const bannerPath = path.join(mangaDirectory, "banner.webp");
+  if (fs.existsSync(bannerPath)) {
+    banner = bannerPath;
+  }
   const volumes: Volume[] = fs
     .readdirSync(mangaDirectory)
     .map((volume) => {
