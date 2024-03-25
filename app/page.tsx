@@ -12,6 +12,12 @@ export default function Home() {
     return fs.lstatSync(itemPath).isDirectory();
   });
 
+  // Write the mangaNames array to a JSON file
+  fs.writeFileSync(
+    path.join(mangaDirectory, "manga.json"),
+    JSON.stringify(mangaNames)
+  );
+
   return (
     <div className="text-white">
       <div className="flex flex-wrap justify-center items-center ">
