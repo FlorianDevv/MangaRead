@@ -52,33 +52,39 @@ export default function MangaPage({
     checkNextPageExists();
   }, [checkNextPageExists, formattedVolume, pageNumber, slug, volume]);
 
-  useEffect(() => {
-    const checkNextPageExists = async (
-      nextImageName: string
-    ): Promise<boolean> => {
-      const imageUrl = `/${slug}/${volume}/${nextImageName}.webp`;
-      const response = await fetch(imageUrl, { method: "HEAD" });
-      return response.status === 200;
-    };
+  //don't work with next/image
+  // useEffect(() => {
+  //   const checkNextPageExists = async (
+  //     nextImageName: string
+  //   ): Promise<boolean> => {
+  //     const imageUrl = `/${slug}/${volume}/${nextImageName}.webp`;
+  //     const response = await fetch(imageUrl, { method: "HEAD" });
+  //     return response.status === 200;
+  //   };
 
-    const preloadNextPages = async () => {
-      for (let i = 2; i <= 8; i++) {
-        const nextFormattedPageNumber = String(pageNumber + i).padStart(3, "0");
-        const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
+  //   const preloadNextPages = async () => {
+  //     for (let i = 2; i <= 8; i++) {
+  //       const nextPageNumber = pageNumber + i;
+  //       if (nextPageNumber > totalPages) {
+  //         break; // Stop preloading if the next page number exceeds the total page number
+  //       }
 
-        if (await checkNextPageExists(nextImageName)) {
-          const link = document.createElement("link");
-          link.rel = "preload";
-          link.as = "image";
-          link.href = `/${slug}/${volume}/${nextImageName}.webp`;
-          link.crossOrigin = "anonymous";
-          document.head.appendChild(link);
-        }
-      }
-    };
+  //       const nextFormattedPageNumber = String(nextPageNumber).padStart(3, "0");
+  //       const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
 
-    preloadNextPages();
-  }, [formattedVolume, pageNumber, slug, volume, checkNextPageExists]);
+  //       if (await checkNextPageExists(nextImageName)) {
+  //         const link = document.createElement("link");
+  //         link.rel = "preload";
+  //         link.as = "image";
+  //         link.href = `/${slug}/${volume}/${nextImageName}.webp`;
+  //         link.crossOrigin = "anonymous";
+  //         document.head.appendChild(link);
+  //       }
+  //     }
+  //   };
+
+  //   preloadNextPages();
+  // }, [pageNumber, slug, volume, formattedVolume, totalPages]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -181,7 +187,7 @@ export default function MangaPage({
           alt={`${slug} Page ${pageNumber}`}
           style={{ objectFit: "contain" }}
           sizes="100vw"
-          quality={100}
+          quality={80}
           fill
           priority
         />
@@ -191,7 +197,7 @@ export default function MangaPage({
             alt={`${slug} Page ${pageNumber + 1}`}
             style={{ objectFit: "contain" }}
             sizes="100vw"
-            quality={100}
+            quality={80}
             fill
             priority
             className="hidden"
