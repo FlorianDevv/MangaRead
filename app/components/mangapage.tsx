@@ -53,17 +53,32 @@ export default function MangaPage({
   }, [checkNextPageExists, formattedVolume, pageNumber, slug, volume]);
 
   useEffect(() => {
-    for (let i = 2; i <= 8; i++) {
-      const nextFormattedPageNumber = String(pageNumber + i).padStart(3, "0");
-      const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "image";
-      link.href = `/${slug}/${volume}/${nextImageName}.webp`;
-      link.crossOrigin = "anonymous";
-      document.head.appendChild(link);
-    }
-  }, [formattedVolume, pageNumber, slug, volume]);
+    const checkNextPageExists = async (
+      nextImageName: string
+    ): Promise<boolean> => {
+      const imageUrl = `/${slug}/${volume}/${nextImageName}.webp`;
+      const response = await fetch(imageUrl, { method: "HEAD" });
+      return response.status === 200;
+    };
+
+    const preloadNextPages = async () => {
+      for (let i = 2; i <= 8; i++) {
+        const nextFormattedPageNumber = String(pageNumber + i).padStart(3, "0");
+        const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
+
+        if (await checkNextPageExists(nextImageName)) {
+          const link = document.createElement("link");
+          link.rel = "preload";
+          link.as = "image";
+          link.href = `/${slug}/${volume}/${nextImageName}.webp`;
+          link.crossOrigin = "anonymous";
+          document.head.appendChild(link);
+        }
+      }
+    };
+
+    preloadNextPages();
+  }, [formattedVolume, pageNumber, slug, volume, checkNextPageExists]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -123,16 +138,22 @@ export default function MangaPage({
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
   const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
 
-  const previousFormattedPageNumber = String(pageNumber - 1).padStart(3, "0");
-  const previousImageName = `${formattedVolume}-${previousFormattedPageNumber}`;
-
   return (
     <div>
       <div className="flex justify-center text-white">
-        <p className="text-xl m-4">
-          {" "}
-          Page {pageNumber} / {totalPages}{" "}
-        </p>
+        <select
+          value={`${pageNumber} / ${totalPages}`}
+          onChange={(e) =>
+            setPageNumber(Number(e.target.value.split(" / ")[0]))
+          }
+          className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
+        >
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+            <option key={num} value={`${num} / ${totalPages}`}>
+              {num} / {totalPages}
+            </option>
+          ))}
+        </select>
         <button
           className="justify-center"
           onClick={goFullScreen}
@@ -176,29 +197,31 @@ export default function MangaPage({
             className="hidden"
           />
         )}
-        <button
-          className="absolute top-1/2 left-0 transform -translate-y-1/2 w-1/5 h-full opacity-0 hover:opacity-70 flex items-center justify-start ml-4"
-          onClick={previousPage}
-          title="Page précédente"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="blue"
-            className="h-16 w-16"
+        {pageNumber > 1 && (
+          <button
+            className="absolute top-1/2 left-0 transform -translate-y-1/2 w-1/5 h-full opacity-0 hover:opacity-70 flex items-center justify-start ml-4"
+            onClick={previousPage}
+            title="Page précédente"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="blue"
+              className="h-16 w-16"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+        )}
         <button
           className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-1/5 h-full opacity-0 hover:opacity-70 flex items-center justify-end mr-4 ${
-            nextPageExists ? "" : "opacity-50 cursor-not-allowed"
+            nextPageExists ? "" : "cursor-not-allowed"
           }`}
           onClick={nextPageExists ? nextPage : undefined}
           title="Page suivante"

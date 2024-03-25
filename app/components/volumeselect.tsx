@@ -54,17 +54,39 @@ export default function VolumeSelect({
     return volume;
   };
 
+  const nextVolumeExists = volumes.some(
+    (volume) => formatVolume(volume.name) === nextVolume
+  );
+
   return (
     <div className="flex flex-wrap">
       {currentVolume && (
-        <div>
+        <div className="flex justify-center space-x-2">
           <Link href={`/manga/${slug}/Tome%20${previousVolume}`}>
-            <p className="inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none">
+            <p
+              className={`inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg focus:outline-none ${
+                parseInt(previousVolume) > 0
+                  ? "bg-blue-700 hover:bg-blue-800 cursor-pointer"
+                  : "bg-gray-700 cursor-not-allowed"
+              }`}
+              onClick={
+                parseInt(previousVolume) > 0
+                  ? undefined
+                  : (e) => e.preventDefault()
+              }
+            >
               Previous
             </p>
           </Link>
           <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
-            <p className="inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none">
+            <p
+              className={`inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg focus:outline-none ${
+                nextVolumeExists
+                  ? "bg-blue-700 hover:bg-blue-800 cursor-pointer"
+                  : "bg-gray-700 cursor-not-allowed"
+              }`}
+              onClick={nextVolumeExists ? undefined : (e) => e.preventDefault()}
+            >
               Next
             </p>
           </Link>
