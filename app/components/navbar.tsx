@@ -11,7 +11,7 @@ const mangaNames: string[] = JSON.parse(
 
 export default function Navbar() {
   return (
-    <nav className="bg-black p-2 shadow-md border-b-2 border-[#21496b]">
+    <nav className="bg-black p-2 shadow-md border-b-2 border-sky-600">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/">
           <div className="flex items-center text-white hover:text-gray-200 transition-colors duration-200">
