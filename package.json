@@ -16,10 +16,14 @@
     "@serwist/next": "^8.4.4",
     "@serwist/precaching": "^8.4.4",
     "@serwist/sw": "^8.4.4",
+    "i18next": "^23.10.1",
     "next": "^14.1.4",
+    "next-i18next": "^15.2.0",
+    "next-intl": "^3.10.0",
     "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-i18next": "^14.1.0",
     "sharp": "^0.33.2"
   },
   "devDependencies": {
