@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 interface SearchBarProps {
@@ -44,12 +45,21 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
         {search !== "" &&
           results.map((result) => (
             <Link key={result} href={`/manga/${result}`}>
-              <p
-                className="flex rounded border-t-2 border-sky-600 hover:bg-gray-700 text-white hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
+              <div
+                className="group flex items-center rounded border-t-2 border-sky-600 hover:bg-gray-700 text-white hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
                 onClick={resetSearch}
               >
-                {result}
-              </p>
+                <div className="transition-all duration-200 transform group-hover:opacity-50 group-hover:scale-110">
+                  <Image
+                    src={`/${result}/Tome 01/01-001.webp`}
+                    alt={result}
+                    width={50}
+                    height={50}
+                    quality={10}
+                  />
+                </div>
+                <p className="ml-2">{result}</p>
+              </div>
             </Link>
           ))}
       </div>
