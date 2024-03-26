@@ -43,7 +43,7 @@ export default function LocaleSwitcherSelect({
     >
       <p className="sr-only">{label}</p>
       <select
-        className="inline-flex appearance-none bg-transparent py-3 pl-2 pr-6"
+        className="inline-flex py-3 pl-2 pr-6 mx-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-200 text-white "
         defaultValue={defaultValue}
         disabled={isPending}
         onChange={onSelectChange}

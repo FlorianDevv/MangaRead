@@ -7,7 +7,7 @@ export default function LocaleSwitcher() {
   const locale = useLocale();
 
   return (
-    <LocaleSwitcherSelect defaultValue={locale} label={t("label")}>
+    <LocaleSwitcherSelect defaultValue={locale}>
       {locales.map((cur) => (
         <option key={cur} value={cur}>
           {t(`locale.${cur}`)}
