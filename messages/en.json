@@ -1,0 +1,24 @@
+{
+  "LocaleSwitcher": {
+    "locale": {
+      "en": "English",
+      "fr": "French"
+    }
+  },
+  "Home": {
+    "all": "All available manga"
+  },
+  "Resume": {
+    "title": "Resume reading"
+  },
+  "Navbar": {
+    "home": "Home",
+    "search": "Search"
+  },
+  "Read": {
+    "previous": "Previous chapter",
+    "next": "Next chapter",
+    "change": "Change chapter",
+    "go": "Go to chapter"
+  }
+}

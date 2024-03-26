@@ -1,12 +1,13 @@
 "use client";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import NavigationLink from "./navigationLink";
 interface SearchBarProps {
   mangaNames: string[];
+  searchTrad: string;
 }
 
-export default function SearchBar({ mangaNames }: SearchBarProps) {
+export default function SearchBar({ mangaNames, searchTrad }: SearchBarProps) {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<string[]>([]);
 
@@ -35,8 +36,8 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
       <div className="flex items-center justify-center flex-col mr-6">
         <input
           type="search"
-          placeholder="Search"
-          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75"
+          placeholder={searchTrad}
+          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-sky-600 border-opacity-50"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -44,7 +45,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
       <div className="absolute w-full mt-2  z-10 bg-black bg-opacity-90 h-auto z-99 rounded shadow-lg shadow-black border-1 border-white border-opacity-50">
         {search !== "" &&
           results.map((result) => (
-            <Link key={result} href={`/manga/${result}`}>
+            <NavigationLink key={result} href={`/manga/${result}`}>
               <div
                 className="group flex items-center rounded border-t-2 border-sky-600 hover:bg-gray-700 text-white hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
                 onClick={resetSearch}
@@ -60,7 +61,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
                 </div>
                 <p className="ml-2">{result}</p>
               </div>
-            </Link>
+            </NavigationLink>
           ))}
       </div>
     </div>
