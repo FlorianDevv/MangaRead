@@ -2,7 +2,7 @@
 
 import { useSelectedLayoutSegment } from "next/navigation";
 import { ComponentProps } from "react";
-import { Link } from "./navigation";
+import { Link } from "../navigation";
 
 export default function NavigationLink({
   href,

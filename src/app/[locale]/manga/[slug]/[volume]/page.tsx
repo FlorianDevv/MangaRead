@@ -2,6 +2,7 @@
 import CheckPage from "@/src/app/components/checkpage";
 import VolumeSelect from "@/src/app/components/volumeselect";
 import fs from "fs";
+import { useTranslations } from "next-intl";
 import path from "path";
 import "../../../../noscrollbar.css";
 
@@ -16,6 +17,7 @@ export default function Page({
 }: {
   params: { slug: string; volume: string };
 }) {
+  const t = useTranslations("Read");
   const mangaDirectory = path.join(process.cwd(), "public", params.slug);
   const volumes: Volume[] = fs
     .readdirSync(mangaDirectory)
@@ -55,6 +57,9 @@ export default function Page({
           slug={params.slug}
           currentVolume={decodedVolume}
           isPage={true}
+          nextTrad={t("next")}
+          previousTrad={t("previous")}
+          changeTrad={t("change")}
         />
       </div>
       <div className="flex justify-center">

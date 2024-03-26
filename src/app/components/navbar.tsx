@@ -1,5 +1,6 @@
 // components/Navbar.tsx
 import fs from "fs";
+import { useTranslations } from "next-intl";
 import path from "path";
 import LocaleSwitcher from "./LocaleSwitcher";
 import NavigationLink from "./navigationLink";
@@ -9,20 +10,20 @@ const mangaDirectory = path.join(process.cwd(), "public");
 const mangaNames: string[] = JSON.parse(
   fs.readFileSync(path.join(mangaDirectory, "manga.json"), "utf-8")
 );
-
 export default function Navbar() {
+  const t = useTranslations("Navbar");
   return (
     <nav className="bg-black p-2 shadow-md border-b-2 border-sky-600">
       <div className="container mx-auto flex items-center justify-between">
         <NavigationLink href="/">
           <div className="flex items-center text-white hover:text-gray-200 transition-colors duration-200">
             <HomeSvg />
-            <span className="ml-2">Home</span>
+            <span className="ml-2">{t("home")}</span>
           </div>
         </NavigationLink>
 
         <div className="flex flex-warp items-center">
-          <SearchBar mangaNames={mangaNames} />
+          <SearchBar mangaNames={mangaNames} searchTrad={t("search")} />
           <LocaleSwitcher />
           <a
             href="https://github.com/FlorianDevv/MangaRead"

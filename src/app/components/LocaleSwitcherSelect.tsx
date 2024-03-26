@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { ChangeEvent, ReactNode, useTransition } from "react";
-import { usePathname, useRouter } from "./navigation";
+import { usePathname, useRouter } from "../navigation";
 
 type Props = {
   children: ReactNode;
@@ -43,14 +43,13 @@ export default function LocaleSwitcherSelect({
     >
       <p className="sr-only">{label}</p>
       <select
-        className="inline-flex py-3 pl-2 pr-6 mx-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-200 text-white "
+        className="inline-flex py-3 pl-2 pr-6 mx-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-black text-white border border-sky-600 border-opacity-50 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:border-transparent transition-colors duration-200"
         defaultValue={defaultValue}
         disabled={isPending}
         onChange={onSelectChange}
       >
         {children}
       </select>
-      <span className="pointer-events-none absolute right-2 top-[8px]">⌄</span>
     </label>
   );
 }

@@ -1,4 +1,4 @@
-import { locales } from "@/src/app/components/navigation";
+import { locales } from "@/src/app/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import LocaleSwitcherSelect from "./LocaleSwitcherSelect";
 
@@ -7,10 +7,10 @@ export default function LocaleSwitcher() {
   const locale = useLocale();
 
   return (
-    <LocaleSwitcherSelect defaultValue={locale}>
+    <LocaleSwitcherSelect defaultValue={locale} label="">
       {locales.map((cur) => (
         <option key={cur} value={cur}>
-          {t(`locale.${cur}`)}
+          {cur}
         </option>
       ))}
     </LocaleSwitcherSelect>

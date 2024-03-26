@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import NavigationLink from "./navigationLink";
 interface SearchBarProps {
   mangaNames: string[];
+  searchTrad: string;
 }
 
-export default function SearchBar({ mangaNames }: SearchBarProps) {
+export default function SearchBar({ mangaNames, searchTrad }: SearchBarProps) {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<string[]>([]);
 
@@ -35,8 +36,8 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
       <div className="flex items-center justify-center flex-col mr-6">
         <input
           type="search"
-          placeholder="Search"
-          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75"
+          placeholder={searchTrad}
+          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-sky-600 border-opacity-50"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

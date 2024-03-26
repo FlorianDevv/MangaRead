@@ -1,6 +1,7 @@
 // app/manga/[slug]/page.server.tsx
 import VolumeSelect from "@/src/app/components/volumeselect";
 import fs from "fs";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import path from "path";
 
@@ -15,6 +16,7 @@ type Manga = {
 };
 
 export default function Page({ params }: { params: { slug: string } }) {
+  const t = useTranslations("Read");
   const mangaDirectory = path.join(process.cwd(), "public", params.slug);
 
   let synopsis: string | undefined;
@@ -71,6 +73,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         slug={params.slug}
         currentVolume=""
         isPage={false}
+        changeTrad={t("go")}
       />
     </div>
   );

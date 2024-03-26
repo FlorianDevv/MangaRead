@@ -1,11 +1,14 @@
 import DynamicBlur from "@/src/app/components/dynamicBlur";
 import ResumeReading from "@/src/app/components/resumereading";
 import fs from "fs";
+import { useTranslations } from "next-intl";
 import path from "path";
 import ".././scrollbar.css";
 import NavigationLink from "../components/navigationLink";
 
 export default function Home() {
+  const t = useTranslations("Home");
+  const r = useTranslations("Resume");
   const mangaDirectory = path.join(process.cwd(), "public");
   const mangaNames = fs.readdirSync(mangaDirectory).filter((name) => {
     const itemPath = path.join(mangaDirectory, name);
@@ -21,10 +24,10 @@ export default function Home() {
   return (
     <div className="text-white">
       <div className="flex flex-nowrap justify-center items-center overflow-x-auto">
-        <ResumeReading />
+        <ResumeReading resumeTrad={r("title")} />
       </div>
       <hr className="my-8" />
-      <h2 className="text-center text-3xl mb-4">Tous les Mangas disponible</h2>
+      <h2 className="text-center text-3xl mb-4">{t("all")}</h2>
       <div className="mx-4">
         <div className="flex flex-nowrap justify-center items-center overflow-x-auto">
           {mangaNames.map((mangaName) => (
