@@ -1,7 +1,7 @@
 "use client";
 // VolumeSelect.tsx
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import NavigationLink from "./navigationLink";
 
 type Volume = {
   name: string;
@@ -13,17 +13,11 @@ export default function VolumeSelect({
   slug,
   currentVolume,
   isPage,
-  nextTrad,
-  previousTrad,
-  changeTrad,
 }: {
   volumes: Volume[];
   slug: string;
   currentVolume: string;
   isPage: boolean;
-  nextTrad?: string;
-  previousTrad?: string;
-  changeTrad: string;
 }) {
   const [selectedVolume, setSelectedVolume] = useState(currentVolume || "");
   const [currentVolumeFromUrl, setCurrentVolumeFromUrl] = useState("");
@@ -68,7 +62,7 @@ export default function VolumeSelect({
     <div className="flex flex-wrap">
       {currentVolume && (
         <div className="flex justify-center space-x-2">
-          <NavigationLink href={`/manga/${slug}/Tome%20${previousVolume}`}>
+          <Link href={`/manga/${slug}/Tome%20${previousVolume}`}>
             <p
               className={`inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg focus:outline-none ${
                 parseInt(previousVolume) > 0
@@ -81,10 +75,10 @@ export default function VolumeSelect({
                   : (e) => e.preventDefault()
               }
             >
-              {previousTrad}
+              Previous
             </p>
-          </NavigationLink>
-          <NavigationLink href={`/manga/${slug}/Tome%20${nextVolume}`}>
+          </Link>
+          <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
             <p
               className={`inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg focus:outline-none ${
                 nextVolumeExists
@@ -93,9 +87,9 @@ export default function VolumeSelect({
               }`}
               onClick={nextVolumeExists ? undefined : (e) => e.preventDefault()}
             >
-              {nextTrad}
+              Next
             </p>
-          </NavigationLink>
+          </Link>
         </div>
       )}
       <select
@@ -109,13 +103,11 @@ export default function VolumeSelect({
           </option>
         ))}
       </select>
-      <NavigationLink
-        href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}
-      >
+      <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
         <p className="inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none">
-          {changeTrad}
+          Go to volume
         </p>
-      </NavigationLink>
+      </Link>
     </div>
   );
 }
