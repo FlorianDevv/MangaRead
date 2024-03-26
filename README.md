@@ -10,11 +10,12 @@
 - [x] Mobile friendly 📱
 - [x] Black mode for OLED screens 🌑
 - [x] Reel full screen mode using all available space for the images 🖼️
+- [X] Search Bar 
 
 ### Languages 🌐
 
-- [x] French (fr) 🇫🇷
-- [ ] English (en) (work in progress) 🚧
+- [x] French (fr)
+- [x] English (en) 
 
 ### How to use 🚀
 
