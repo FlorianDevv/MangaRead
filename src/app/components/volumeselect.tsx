@@ -1,7 +1,7 @@
 "use client";
 // VolumeSelect.tsx
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import NavigationLink from "./navigationLink";
 
 type Volume = {
   name: string;
@@ -62,7 +62,7 @@ export default function VolumeSelect({
     <div className="flex flex-wrap">
       {currentVolume && (
         <div className="flex justify-center space-x-2">
-          <Link href={`/manga/${slug}/Tome%20${previousVolume}`}>
+          <NavigationLink href={`/manga/${slug}/Tome%20${previousVolume}`}>
             <p
               className={`inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg focus:outline-none ${
                 parseInt(previousVolume) > 0
@@ -77,8 +77,8 @@ export default function VolumeSelect({
             >
               Previous
             </p>
-          </Link>
-          <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
+          </NavigationLink>
+          <NavigationLink href={`/manga/${slug}/Tome%20${nextVolume}`}>
             <p
               className={`inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition rounded shadow ripple hover:shadow-lg focus:outline-none ${
                 nextVolumeExists
@@ -89,7 +89,7 @@ export default function VolumeSelect({
             >
               Next
             </p>
-          </Link>
+          </NavigationLink>
         </div>
       )}
       <select
@@ -103,11 +103,13 @@ export default function VolumeSelect({
           </option>
         ))}
       </select>
-      <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
+      <NavigationLink
+        href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}
+      >
         <p className="inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none">
           Go to volume
         </p>
-      </Link>
+      </NavigationLink>
     </div>
   );
 }
