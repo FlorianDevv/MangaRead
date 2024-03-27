@@ -35,7 +35,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
       <div className="flex items-center justify-center flex-col mr-6">
         <input
           type="search"
-          placeholder="Search"
+          placeholder="Recherche"
           className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75"
           value={search}
           onChange={(e) => setSearch(e.target.value)}

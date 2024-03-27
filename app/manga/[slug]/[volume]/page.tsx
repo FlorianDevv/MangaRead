@@ -16,13 +16,23 @@ export default function Page({
 }: {
   params: { slug: string; volume: string };
 }) {
-  const mangaDirectory = path.join(process.cwd(), "public", params.slug);
+  const mangaDirectory = path.join(
+    process.cwd(),
+    "public",
+    decodeURIComponent(params.slug)
+  );
   const volumes: Volume[] = fs
     .readdirSync(mangaDirectory)
     .map((volume) => {
-      const volumeDirectory = path.join(mangaDirectory, volume);
-      if (fs.lstatSync(volumeDirectory).isDirectory()) {
-        const images = fs.readdirSync(volumeDirectory);
+      const volumeDirectory = path.join(
+        mangaDirectory,
+        decodeURIComponent(volume)
+      );
+      if (
+        fs.existsSync(decodeURIComponent(volumeDirectory)) &&
+        fs.lstatSync(decodeURIComponent(volumeDirectory)).isDirectory()
+      ) {
+        const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
         const firstImage =
           images.find((image) => /^(\d+)-001/.test(image)) ?? "01-001.webp";
         const volumeNumber = volume.match(/\d+/)?.[0] || "";
@@ -40,14 +50,14 @@ export default function Page({
     params.slug,
     decodedVolume
   );
-  const images = fs.readdirSync(volumeDirectory);
+  const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
   const totalPages = images.length;
 
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
       <div className="flex flex-wrap justify-center text-white">
         <h1 className="w-full text-center text-2xl mb-8">
-          {params.slug} - {decodedVolume}
+          {decodeURIComponent(params.slug)} - {decodedVolume}
         </h1>
 
         <VolumeSelect

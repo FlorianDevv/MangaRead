@@ -29,11 +29,14 @@ export default function Page({ params }: { params: { slug: string } }) {
     banner = bannerPath;
   }
   const volumes: Volume[] = fs
-    .readdirSync(mangaDirectory)
+    .readdirSync(decodeURIComponent(mangaDirectory))
     .map((volume) => {
       const volumeDirectory = path.join(mangaDirectory, volume);
-      if (fs.lstatSync(volumeDirectory).isDirectory()) {
-        const images = fs.readdirSync(volumeDirectory);
+      if (
+        fs.existsSync(decodeURIComponent(volumeDirectory)) &&
+        fs.lstatSync(decodeURIComponent(volumeDirectory)).isDirectory()
+      ) {
+        const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
         const firstImage =
           images.find((image) => /^(\d+)-001/.test(image)) ?? "01-001.webp";
         return { name: volume, firstImage };
@@ -45,7 +48,9 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="flex flex-wrap justify-center text-white">
-      <h1 className="w-full text-center text-2xl my-5">{params.slug}</h1>
+      <h1 className="w-full text-center text-2xl my-5">
+        {decodeURIComponent(params.slug)}
+      </h1>
       {banner && ( // Check if banner file exists before rendering
         <div className="w-full h-52 relative mx-20">
           <Image
