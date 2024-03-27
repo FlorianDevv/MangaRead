@@ -21,6 +21,7 @@ export default function MangaPage({
   const volumeWithSpace = volume.replace(/%20/g, " ");
   const volumeNumber = Number(volumeWithSpace.split(" ")[1]);
   const formattedVolume = String(volumeNumber).padStart(2, "0");
+  const [quality, setQuality] = useState(80);
 
   const goFullScreen = () => {
     if (document.documentElement.requestFullscreen) {
@@ -181,13 +182,24 @@ export default function MangaPage({
           </svg>
         </button>
       </div>
+      <div className="flex justify-center ">
+        <input
+          type="range"
+          min="1"
+          max="100"
+          value={quality}
+          onChange={(e) => setQuality(Number(e.target.value))}
+          className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm   bg-sky-900 hover:bg-sky-900 "
+        />
+        <p className="m-2 text-white">Qualité: {quality} %</p>
+      </div>
       <div className="relative h-screen w-screen">
         <Image
           src={`/${slug}/${volume}/${imageName}.webp`}
           alt={`${slug} Page ${pageNumber}`}
           style={{ objectFit: "contain" }}
           sizes="100vw"
-          quality={80}
+          quality={quality}
           fill
           priority
         />
@@ -197,7 +209,7 @@ export default function MangaPage({
             alt={`${slug} Page ${pageNumber + 1}`}
             style={{ objectFit: "contain" }}
             sizes="100vw"
-            quality={80}
+            quality={quality}
             fill
             priority
             className="hidden"
