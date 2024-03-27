@@ -16,7 +16,7 @@ export default function Navbar() {
         <Link href="/">
           <div className="flex items-center text-white hover:text-gray-200 transition-colors duration-200">
             <HomeSvg />
-            <span className="ml-2">Home</span>
+            <span className="ml-2">Accueil</span>
           </div>
         </Link>
         <div className="flex flex-warp items-center">

@@ -75,7 +75,7 @@ export default function VolumeSelect({
                   : (e) => e.preventDefault()
               }
             >
-              Previous
+              Chapitre précédent
             </p>
           </Link>
           <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
@@ -87,7 +87,7 @@ export default function VolumeSelect({
               }`}
               onClick={nextVolumeExists ? undefined : (e) => e.preventDefault()}
             >
-              Next
+              Chapitre suivant
             </p>
           </Link>
         </div>
@@ -105,7 +105,7 @@ export default function VolumeSelect({
       </select>
       <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
         <p className="inline-block px-4 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none">
-          Go to volume
+          Valider
         </p>
       </Link>
     </div>
