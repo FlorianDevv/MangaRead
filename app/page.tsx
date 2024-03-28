@@ -1,7 +1,7 @@
 import fs from "fs";
 import Link from "next/link";
 import path from "path";
-import DynamicBlur from "./components/dynamicBlur";
+import MangaCard from "./components/mangaCard";
 import ResumeReading from "./components/resumereading";
 import "./scrollbar.css";
 
@@ -26,20 +26,8 @@ export default function Home() {
       <div className="mx-4">
         <div className="flex overflow-x-scroll whitespace-nowrap">
           {mangaNames.map((mangaName) => (
-            <Link key={mangaName} href={`/manga/${mangaName}`}>
-              <div className="flex flex-col m-2 bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:opacity-80">
-                <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64">
-                  <DynamicBlur
-                    src={`/${mangaName}/Tome 01/01-001.webp`}
-                    alt={mangaName}
-                  />
-                </div>
-                <div className="p-2">
-                  <h4 className="text-sm text-center text-white">
-                    {mangaName}
-                  </h4>
-                </div>
-              </div>
+            <Link key={mangaName} href={`/manga/${mangaName}`} className="m-2">
+              <MangaCard key={mangaName} mangaName={mangaName} />
             </Link>
           ))}
         </div>

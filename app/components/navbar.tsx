@@ -14,7 +14,7 @@ export default function Navbar() {
     <nav className="bg-black p-2 shadow-md border-b-2 border-sky-600">
       <div className="container mx-auto flex items-center justify-between">
         <Link href="/">
-          <div className="flex items-center text-white hover:text-gray-200 transition-colors duration-200">
+          <div className="flex items-center text-white hover:opacity-75  duration-200 ease-in-out transition-opacity">
             <HomeSvg />
             <span className="ml-2">Accueil</span>
           </div>
@@ -26,7 +26,7 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <p className="text-white hover:text-gray-200 transition-colors duration-200">
+            <p className="text-white  hover:opacity-75  duration-200 ease-in-out transition-opacity">
               GitHub
             </p>
           </a>
