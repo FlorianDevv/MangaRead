@@ -18,7 +18,6 @@ const withSerwist = withSerwistInit({
 const nextConfig = {
   images: {
     formats: ["image/webp"],
-    minimumCacheTTL: 60,
   },
   // env: {
   //   version,
