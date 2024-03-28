@@ -97,11 +97,17 @@ export default function VolumeSelect({
         onChange={handleChange}
         className="mx-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
       >
-        {volumes.map((volume, index) => (
-          <option key={index} value={volume.name}>
-            {volume.name}
-          </option>
-        ))}
+        {volumes
+          .sort((a, b) => {
+            const volumeANumber = parseInt(a.name.replace("Tome ", ""));
+            const volumeBNumber = parseInt(b.name.replace("Tome ", ""));
+            return volumeANumber - volumeBNumber;
+          })
+          .map((volume, index) => (
+            <option key={index} value={volume.name}>
+              {volume.name}
+            </option>
+          ))}
       </select>
       <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
         <p className="inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow ripple hover:shadow-lg hover:bg-blue-800 focus:outline-none">
