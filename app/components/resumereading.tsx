@@ -1,6 +1,6 @@
 // ResumeReading.tsx
-// ResumeReading.tsx
 "use client";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -31,13 +31,20 @@ export default function ResumeReading() {
       <h2 className="w-full text-center text-3xl mb-4 mt-6">
         Reprendre la lecture
       </h2>
-      <div className="flex overflow-x-scroll whitespace-nowrap">
+      <div className="flex overflow-x-scroll whitespace-nowrap hover:cursor-default">
         {state.map((mangaInfo, index) => (
           <Link
             key={index}
             href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
+            className="m-2"
           >
-            <div className="flex flex-col items-stretch m-2 bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out transform hover:opacity-80">
+            <motion.div
+              className="flex flex-col items-stretch  bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-shadow duration-300 ease-in-out transform relative"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.05, opacity: 0.75 }}
+            >
               <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0">
                 <Image
                   src={`/${mangaInfo.manga}/Tome 01/01-001.webp`}
@@ -56,7 +63,7 @@ export default function ResumeReading() {
                   Page {mangaInfo.page}
                 </p>
               </div>
-            </div>
+            </motion.div>
           </Link>
         ))}
       </div>
