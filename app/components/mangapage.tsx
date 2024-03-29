@@ -2,7 +2,7 @@
 // components/MangaPage.tsx
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type MangaPageProps = {
   slug: string;
@@ -19,7 +19,6 @@ export default function MangaPage({
 }: MangaPageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isVertical, setIsVertical] = useState(false);
-
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
   const volumeWithSpace = volume.replace(/%20/g, " ");
   const volumeNumber = Number(volumeWithSpace.split(" ")[1]);
@@ -104,6 +103,7 @@ export default function MangaPage({
   }, [slug, volume, pageNumber]);
 
   const formattedPageNumber = String(pageNumber).padStart(3, "0");
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const imageName = `${formattedVolume}-${formattedPageNumber}`;
   const images = Array.from({ length: totalPages }, (_, i) => {
     const pageNumber = i + 1;
@@ -114,6 +114,14 @@ export default function MangaPage({
 
     return `${formattedVolume}-${String(pageNumber).padStart(3, "0")}`;
   });
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (isVertical) {
+      // Scroll to the image corresponding to pageNumber when switching to vertical mode
+      imageRefs.current[pageNumber - 1]?.scrollIntoView();
+    }
+  }, [isVertical, pageNumber]);
 
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
   const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
@@ -121,8 +129,11 @@ export default function MangaPage({
   return (
     <div>
       <div className="flex justify-center text-white">
-        {!isVertical && SelectPageNumber(pageNumber, setPageNumber, totalPages)}
-        <Fullscreen />
+        {SelectPageNumber(pageNumber, setPageNumber, totalPages)}
+        <Fullscreen
+          isFullscreen={isFullscreen}
+          setIsFullscreen={setIsFullscreen}
+        />
       </div>
       <div className="flex justify-center ">
         <input
@@ -135,9 +146,9 @@ export default function MangaPage({
         />
         <p className="m-2 text-white">Qualité: {quality} %</p>
         <button
-          className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
+          className="p-2 mx-2 text-xs transition bg-blue-700 rounded shadow hover:shadow-lg hover:bg-blue-800 focus:outline-none"
           onClick={() => {
-            if (!isVertical && !isLoading) {
+            if (!isLoading) {
               setIsVertical((prevState) => !prevState);
               setQuality(15);
             }
@@ -146,7 +157,7 @@ export default function MangaPage({
           {isVertical ? "Vertical" : "Horizontal"}
         </button>
       </div>
-      <div className="relative min-h-screen w-screen">
+      <div className="relative min-h-screen w-screen mt-2">
         {!isVertical && (
           <Image
             src={`/${slug}/${volume}/${imageName}.webp`}
@@ -179,20 +190,43 @@ export default function MangaPage({
           </>
         )}
         <div className="flex flex-col">
-          {isVertical &&
-            images.map((imageName, index) => (
-              <Image
-                key={index}
-                src={`/${slug}/${volume}/${imageName}.webp`}
-                alt={`${slug} Page ${index + 1}`}
-                width={3840}
-                height={2160}
-                style={{ objectFit: "contain" }}
-                sizes="125vw"
-                quality={quality}
-                priority
-              />
-            ))}
+          {isVertical && (
+            <>
+              {images.map((imageName, index) => (
+                <div
+                  key={index}
+                  ref={(ref) => (imageRefs.current[index] = ref)}
+                >
+                  <Image
+                    id={`image-${index}`}
+                    src={`/${slug}/${volume}/${imageName}.webp`}
+                    alt={`${slug} Page ${index + 1}`}
+                    width={3840}
+                    height={2160}
+                    style={{ objectFit: "contain" }}
+                    sizes="125vw"
+                    quality={quality}
+                    loading="lazy"
+                    onLoad={() => {
+                      if (index + 1 === pageNumber) {
+                        imageRefs.current[index]?.scrollIntoView();
+                      }
+                    }}
+                    onClick={() => {
+                      setPageNumber(index + 1);
+                    }}
+                    className={isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"}
+                  />
+                </div>
+              ))}
+              <button
+                className="fixed bottom-4 right-4 text-4xl text-sky-900 px-4 py-2 rounded-full opacity-50 hover:opacity-100 ease-in-out transform transition-opacity duration-200 "
+                onClick={() => window.scrollTo(0, 0)}
+              >
+                ↑
+              </button>
+            </>
+          )}
         </div>
         {pageNumber > 1 && !isVertical && (
           <PreviousPageButton previousPage={previousPage} />
@@ -208,7 +242,7 @@ export default function MangaPage({
     </div>
   );
 }
-//-------------------------------------------------------------------------------------------------------
+//---------------------------------------------
 function SelectPageNumber(
   pageNumber: number,
   setPageNumber: (arg0: number) => void,
@@ -229,16 +263,35 @@ function SelectPageNumber(
   );
 }
 
-function Fullscreen() {
+interface FullscreenProps {
+  isFullscreen: boolean;
+  setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
+  className?: string;
+}
+
+function Fullscreen({
+  isFullscreen,
+  setIsFullscreen,
+  className,
+}: FullscreenProps) {
   const goFullScreen = () => {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
     }
+    setIsFullscreen(true);
   };
+
+  const exitFullScreen = () => {
+    if (document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+    setIsFullscreen(false);
+  };
+
   return (
     <button
-      className="justify-center hover:scale-115 hover:opacity-75 transform transition-transform duration-300"
-      onClick={goFullScreen}
+      className={`justify-center hover:scale-115 hover:opacity-75 transform transition-transform duration-300 `}
+      onClick={isFullscreen ? exitFullScreen : goFullScreen}
       title="Fullscreen"
     >
       <svg
@@ -258,6 +311,7 @@ function Fullscreen() {
     </button>
   );
 }
+
 interface PreviousPageButtonProps {
   previousPage: () => void;
 }
