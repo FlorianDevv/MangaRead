@@ -141,7 +141,7 @@ export default function MangaPage({
           {isVertical ? "Vertical" : "Horizontal"}
         </button>
       </div>
-      <div className="relative h-screen w-screen">
+      <div className="relative min-h-screen w-screen">
         {!isVertical && (
           <Image
             src={`/${slug}/${volume}/${imageName}.webp`}
@@ -185,7 +185,7 @@ export default function MangaPage({
                 style={{ objectFit: "contain" }}
                 sizes="200vw"
                 quality={quality}
-                onLoad={() => setIsLoading(false)}
+                priority
               />
             ))}
         </div>
