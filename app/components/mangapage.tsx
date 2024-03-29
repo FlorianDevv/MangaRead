@@ -147,7 +147,7 @@ export default function MangaPage({
             src={`/${slug}/${volume}/${imageName}.webp`}
             alt={`${slug} Page ${pageNumber}`}
             style={{ objectFit: "contain" }}
-            sizes="200vw"
+            sizes="125vw"
             quality={quality}
             fill
             priority
@@ -165,7 +165,7 @@ export default function MangaPage({
               src={`/${slug}/${volume}/${nextImageName}.webp`}
               alt={`${slug} Page ${pageNumber + 1}`}
               style={{ objectFit: "contain" }}
-              sizes="200vw"
+              sizes="125vw"
               quality={quality}
               fill
               priority
@@ -183,7 +183,7 @@ export default function MangaPage({
                 width={3840}
                 height={2160}
                 style={{ objectFit: "contain" }}
-                sizes="200vw"
+                sizes="125vw"
                 quality={quality}
                 priority
               />
