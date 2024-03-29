@@ -18,6 +18,7 @@ export default function MangaPage({
   totalPages,
 }: MangaPageProps) {
   const [isLoading, setIsLoading] = useState(true);
+  const [isVertical, setIsVertical] = useState(false);
 
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
   const volumeWithSpace = volume.replace(/%20/g, " ");
@@ -104,6 +105,15 @@ export default function MangaPage({
 
   const formattedPageNumber = String(pageNumber).padStart(3, "0");
   const imageName = `${formattedVolume}-${formattedPageNumber}`;
+  const images = Array.from({ length: totalPages }, (_, i) => {
+    const pageNumber = i + 1;
+    if (isNaN(pageNumber)) {
+      console.error("i + 1 is not a number:", i + 1);
+      return;
+    }
+
+    return `${formattedVolume}-${String(pageNumber).padStart(3, "0")}`;
+  });
 
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
   const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
@@ -111,7 +121,7 @@ export default function MangaPage({
   return (
     <div>
       <div className="flex justify-center text-white">
-        {SelectPageNumber(pageNumber, setPageNumber, totalPages)}
+        {!isVertical && SelectPageNumber(pageNumber, setPageNumber, totalPages)}
         <Fullscreen />
       </div>
       <div className="flex justify-center ">
@@ -124,24 +134,32 @@ export default function MangaPage({
           className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm   bg-sky-900 hover:bg-sky-900 "
         />
         <p className="m-2 text-white">Qualité: {quality} %</p>
+        <button
+          className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
+          onClick={() => setIsVertical(!isVertical)}
+        >
+          {isVertical ? "Vertical" : "Horizontal"}
+        </button>
       </div>
       <div className="relative h-screen w-screen">
-        <Image
-          src={`/${slug}/${volume}/${imageName}.webp`}
-          alt={`${slug} Page ${pageNumber}`}
-          style={{ objectFit: "contain" }}
-          sizes="200vw"
-          quality={quality}
-          fill
-          priority
-          onLoad={() => setIsLoading(false)}
-        />
-        {isLoading && (
+        {!isVertical && (
+          <Image
+            src={`/${slug}/${volume}/${imageName}.webp`}
+            alt={`${slug} Page ${pageNumber}`}
+            style={{ objectFit: "contain" }}
+            sizes="200vw"
+            quality={quality}
+            fill
+            priority
+            onLoad={() => setIsLoading(false)}
+          />
+        )}
+        {isLoading && !isVertical && (
           <div className="loading-screen">
             <div className="spinner"></div>
           </div>
         )}
-        {nextPageExists && (
+        {nextPageExists && !isVertical && (
           <>
             <Image
               src={`/${slug}/${volume}/${nextImageName}.webp`}
@@ -155,13 +173,32 @@ export default function MangaPage({
             />
           </>
         )}
-
-        {pageNumber > 1 && <PreviousPageButton previousPage={previousPage} />}
-        <NextPageButton
-          nextPageExists={nextPageExists}
-          nextPage={nextPage}
-          disabled={isLoading}
-        />
+        <div className="flex flex-col">
+          {isVertical &&
+            images.map((imageName, index) => (
+              <Image
+                key={index}
+                src={`/${slug}/${volume}/${imageName}.webp`}
+                alt={`${slug} Page ${index + 1}`}
+                width={3840}
+                height={2160}
+                style={{ objectFit: "contain" }}
+                sizes="200vw"
+                quality={quality}
+                onLoad={() => setIsLoading(false)}
+              />
+            ))}
+        </div>
+        {pageNumber > 1 && !isVertical && (
+          <PreviousPageButton previousPage={previousPage} />
+        )}
+        {!isVertical && (
+          <NextPageButton
+            nextPageExists={nextPageExists}
+            nextPage={nextPage}
+            disabled={isLoading}
+          />
+        )}
       </div>
     </div>
   );
