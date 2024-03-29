@@ -185,7 +185,7 @@ export default function MangaPage({
                 style={{ objectFit: "contain" }}
                 sizes="200vw"
                 quality={quality}
-                onLoad={() => setIsLoading(false)}
+                priority
               />
             ))}
         </div>
