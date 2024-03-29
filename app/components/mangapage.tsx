@@ -24,7 +24,7 @@ export default function MangaPage({
   const volumeWithSpace = volume.replace(/%20/g, " ");
   const volumeNumber = Number(volumeWithSpace.split(" ")[1]);
   const formattedVolume = String(volumeNumber).padStart(2, "0");
-  const [quality, setQuality] = useState(80);
+  const [quality, setQuality] = useState(75);
 
   const [nextPageExists, setNextPageExists] = useState(true);
 
@@ -128,7 +128,7 @@ export default function MangaPage({
         <input
           type="range"
           min="1"
-          max="100"
+          max={isVertical ? "50" : "100"}
           value={quality}
           onChange={(e) => setQuality(Number(e.target.value))}
           className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm   bg-sky-900 hover:bg-sky-900 "
@@ -136,7 +136,12 @@ export default function MangaPage({
         <p className="m-2 text-white">Qualité: {quality} %</p>
         <button
           className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
-          onClick={() => setIsVertical(!isVertical)}
+          onClick={() => {
+            if (!isVertical && !isLoading) {
+              setIsVertical((prevState) => !prevState);
+              setQuality(15);
+            }
+          }}
         >
           {isVertical ? "Vertical" : "Horizontal"}
         </button>
