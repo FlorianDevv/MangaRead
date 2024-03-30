@@ -10,7 +10,7 @@ export default function MangaCard({ mangaName }: { mangaName: string }) {
         />
       </div>
       <div className="p-2">
-        <h4 className="text-sm text-center text-white">{mangaName}</h4>
+        <h4 className="text-sm text-center text-white ">{mangaName}</h4>
       </div>
     </div>
   );

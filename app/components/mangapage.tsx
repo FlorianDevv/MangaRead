@@ -118,6 +118,7 @@ export default function MangaPage({
 
   useEffect(() => {
     if (isVertical) {
+      setIsLoading(true);
       // Scroll to the image corresponding to pageNumber when switching to vertical mode
       imageRefs.current[pageNumber - 1]?.scrollIntoView();
     }
@@ -139,18 +140,20 @@ export default function MangaPage({
         <input
           type="range"
           min="1"
-          max={isVertical ? "50" : "100"}
+          max="100"
           value={quality}
           onChange={(e) => setQuality(Number(e.target.value))}
-          className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm   bg-sky-900 hover:bg-sky-900 "
+          className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm bg-sky-900 hover:bg-sky-900"
         />
-        <p className="m-2 text-white">Qualité: {quality} %</p>
+
+        <p className={`m-2 ${qualityColor(quality)}`}>
+          Qualité: {quality} % - {qualityIndicator(quality)}
+        </p>
         <button
           className="p-2 mx-2 text-xs transition bg-blue-700 rounded shadow hover:shadow-lg hover:bg-blue-800 focus:outline-none"
           onClick={() => {
             if (!isLoading) {
               setIsVertical((prevState) => !prevState);
-              setQuality(15);
             }
           }}
         >
@@ -210,6 +213,7 @@ export default function MangaPage({
                     onLoad={() => {
                       if (index + 1 === pageNumber) {
                         imageRefs.current[index]?.scrollIntoView();
+                        setIsLoading(false);
                       }
                     }}
                     onClick={() => {
@@ -219,6 +223,11 @@ export default function MangaPage({
                   />
                 </div>
               ))}
+              {isLoading && (
+                <div className="loading-screen">
+                  <div className="spinner"></div>
+                </div>
+              )}
               <button
                 className="fixed bottom-4 right-4 text-4xl text-sky-900 px-4 py-2 rounded-full opacity-50 hover:opacity-100 ease-in-out transform transition-opacity duration-200 "
                 onClick={() => window.scrollTo(0, 0)}
@@ -261,6 +270,20 @@ function SelectPageNumber(
       ))}
     </select>
   );
+}
+function qualityColor(quality: number) {
+  if (quality === 100) return "text-green-500";
+  if (quality >= 75) return "text-green-400";
+  if (quality >= 50) return "text-yellow-500";
+  if (quality >= 25) return "text-orange-500";
+  return "text-red-500";
+}
+function qualityIndicator(quality: number) {
+  if (quality === 100) return "Sans perte";
+  if (quality >= 75) return "Excellent";
+  if (quality >= 50) return "Bon";
+  if (quality >= 25) return "Moyen";
+  return "Faible";
 }
 
 interface FullscreenProps {
