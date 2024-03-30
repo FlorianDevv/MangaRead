@@ -24,7 +24,7 @@ export default function Home() {
       <hr className="my-8" />
       <h2 className="text-center text-3xl mb-4">Tous les Mangas disponible</h2>
       <div className="mx-4">
-        <div className="flex overflow-x-scroll whitespace-nowrap">
+        <div className="flex overflow-x-scroll overflow-wrap break-word">
           {mangaNames.map((mangaName) => (
             <Link key={mangaName} href={`/manga/${mangaName}`} className="m-2">
               <MangaCard key={mangaName} mangaName={mangaName} />
