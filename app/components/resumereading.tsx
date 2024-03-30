@@ -42,10 +42,10 @@ export default function ResumeReading() {
         {state.map((mangaInfo, index) => (
           <div
             key={index}
-            className="m-2 relative ease-in-out transform hover:opacity-75 hover:scale-105 transition-transform duration-300"
+            className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
           >
             <motion.div
-              className="flex flex-col items-stretch  bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform hover:opacity-75 hover:scale-105 transition-transform duration-300"
+              className="flex flex-col items-stretch  bg-black rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
@@ -53,9 +53,9 @@ export default function ResumeReading() {
               <Link
                 key={index}
                 href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
-                className="hover:shadow-2xl ease-in-out transform hover:opacity-75 hover:scale-105 transition-transform duration-300"
+                className="hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
               >
-                <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0">
+                <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
                   <Image
                     src={`/${mangaInfo.manga}/Tome 01/01-001.webp`}
                     alt={mangaInfo.manga}
@@ -67,11 +67,17 @@ export default function ResumeReading() {
                   />
                 </div>
                 <div className="p-2 flex-grow">
-                  <p className="text-sm text-center text-white overflow-wrap break-word">
-                    {decodeURIComponent(mangaInfo.manga)} <br></br> Volume{" "}
-                    {decodeURIComponent(mangaInfo.volume).split(" ")[1]}{" "}
-                    <br></br> Page {mangaInfo.page}
+                  <p className="text-lg text-white overflow-wrap break-word transition-colors duration-300 ease-in-out group-hover:text-red-500">
+                    {decodeURIComponent(mangaInfo.manga)}
                   </p>
+                  <div className="text-sm mt-2 text-gray-400 overflow-wrap break-word flex flex-col sm:flex-row">
+                    <p>
+                      Volume{" "}
+                      {decodeURIComponent(mangaInfo.volume).split(" ")[1]}
+                    </p>
+                    <p className="sm:mx-2 sm:my-0 my-2 hidden sm:block">-</p>
+                    <p>Page {mangaInfo.page}</p>
+                  </div>
                 </div>
               </Link>
               <button

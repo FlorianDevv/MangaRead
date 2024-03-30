@@ -55,6 +55,30 @@ body {
   pointer-events: auto;
 }
 
+.shine::after {
+  content: "";
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 100%
+  );
+  height: 100%;
+  left: -50%;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  transform: skewX(-20deg);
+  transition: left 0.75s ease-out, opacity 0.5s ease-out;
+  width: 25%;
+  z-index: 1;
+}
+
+.shine:hover::after {
+  left: 150%;
+  opacity: 1;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
