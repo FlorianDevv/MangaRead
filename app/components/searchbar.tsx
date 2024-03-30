@@ -34,11 +34,11 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
 
   return (
     <div className="relative">
-      <div className="flex items-center justify-center flex-col mr-6">
+      <div className="flex items-center justify-center flex-col lg:mr-8 ">
         <input
           type="search"
           placeholder="Recherche"
-          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75"
+          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600 "
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -61,9 +61,9 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
                     <Image
                       src={`/${result}/Tome 01/01-001.webp`}
                       alt={result}
-                      width={50}
-                      height={50}
-                      quality={10}
+                      width={60}
+                      height={60}
+                      quality={1}
                     />
                   </div>
                   <p className="ml-2">{result}</p>

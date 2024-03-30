@@ -56,7 +56,7 @@ export default function Page({
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
       <div className="flex flex-wrap justify-center text-white">
-        <h1 className="w-full text-center text-2xl my-4">
+        <h1 className="w-full text-center text-3xl my-4">
           {decodeURIComponent(params.slug)}
         </h1>
 

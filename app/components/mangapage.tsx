@@ -149,16 +149,18 @@ export default function MangaPage({
         <p className={`m-2 ${qualityColor(quality)}`}>
           Qualité: {quality} % - {qualityIndicator(quality)}
         </p>
-        <button
-          className="p-2 mx-2 text-xs transition bg-blue-700 rounded shadow hover:shadow-lg hover:bg-blue-800 focus:outline-none"
-          onClick={() => {
+        <select
+          className="p-2 mx-2 text-xs bg-gray-700 rounded-md shadow hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none text-white cursor-pointer"
+          value={isVertical ? "vertical" : "page"}
+          onChange={(e) => {
             if (!isLoading) {
-              setIsVertical((prevState) => !prevState);
+              setIsVertical(e.target.value === "vertical");
             }
           }}
         >
-          {isVertical ? "Vertical" : "Horizontal"}
-        </button>
+          <option value="vertical">Lecture Vertical</option>
+          <option value="page">Lecture par Page</option>
+        </select>
       </div>
       <div className="relative min-h-screen w-screen mt-2">
         {!isVertical && (
@@ -231,7 +233,7 @@ export default function MangaPage({
                 </div>
               )}
               <button
-                className="fixed bottom-4 right-4 text-4xl text-sky-900 px-4 py-2 rounded-full opacity-50 hover:opacity-100 ease-in-out transform transition-opacity duration-200 "
+                className="fixed bottom-4 right-4 text-4xl text-sky-900 px-4 py-2 rounded-md opacity-50 hover:opacity-100 ease-in-out transform transition-opacity duration-200 "
                 onClick={() => window.scrollTo(0, 0)}
               >
                 ↑
@@ -263,7 +265,7 @@ function SelectPageNumber(
     <select
       value={`${pageNumber} / ${totalPages}`}
       onChange={(e) => setPageNumber(Number(e.target.value.split(" / ")[0]))}
-      className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
+      className="m-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer"
     >
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
         <option key={num} value={`${num} / ${totalPages}`}>
