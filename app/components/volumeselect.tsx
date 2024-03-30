@@ -64,9 +64,9 @@ export default function VolumeSelect({
         <div className="flex justify-center space-x-2">
           <Link href={`/manga/${slug}/Tome%20${previousVolume}`}>
             <p
-              className={`inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase transition rounded shadow hover:shadow-lg focus:outline-none ${
+              className={`inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase rounded-md shadow hover:shadow-lg focus:outline-none ${
                 parseInt(previousVolume) > 0
-                  ? "bg-blue-700 hover:bg-blue-800 cursor-pointer"
+                  ? "bg-blue-700 hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
                   : "bg-gray-700 cursor-not-allowed"
               }`}
               onClick={
@@ -80,9 +80,9 @@ export default function VolumeSelect({
           </Link>
           <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
             <p
-              className={`inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase transition rounded shadow hover:shadow-lg focus:outline-none ${
+              className={`inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase rounded-md shadow hover:shadow-lg focus:outline-none ${
                 nextVolumeExists
-                  ? "bg-blue-700 hover:bg-blue-800 cursor-pointer"
+                  ? "bg-blue-700 hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
                   : "bg-gray-700 cursor-not-allowed"
               }`}
               onClick={nextVolumeExists ? undefined : (e) => e.preventDefault()}
@@ -95,7 +95,7 @@ export default function VolumeSelect({
       <select
         value={isPage ? formatVolume(selectedVolume) : selectedVolume}
         onChange={handleChange}
-        className="mx-2 shadow-md rounded-lg overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white"
+        className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer"
       >
         {volumes
           .sort((a, b) => {
@@ -110,7 +110,7 @@ export default function VolumeSelect({
           ))}
       </select>
       <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
-        <p className="inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase transition bg-blue-700 rounded shadow hover:shadow-lg hover:bg-blue-800 focus:outline-none">
+        <p className="inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase bg-blue-700 rounded-md shadow hover:shadow-lg hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300">
           Valider
         </p>
       </Link>
