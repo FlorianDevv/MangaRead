@@ -216,8 +216,10 @@ export default function MangaPage({
                         setIsLoading(false);
                       }
                     }}
-                    onClick={() => {
+                    onClick={async () => {
                       setPageNumber(index + 1);
+                      await new Promise((resolve) => setTimeout(resolve, 10));
+                      setIsLoading(false);
                     }}
                     className={isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"}
                   />
