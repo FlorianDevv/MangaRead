@@ -93,6 +93,7 @@ export default function VolumeSelect({
         </div>
       )}
       <select
+        name="volume"
         value={isPage ? formatVolume(selectedVolume) : selectedVolume}
         onChange={handleChange}
         className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer"

@@ -150,6 +150,7 @@ export default function MangaPage({
           Qualité: {quality} % - {qualityIndicator(quality)}
         </p>
         <select
+          name="orientation"
           className="p-2 mx-2 text-xs bg-gray-700 rounded-md shadow hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none text-white cursor-pointer"
           value={isVertical ? "vertical" : "page"}
           onChange={(e) => {
@@ -263,6 +264,7 @@ function SelectPageNumber(
 ) {
   return (
     <select
+      name="pageNumber"
       value={`${pageNumber} / ${totalPages}`}
       onChange={(e) => setPageNumber(Number(e.target.value.split(" / ")[0]))}
       className="m-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer"
