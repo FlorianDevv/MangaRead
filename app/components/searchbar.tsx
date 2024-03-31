@@ -36,6 +36,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
     <div className="relative">
       <div className="flex items-center justify-center flex-col lg:mr-8 ">
         <input
+          name="search"
           type="search"
           placeholder="Recherche"
           className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600 "
