@@ -52,6 +52,10 @@ export default function MangaPage({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (isVertical) {
+        return;
+      }
+
       switch (event.key) {
         case "ArrowLeft":
           previousPage();
@@ -71,7 +75,7 @@ export default function MangaPage({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [nextPageExists, previousPage, nextPage]);
+  }, [nextPageExists, previousPage, nextPage, isVertical]);
 
   useEffect(() => {
     const mangaInfo = {
