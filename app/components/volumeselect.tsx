@@ -1,4 +1,11 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 // VolumeSelect.tsx
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -22,8 +29,8 @@ export default function VolumeSelect({
   const [selectedVolume, setSelectedVolume] = useState(currentVolume || "");
   const [currentVolumeFromUrl, setCurrentVolumeFromUrl] = useState("");
 
-  const handleChange = (e: { target: { value: string } }) => {
-    setSelectedVolume(e.target.value);
+  const handleChange = (value: string) => {
+    setSelectedVolume(value);
   };
 
   useEffect(() => {
@@ -62,58 +69,74 @@ export default function VolumeSelect({
     <div className="flex flex-wrap">
       {currentVolume && (
         <div className="flex justify-center space-x-2">
-          <Link href={`/manga/${slug}/Tome%20${previousVolume}`}>
-            <p
-              className={`inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase rounded-md shadow hover:shadow-lg focus:outline-none ${
-                parseInt(previousVolume) > 0
-                  ? "bg-blue-700 hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
-                  : "bg-gray-700 cursor-not-allowed"
-              }`}
-              onClick={
-                parseInt(previousVolume) > 0
-                  ? undefined
-                  : (e) => e.preventDefault()
-              }
+          {parseInt(previousVolume) > 0 ? (
+            <Link href={`/manga/${slug}/Tome%20${previousVolume}`}>
+              <Button
+                variant="secondary"
+                className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
+              >
+                Volume précédent
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              variant="secondary"
+              className="inline-block px-4 py-2 text-center uppercase focus:outline-none opacity-50 cursor-not-allowed"
+              onClick={(e) => e.preventDefault()}
             >
-              Chapitre précédent
-            </p>
-          </Link>
-          <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
-            <p
-              className={`inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase rounded-md shadow hover:shadow-lg focus:outline-none ${
-                nextVolumeExists
-                  ? "bg-blue-700 hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
-                  : "bg-gray-700 cursor-not-allowed"
-              }`}
-              onClick={nextVolumeExists ? undefined : (e) => e.preventDefault()}
+              Volume précédent
+            </Button>
+          )}
+
+          {nextVolumeExists ? (
+            <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
+              <Button
+                variant="secondary"
+                className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
+              >
+                Volume suivant
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              variant="secondary"
+              className="inline-block px-4 py-2 text-center uppercase focus:outline-none opacity-50 cursor-not-allowed"
+              onClick={(e) => e.preventDefault()}
             >
-              Chapitre suivant
-            </p>
-          </Link>
+              Volume suivant
+            </Button>
+          )}
         </div>
       )}
-      <select
+      <Select
         name="volume"
         value={isPage ? formatVolume(selectedVolume) : selectedVolume}
-        onChange={handleChange}
-        className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer"
+        onValueChange={handleChange}
       >
-        {volumes
-          .sort((a, b) => {
-            const volumeANumber = parseInt(a.name.replace("Tome ", ""));
-            const volumeBNumber = parseInt(b.name.replace("Tome ", ""));
-            return volumeANumber - volumeBNumber;
-          })
-          .map((volume, index) => (
-            <option key={index} value={volume.name}>
-              {volume.name}
-            </option>
-          ))}
-      </select>
+        <SelectTrigger className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto">
+          {isPage ? formatVolume(selectedVolume) : selectedVolume}
+        </SelectTrigger>
+        <SelectContent>
+          {volumes
+            .sort((a, b) => {
+              const volumeANumber = parseInt(a.name.replace("Tome ", ""));
+              const volumeBNumber = parseInt(b.name.replace("Tome ", ""));
+              return volumeANumber - volumeBNumber;
+            })
+            .map((volume, index) => (
+              <SelectItem key={index} value={volume.name}>
+                {volume.name}
+              </SelectItem>
+            ))}
+        </SelectContent>
+      </Select>
       <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
-        <p className="inline-block px-4 py-2 text-xs leading-6 text-center text-white uppercase bg-blue-700 rounded-md shadow hover:shadow-lg hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300">
+        <Button
+          variant="secondary"
+          className={`inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer`}
+        >
           Valider
-        </p>
+        </Button>
       </Link>
     </div>
   );

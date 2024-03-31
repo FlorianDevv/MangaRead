@@ -1,4 +1,11 @@
 "use client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 // components/MangaPage.tsx
 
 import Image from "next/image";
@@ -52,6 +59,10 @@ export default function MangaPage({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (isVertical) {
+        return;
+      }
+
       switch (event.key) {
         case "ArrowLeft":
           previousPage();
@@ -71,7 +82,7 @@ export default function MangaPage({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [nextPageExists, previousPage, nextPage]);
+  }, [nextPageExists, previousPage, nextPage, isVertical]);
 
   useEffect(() => {
     const mangaInfo = {
@@ -126,7 +137,11 @@ export default function MangaPage({
 
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
   const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
-
+  const handleChange = (value: string) => {
+    if (!isLoading) {
+      setIsVertical(value === "vertical");
+    }
+  };
   return (
     <div>
       <div className="flex justify-center text-white">
@@ -137,31 +152,32 @@ export default function MangaPage({
         />
       </div>
       <div className="flex justify-center ">
-        <input
-          type="range"
-          min="1"
-          max="100"
-          value={quality}
-          onChange={(e) => setQuality(Number(e.target.value))}
-          className="m-2 shadow-md rounded-lg overflow-hidden max-w-sm bg-sky-900 hover:bg-sky-900"
+        <Slider
+          min={1}
+          max={100}
+          step={1}
+          value={[quality]}
+          onValueChange={(value) => setQuality(Number(value))}
+          className="w-1/6 m-2"
         />
 
         <p className={`m-2 ${qualityColor(quality)}`}>
           Qualité: {quality} % - {qualityIndicator(quality)}
         </p>
-        <select
+
+        <Select
           name="orientation"
-          className="p-2 mx-2 text-xs bg-gray-700 rounded-md shadow hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none text-white cursor-pointer"
           value={isVertical ? "vertical" : "page"}
-          onChange={(e) => {
-            if (!isLoading) {
-              setIsVertical(e.target.value === "vertical");
-            }
-          }}
+          onValueChange={handleChange}
         >
-          <option value="vertical">Lecture Vertical</option>
-          <option value="page">Lecture par Page</option>
-        </select>
+          <SelectTrigger className="p-2 mx-2 text-xs hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none cursor-pointer w-auto">
+            {isVertical ? "Lecture Vertical" : "Lecture par Page"}
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="vertical">Lecture Vertical</SelectItem>
+            <SelectItem value="page">Lecture par Page</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="relative min-h-screen w-screen mt-2">
         {!isVertical && (
@@ -257,24 +273,25 @@ export default function MangaPage({
   );
 }
 //---------------------------------------------
+
 function SelectPageNumber(
   pageNumber: number,
   setPageNumber: (arg0: number) => void,
   totalPages: number
 ) {
   return (
-    <select
-      name="pageNumber"
-      value={`${pageNumber} / ${totalPages}`}
-      onChange={(e) => setPageNumber(Number(e.target.value.split(" / ")[0]))}
-      className="m-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center bg-gray-700 text-white hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer"
+    <Select
+      onValueChange={(value) => setPageNumber(Number(value.split(" / ")[0]))}
     >
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-        <option key={num} value={`${num} / ${totalPages}`}>
-          {num} / {totalPages}
-        </option>
-      ))}
-    </select>
+      <SelectTrigger className="m-2 overflow-hidden max-w-sm p-2 hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto">{`${pageNumber} / ${totalPages}`}</SelectTrigger>
+      <SelectContent>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+          <SelectItem key={num} value={`${num} / ${totalPages}`}>
+            {`${num} / ${totalPages}`}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
 function qualityColor(quality: number) {
