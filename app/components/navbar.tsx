@@ -1,9 +1,9 @@
 // components/Navbar.tsx
 import fs from "fs";
+import { CircleUser, Github, Home } from "lucide-react";
 import Link from "next/link";
 import path from "path";
 import SearchBar from "./searchbar";
-
 const mangaDirectory = path.join(process.cwd(), "public");
 const mangaNames: string[] = JSON.parse(
   fs.readFileSync(path.join(mangaDirectory, "manga.json"), "utf-8")
@@ -12,14 +12,22 @@ const mangaNames: string[] = JSON.parse(
 export default function Navbar() {
   return (
     <nav className="bg-black p-2 shadow-md border-b-2 border-sky-600">
-      <div className="container mx-auto flex items-center justify-between">
-        <Link href="/">
-          <div className="flex items-center text-white hover:opacity-75  duration-200 ease-in-out transition-opacity">
-            <HomeSvg />
-            <span className="ml-2">Accueil</span>
-          </div>
-        </Link>
-        <div className="flex flex-warp items-center">
+      <div className="flex justify-between items-center max-w-7xl mx-auto">
+        <div className="flex items-center space-x-4 lg:space-x-8">
+          <Link href="/">
+            <div className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity">
+              <Home />
+              <span className="ml-2">Accueil</span>
+            </div>
+          </Link>
+          <Link href="/profil">
+            <div className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity">
+              <CircleUser />
+              <span className="ml-2">Profil</span>
+            </div>
+          </Link>
+        </div>
+        <div className="flex items-center space-x-4">
           <SearchBar mangaNames={mangaNames} />
           <a
             href="https://github.com/FlorianDevv/MangaRead"
@@ -27,32 +35,13 @@ export default function Navbar() {
             rel="noopener noreferrer"
             className="md:block hidden"
           >
-            <p className="text-white hover:opacity-75 duration-200 ease-in-out transition-opacity md:block hidden">
-              GitHub
+            <p className="text-white hover:opacity-75 duration-200 ease-in-out transition-opacity md:block hidden ">
+              <Github />
             </p>
           </a>
           {/* <p className="text-white ml-4">Version {process.env.version}</p> */}
         </div>
       </div>
     </nav>
-  );
-}
-
-function HomeSvg() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      className="h-6 w-6"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-      />
-    </svg>
   );
 }

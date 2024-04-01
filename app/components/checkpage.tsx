@@ -2,13 +2,25 @@
 import { useState } from "react";
 import MangaPage from "./mangapage";
 
+interface Volume {
+  name: string;
+  firstImage: string;
+  totalPages: number;
+}
+
+interface CheckPageProps {
+  params: { slug: string; volume: string };
+  totalPages: number;
+  volumes: Volume[];
+  currentVolume: string;
+}
+
 export default function CheckPage({
   params,
   totalPages,
-}: {
-  params: { slug: string; volume: string };
-  totalPages: number;
-}) {
+  volumes,
+  currentVolume,
+}: CheckPageProps) {
   const { slug, volume } = params;
 
   const getInitialPageNumber = () => {
@@ -38,6 +50,8 @@ export default function CheckPage({
       volume={volume}
       initialPageNumber={initialPageNumber}
       totalPages={totalPages}
+      volumes={volumes}
+      currentVolume={currentVolume}
     />
   );
 }
