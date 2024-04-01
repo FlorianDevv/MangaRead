@@ -5,17 +5,27 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 // components/MangaPage.tsx
 
+import { FullscreenIcon } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { FloatingButton } from "./floatingButtons";
+import { Quality, Read, getSettings } from "./settings";
+
+type Volume = {
+  name: string;
+  firstImage: string;
+  totalPages: number;
+};
 
 type MangaPageProps = {
   slug: string;
   volume: string;
   initialPageNumber: number;
   totalPages: number;
+  volumes: Volume[];
+  currentVolume: string;
 };
 
 export default function MangaPage({
@@ -23,15 +33,47 @@ export default function MangaPage({
   volume,
   initialPageNumber,
   totalPages,
+  volumes,
+  currentVolume,
 }: MangaPageProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [isVertical, setIsVertical] = useState(false);
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
   const volumeWithSpace = volume.replace(/%20/g, " ");
   const volumeNumber = Number(volumeWithSpace.split(" ")[1]);
   const formattedVolume = String(volumeNumber).padStart(2, "0");
-  const [quality, setQuality] = useState(75);
+  const { read } = getSettings();
+  const [isVertical, setIsVertical] = useState(read === "vertical");
 
+  useEffect(() => {
+    const handleSettingsChange = () => {
+      const { read } = getSettings();
+      setIsVertical(read === "vertical");
+    };
+
+    // Listen for the custom event
+    window.addEventListener("settingsUpdated", handleSettingsChange);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener("settingsUpdated", handleSettingsChange);
+    };
+  }, []);
+
+  const { qualityNumber } = getSettings();
+  const [quality, setQuality] = useState(qualityNumber);
+
+  useEffect(() => {
+    const handleSettingsChange = () => {
+      const { quality: newQuality } = getSettings();
+      setQuality(newQuality);
+    };
+
+    window.addEventListener("settingsUpdated", handleSettingsChange);
+
+    return () => {
+      window.removeEventListener("settingsUpdated", handleSettingsChange);
+    };
+  }, []);
   const [nextPageExists, setNextPageExists] = useState(true);
 
   const nextPage = useCallback(() => {
@@ -137,11 +179,7 @@ export default function MangaPage({
 
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
   const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
-  const handleChange = (value: string) => {
-    if (!isLoading) {
-      setIsVertical(value === "vertical");
-    }
-  };
+
   return (
     <div>
       <div className="flex justify-center text-white">
@@ -151,33 +189,10 @@ export default function MangaPage({
           setIsFullscreen={setIsFullscreen}
         />
       </div>
-      <div className="flex justify-center ">
-        <Slider
-          min={1}
-          max={100}
-          step={1}
-          value={[quality]}
-          onValueChange={(value) => setQuality(Number(value))}
-          className="w-1/6 m-2"
-        />
+      <div className="flex justify-center space-x-4 ">
+        <Quality qualityNumber={quality} setQuality={setQuality} />
 
-        <p className={`m-2 ${qualityColor(quality)}`}>
-          Qualité: {quality} % - {qualityIndicator(quality)}
-        </p>
-
-        <Select
-          name="orientation"
-          value={isVertical ? "vertical" : "page"}
-          onValueChange={handleChange}
-        >
-          <SelectTrigger className="p-2 mx-2 text-xs hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none cursor-pointer w-auto">
-            {isVertical ? "Lecture Vertical" : "Lecture par Page"}
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="vertical">Lecture Vertical</SelectItem>
-            <SelectItem value="page">Lecture par Page</SelectItem>
-          </SelectContent>
-        </Select>
+        <Read isVertical={isVertical} setIsVertical={setIsVertical} />
       </div>
       <div className="relative min-h-screen w-screen mt-2">
         {!isVertical && (
@@ -230,7 +245,7 @@ export default function MangaPage({
                     quality={quality}
                     loading="lazy"
                     onLoad={() => {
-                      if (index + 1 === pageNumber) {
+                      if (index + 1 === pageNumber && isLoading) {
                         imageRefs.current[index]?.scrollIntoView();
                         setIsLoading(false);
                       }
@@ -249,12 +264,16 @@ export default function MangaPage({
                   <div className="spinner"></div>
                 </div>
               )}
-              <button
-                className="fixed bottom-4 right-4 text-4xl text-sky-900 px-4 py-2 rounded-md opacity-50 hover:opacity-100 ease-in-out transform transition-opacity duration-200 "
-                onClick={() => window.scrollTo(0, 0)}
-              >
-                ↑
-              </button>
+
+              <FloatingButton
+                qualityNumber={quality || 0}
+                setQuality={setQuality}
+                setIsVertical={setIsVertical}
+                isVertical={isVertical}
+                volumes={[...volumes]}
+                slug={slug}
+                currentVolume={decodeURIComponent(volume)}
+              />
             </>
           )}
         </div>
@@ -294,32 +313,13 @@ function SelectPageNumber(
     </Select>
   );
 }
-function qualityColor(quality: number) {
-  if (quality === 100) return "text-green-500";
-  if (quality >= 75) return "text-green-400";
-  if (quality >= 50) return "text-yellow-500";
-  if (quality >= 25) return "text-orange-500";
-  return "text-red-500";
-}
-function qualityIndicator(quality: number) {
-  if (quality === 100) return "Sans perte";
-  if (quality >= 75) return "Excellent";
-  if (quality >= 50) return "Bon";
-  if (quality >= 25) return "Moyen";
-  return "Faible";
-}
 
 interface FullscreenProps {
   isFullscreen: boolean;
   setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
-  className?: string;
 }
 
-function Fullscreen({
-  isFullscreen,
-  setIsFullscreen,
-  className,
-}: FullscreenProps) {
+function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
   const goFullScreen = () => {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
@@ -340,20 +340,7 @@ function Fullscreen({
       onClick={isFullscreen ? exitFullScreen : goFullScreen}
       title="Fullscreen"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        className="h-6 w-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M15 3h5m0 0v5m0-5l-7 7m7-7l-7 7M9 21H4m0 0v-5m0 5l7-7m-7 7l7-7"
-        />
-      </svg>
+      <FullscreenIcon />
     </button>
   );
 }

@@ -68,7 +68,12 @@ export default function Page({
         />
       </div>
       <div className="flex justify-center">
-        <CheckPage params={params} totalPages={totalPages} />
+        <CheckPage
+          params={params}
+          totalPages={totalPages}
+          volumes={volumes}
+          currentVolume={decodedVolume}
+        />{" "}
       </div>
     </div>
   );

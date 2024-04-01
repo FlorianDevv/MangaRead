@@ -1,11 +1,20 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { Navigation } from "lucide-react";
 // VolumeSelect.tsx
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -141,3 +150,48 @@ export default function VolumeSelect({
     </div>
   );
 }
+
+interface VolumeSelectDialogProps {
+  isOpen: boolean;
+  volumes: Volume[];
+  slug: string;
+  currentVolume: string;
+  classNames?: string[];
+}
+
+export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
+  isOpen,
+  volumes,
+  slug,
+  currentVolume,
+  classNames,
+}) => {
+  const decodedVolume = currentVolume.replace(/\D/g, "");
+  return (
+    <div
+      className={`${classNames?.join(" ")} ${
+        isOpen ? "" : "opacity-0 pointer-events-none"
+      }`}
+    >
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="ghost" title="Navigation">
+            <Navigation />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Navigation</DialogTitle>
+            <DialogDescription>Changer de volume rapidement</DialogDescription>
+          </DialogHeader>
+          <VolumeSelect
+            volumes={volumes}
+            slug={slug}
+            currentVolume={decodedVolume}
+            isPage={false}
+          />
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
