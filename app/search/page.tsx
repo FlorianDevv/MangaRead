@@ -8,10 +8,11 @@ const mangaNames: string[] = JSON.parse(
 );
 export default function Page() {
   return (
-    <div>
-      <h1 className="text-center text-3xl mb-4 mt-6">Recherche</h1>
-      <SearchBar mangaNames={mangaNames} />
-      <MobileNavbarComponent activePage="Search" />
-    </div>
+    <MobileNavbarComponent activePage="Search">
+      <div>
+        <h1 className="text-center text-3xl mb-4 mt-6">Recherche</h1>
+        <SearchBar mangaNames={mangaNames} />
+      </div>
+    </MobileNavbarComponent>
   );
 }

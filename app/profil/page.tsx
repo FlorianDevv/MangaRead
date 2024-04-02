@@ -6,18 +6,19 @@ import { Quality, Read } from "../components/settings";
 
 export default function Profile() {
   return (
-    <div>
-      <ResumeReading />
-      <Card className="w-64 ">
-        <CardHeader className="items-center justify-center flex">
-          <CardTitle>Paramètres ⚙️</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 items-center">
-          <Quality />
-          <Read />
-        </CardContent>
-      </Card>
-      <MobileNavbarComponent activePage="Profil" />
-    </div>
+    <MobileNavbarComponent activePage="Profil">
+      <div>
+        <ResumeReading />
+        <Card className="w-64 ">
+          <CardHeader className="items-center justify-center flex">
+            <CardTitle>Paramètres ⚙️</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 items-center">
+            <Quality />
+            <Read />
+          </CardContent>
+        </Card>
+      </div>
+    </MobileNavbarComponent>
   );
 }
