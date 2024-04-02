@@ -1,19 +1,22 @@
 // ResumeReading.tsx
 "use client";
+import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
+import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import "../scrollbar.css";
 
+interface MangaInfo {
+  manga: string;
+  volume: string;
+  page: number;
+  totalVolumes: number;
+}
+
 export default function ResumeReading() {
-  const [state, setState] = useState<
-    Array<{
-      manga: string;
-      volume: string;
-      page: number;
-    }>
-  >([]);
+  const [state, setState] = useState<MangaInfo[]>([]);
 
   useEffect(() => {
     const storedState = localStorage.getItem("mangaInfo");
@@ -32,6 +35,15 @@ export default function ResumeReading() {
   if (!state.length) {
     return null;
   }
+
+  const calculateProgress = (mangaInfo: MangaInfo) => {
+    const currentVolumeNumber = parseInt(
+      decodeURIComponent(mangaInfo.volume).split(" ")[1]
+    );
+    const totalVolumes = mangaInfo.totalVolumes;
+    console.log(currentVolumeNumber, totalVolumes);
+    return (currentVolumeNumber / totalVolumes) * 100;
+  };
 
   return (
     <div>
@@ -78,6 +90,14 @@ export default function ResumeReading() {
                     <p className="sm:mx-2 sm:my-0 my-2 hidden sm:block">-</p>
                     <p>Page {mangaInfo.page}</p>
                   </div>
+                  <div className="ml-auto flex flex-col items-center">
+                    <Progress value={calculateProgress(mangaInfo)} />
+                    <p className="mt-2 text-gray-200">
+                      {`${
+                        decodeURIComponent(mangaInfo.volume).split(" ")[1]
+                      } / ${mangaInfo.totalVolumes}`}
+                    </p>
+                  </div>
                 </div>
               </Link>
               <button
@@ -85,17 +105,10 @@ export default function ResumeReading() {
                   e.stopPropagation();
                   deleteManga(index);
                 }}
-                className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
                 title="Supprimer de la liste de lecture"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="w-6 h-6 text-white hover:text-red-900 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
-                >
-                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"></path>
-                </svg>
+                <X />
               </button>
             </motion.div>
           </div>

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MangaPage from "./mangapage";
 
 interface Volume {
@@ -40,9 +40,29 @@ export default function CheckPage({
     return 1;
   };
 
-  const [initialPageNumber, setInitialPageNumber] = useState<number>(
-    getInitialPageNumber()
-  );
+  const [initialPageNumber] = useState<number>(getInitialPageNumber());
+
+  useEffect(() => {
+    const totalVolumes = volumes.length;
+    const mangaInfos = JSON.parse(localStorage.getItem("mangaInfo") || "[]");
+    const mangaInfoIndex = mangaInfos.findIndex(
+      (info: { manga: string; volume: string }) =>
+        info.manga === slug && info.volume === volume
+    );
+
+    if (mangaInfoIndex !== -1) {
+      mangaInfos[mangaInfoIndex].totalVolumes = totalVolumes;
+    } else {
+      mangaInfos.push({
+        manga: slug,
+        volume: volume,
+        page: initialPageNumber,
+        totalVolumes: totalVolumes,
+      });
+    }
+
+    localStorage.setItem("mangaInfo", JSON.stringify(mangaInfos));
+  }, [volumes]);
 
   return (
     <MangaPage
