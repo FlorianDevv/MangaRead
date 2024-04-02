@@ -48,37 +48,38 @@ export default function Page({ params }: { params: { slug: string } }) {
   const manga: Manga = { synopsis, banner };
 
   return (
-    <div className="flex flex-wrap justify-center text-white">
-      <h1 className="w-full text-center text-2xl my-5">
-        {decodeURIComponent(params.slug)}
-      </h1>
-      {banner && ( // Check if banner file exists before rendering
-        <div className="w-full h-52 relative mx-20">
-          <Image
-            src={`/${params.slug}/banner.webp`}
-            alt="Banner"
-            style={{ objectFit: "cover" }}
-            quality={25}
-            fill
-            sizes="90vw"
-          />
-        </div>
-      )}
-      {manga.synopsis && ( // Check if synopsis exists before rendering
-        <p className="w-full justify-start text-sm m-8 px-12 overflow-wrap-break break-words">
-          {manga.synopsis}
-        </p>
-      )}
-      <h1 className="w-full text-center text-2xl mb-8">
-        total: {volumes.length} volumes
-      </h1>
-      <VolumeSelect
-        volumes={volumes}
-        slug={params.slug}
-        currentVolume=""
-        isPage={false}
-      />
-      <MobileNavbarComponent />
-    </div>
+    <MobileNavbarComponent activePage="Home">
+      <div className="flex flex-wrap justify-center text-white">
+        <h1 className="w-full text-center text-2xl my-5">
+          {decodeURIComponent(params.slug)}
+        </h1>
+        {banner && ( // Check if banner file exists before rendering
+          <div className="w-full h-52 relative mx-20">
+            <Image
+              src={`/${params.slug}/banner.webp`}
+              alt="Banner"
+              style={{ objectFit: "cover" }}
+              quality={25}
+              fill
+              sizes="90vw"
+            />
+          </div>
+        )}
+        {manga.synopsis && ( // Check if synopsis exists before rendering
+          <p className="w-full justify-start text-sm m-8 px-12 overflow-wrap-break break-words">
+            {manga.synopsis}
+          </p>
+        )}
+        <h1 className="w-full text-center text-2xl mb-8">
+          total: {volumes.length} volumes
+        </h1>
+        <VolumeSelect
+          volumes={volumes}
+          slug={params.slug}
+          currentVolume=""
+          isPage={false}
+        />
+      </div>
+    </MobileNavbarComponent>
   );
 }

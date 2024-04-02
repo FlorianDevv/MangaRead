@@ -185,117 +185,120 @@ export default function MangaPage({
 
   return (
     <NavbarContext.Provider value={{ isVisible, setIsVisible }}>
-      <div>
-        <MobileNavbarComponent />
-        <div className="flex justify-center text-white">
-          {SelectPageNumber(pageNumber, setPageNumber, totalPages)}
-          <Fullscreen
-            isFullscreen={isFullscreen}
-            setIsFullscreen={setIsFullscreen}
-          />
-        </div>
-        <div className="flex justify-center space-x-4 ">
-          <Quality qualityNumber={quality} setQuality={setQuality} />
-
-          <Read isVertical={isVertical} setIsVertical={setIsVertical} />
-        </div>
-        <div className="relative min-h-screen w-screen mt-2">
-          {!isVertical && (
-            <Image
-              src={`/${slug}/${volume}/${imageName}.webp`}
-              alt={`${slug} Page ${pageNumber}`}
-              style={{ objectFit: "contain" }}
-              sizes="125vw"
-              quality={quality}
-              fill
-              priority
-              onLoad={() => setIsLoading(false)}
+      <MobileNavbarComponent>
+        <div>
+          <div className="flex justify-center text-white">
+            {SelectPageNumber(pageNumber, setPageNumber, totalPages)}
+            <Fullscreen
+              isFullscreen={isFullscreen}
+              setIsFullscreen={setIsFullscreen}
             />
-          )}
-          {isLoading && !isVertical && (
-            <div className="loading-screen">
-              <div className="spinner"></div>
-            </div>
-          )}
-          {nextPageExists && !isVertical && (
-            <>
+          </div>
+          <div className="flex justify-center space-x-4 ">
+            <Quality qualityNumber={quality} setQuality={setQuality} />
+
+            <Read isVertical={isVertical} setIsVertical={setIsVertical} />
+          </div>
+          <div className="relative min-h-screen w-screen mt-2">
+            {!isVertical && (
               <Image
-                src={`/${slug}/${volume}/${nextImageName}.webp`}
-                alt={`${slug} Page ${pageNumber + 1}`}
+                src={`/${slug}/${volume}/${imageName}.webp`}
+                alt={`${slug} Page ${pageNumber}`}
                 style={{ objectFit: "contain" }}
                 sizes="125vw"
                 quality={quality}
                 fill
                 priority
-                className="hidden"
+                onLoad={() => setIsLoading(false)}
               />
-            </>
-          )}
-          <div className="flex flex-col">
-            {isVertical && (
+            )}
+            {isLoading && !isVertical && (
+              <div className="loading-screen">
+                <div className="spinner"></div>
+              </div>
+            )}
+            {nextPageExists && !isVertical && (
               <>
-                {images.map((imageName, index) => (
-                  <div
-                    key={index}
-                    ref={(ref) => (imageRefs.current[index] = ref)}
-                  >
-                    <Image
-                      id={`image-${index}`}
-                      src={`/${slug}/${volume}/${imageName}.webp`}
-                      alt={`${slug} Page ${index + 1}`}
-                      width={3840}
-                      height={2160}
-                      style={{ objectFit: "contain" }}
-                      sizes="125vw"
-                      quality={quality}
-                      loading="lazy"
-                      onLoad={() => {
-                        if (index + 1 === pageNumber && isLoading) {
-                          imageRefs.current[index]?.scrollIntoView();
-                          setIsLoading(false);
-                        }
-                      }}
-                      onClick={async () => {
-                        setPageNumber(index + 1);
-                        await new Promise((resolve) => setTimeout(resolve, 10));
-                        setIsLoading(false);
-                      }}
-                      className={
-                        isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"
-                      }
-                    />
-                  </div>
-                ))}
-                {isLoading && (
-                  <div className="loading-screen">
-                    <div className="spinner"></div>
-                  </div>
-                )}
-
-                <FloatingButton
-                  qualityNumber={quality || 0}
-                  setQuality={setQuality}
-                  setIsVertical={setIsVertical}
-                  isVertical={isVertical}
-                  volumes={[...volumes]}
-                  slug={slug}
-                  currentVolume={decodeURIComponent(volume)}
+                <Image
+                  src={`/${slug}/${volume}/${nextImageName}.webp`}
+                  alt={`${slug} Page ${pageNumber + 1}`}
+                  style={{ objectFit: "contain" }}
+                  sizes="125vw"
+                  quality={quality}
+                  fill
+                  priority
+                  className="hidden"
                 />
               </>
             )}
+            <div className="flex flex-col">
+              {isVertical && (
+                <>
+                  {images.map((imageName, index) => (
+                    <div
+                      key={index}
+                      ref={(ref) => (imageRefs.current[index] = ref)}
+                    >
+                      <Image
+                        id={`image-${index}`}
+                        src={`/${slug}/${volume}/${imageName}.webp`}
+                        alt={`${slug} Page ${index + 1}`}
+                        width={3840}
+                        height={2160}
+                        style={{ objectFit: "contain" }}
+                        sizes="125vw"
+                        quality={quality}
+                        loading="lazy"
+                        onLoad={() => {
+                          if (index + 1 === pageNumber && isLoading) {
+                            imageRefs.current[index]?.scrollIntoView();
+                            setIsLoading(false);
+                          }
+                        }}
+                        onClick={async () => {
+                          setPageNumber(index + 1);
+                          await new Promise((resolve) =>
+                            setTimeout(resolve, 10)
+                          );
+                          setIsLoading(false);
+                        }}
+                        className={
+                          isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"
+                        }
+                      />
+                    </div>
+                  ))}
+                  {isLoading && (
+                    <div className="loading-screen">
+                      <div className="spinner"></div>
+                    </div>
+                  )}
+
+                  <FloatingButton
+                    qualityNumber={quality || 0}
+                    setQuality={setQuality}
+                    setIsVertical={setIsVertical}
+                    isVertical={isVertical}
+                    volumes={[...volumes]}
+                    slug={slug}
+                    currentVolume={decodeURIComponent(volume)}
+                  />
+                </>
+              )}
+            </div>
+            {pageNumber > 1 && !isVertical && (
+              <PreviousPageButton previousPage={previousPage} />
+            )}
+            {!isVertical && (
+              <NextPageButton
+                nextPageExists={nextPageExists}
+                nextPage={nextPage}
+                disabled={isLoading}
+              />
+            )}
           </div>
-          {pageNumber > 1 && !isVertical && (
-            <PreviousPageButton previousPage={previousPage} />
-          )}
-          {!isVertical && (
-            <NextPageButton
-              nextPageExists={nextPageExists}
-              nextPage={nextPage}
-              disabled={isLoading}
-            />
-          )}
         </div>
-      </div>
+      </MobileNavbarComponent>
     </NavbarContext.Provider>
   );
 }
