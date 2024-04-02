@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, MoveUp } from "lucide-react";
+import { ArrowDownToDot, Maximize2, Menu, MoveUp } from "lucide-react";
 import { useState } from "react";
 import { SettingsDialog } from "./settings";
 import { VolumeSelectDialog } from "./volumeselect";
@@ -29,7 +29,6 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
   currentVolume,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVolumeDialogOpen, setIsVolumeDialogOpen] = useState(false);
 
   return (
     <div
@@ -39,9 +38,9 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
     >
       <Button
         title="Menu"
-        variant="ghost"
+        variant="default"
         className={`absolute transition-all duration-300 ease-in-out z-10  ${
-          isOpen ? "transform scale-125" : "opacity-60 hover:opacity-100"
+          isOpen ? "transform scale-125" : "opacity-50 hover:opacity-100"
         }`}
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -50,14 +49,42 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
 
       <Button
         title="Retour en haut"
-        variant="ghost"
+        variant="default"
         className={`absolute transition-all duration-300 ease-in-out ${
-          isOpen ? "opacity-100 transform -translate-y-16" : "opacity-0"
+          isOpen ? "opacity-100 transform  -translate-y-32" : "opacity-0"
         }`}
         onClick={() => window.scrollTo(0, 0)}
       >
         <MoveUp />
       </Button>
+
+      {/* Ajoutez vos nouveaux boutons ici */}
+      <Button
+        title="Scroll Automatique"
+        variant="default"
+        className={`absolute transition-all duration-300 ease-in-out ${
+          isOpen
+            ? "opacity-100 transform -translate-x-16 -translate-y-32"
+            : "opacity-0"
+        }`}
+        onClick={() => {}}
+      >
+        <ArrowDownToDot />
+      </Button>
+
+      <Button
+        title="Plein écran"
+        variant="default"
+        className={`absolute transition-all duration-300 ease-in-out ${
+          isOpen
+            ? "opacity-100 transform -translate-x-32 -translate-y-16"
+            : "opacity-0"
+        }`}
+        onClick={() => {}}
+      >
+        <Maximize2 />
+      </Button>
+
       <SettingsDialog
         isOpen={isOpen}
         classNames={[
@@ -67,7 +94,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
           "ease-in-out",
           "z-10",
           isOpen
-            ? "opacity-100 transform -translate-x-16 -translate-y-0"
+            ? "opacity-100 transform -translate-x-32 -translate-y-0"
             : "opacity-0",
         ]}
         settings={{ qualityNumber, setQuality, setIsVertical, isVertical }}
@@ -85,7 +112,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
           "ease-in-out",
           "z-10",
           isOpen
-            ? "opacity-100 transform -translate-x-16 -translate-y-16"
+            ? "opacity-100 transform -translate-x-32 -translate-y-32"
             : "opacity-0",
         ]}
       />

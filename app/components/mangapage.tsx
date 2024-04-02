@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 // components/MangaPage.tsx
 
-import { FullscreenIcon } from "lucide-react";
+import { Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FloatingButton } from "./floatingButtons";
@@ -331,7 +331,7 @@ interface FullscreenProps {
 }
 
 // Utilisez le contexte dans le composant Fullscreen
-function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
+export function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
   const { setIsVisible } = useContext(NavbarContext);
 
   const goFullScreen = () => {
@@ -356,7 +356,7 @@ function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
       onClick={isFullscreen ? exitFullScreen : goFullScreen}
       title="Fullscreen"
     >
-      <FullscreenIcon />
+      {isFullscreen ? <Minimize2 /> : <Maximize2 />}
     </button>
   );
 }

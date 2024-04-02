@@ -50,7 +50,7 @@ export default function ResumeReading() {
       <h2 className="w-full text-center text-3xl mb-4 mt-6">
         Reprendre la lecture
       </h2>
-      <div className="flex overflow-x-scroll  hover:cursor-default">
+      <div className="flex overflow-x-scroll  hover:cursor-default overflow-y-hidden">
         {state.map((mangaInfo, index) => (
           <div
             key={index}
@@ -79,10 +79,10 @@ export default function ResumeReading() {
                   />
                 </div>
                 <div className="p-2 flex-grow">
-                  <p className="text-lg text-white overflow-wrap break-word transition-colors duration-300 ease-in-out group-hover:text-red-500">
+                  <p className=" text-sm text-white overflow-wrap  transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
                     {decodeURIComponent(mangaInfo.manga)}
                   </p>
-                  <div className="text-sm mt-2 text-gray-400 overflow-wrap break-word flex flex-col sm:flex-row">
+                  <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
                     <p>
                       Volume{" "}
                       {decodeURIComponent(mangaInfo.volume).split(" ")[1]}

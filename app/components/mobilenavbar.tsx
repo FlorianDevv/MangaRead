@@ -23,7 +23,7 @@ export function MobileNavbarComponent({
     <>
       <div className={`${isVisible ? "pb-36" : ""}`}>{children}</div>
       <nav
-        className={`bg-black p-2 shadow-md border-t-2 border-sky-600 fixed bottom-0 w-full flex items-center justify-around md:hidden z-50 ${
+        className={`bg-black p-2 shadow-md border-t border-sky-600 fixed bottom-0 w-full flex items-center justify-around md:hidden z-50 ${
           !isVisible ? "hidden" : ""
         } pb-6`}
       >

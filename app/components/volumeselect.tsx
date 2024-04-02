@@ -175,7 +175,7 @@ export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
     >
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="ghost" title="Navigation">
+          <Button variant="default" title="Navigation">
             <Navigation />
           </Button>
         </DialogTrigger>
