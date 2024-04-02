@@ -2,6 +2,7 @@ import fs from "fs";
 import Link from "next/link";
 import path from "path";
 import MangaCard from "./components/mangaCard";
+import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
 import "./scrollbar.css";
 
@@ -32,6 +33,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+      <MobileNavbarComponent activePage="Home" />
     </div>
   );
 }

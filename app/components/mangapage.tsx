@@ -9,8 +9,10 @@ import {
 
 import { FullscreenIcon } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FloatingButton } from "./floatingButtons";
+import { MobileNavbarComponent } from "./mobilenavbar";
+import { NavbarContext } from "./navbarcontext";
 import { Quality, Read, getSettings } from "./settings";
 
 type Volume = {
@@ -179,116 +181,122 @@ export default function MangaPage({
 
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
   const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
+  const [isVisible, setIsVisible] = useState(true);
 
   return (
-    <div>
-      <div className="flex justify-center text-white">
-        {SelectPageNumber(pageNumber, setPageNumber, totalPages)}
-        <Fullscreen
-          isFullscreen={isFullscreen}
-          setIsFullscreen={setIsFullscreen}
-        />
-      </div>
-      <div className="flex justify-center space-x-4 ">
-        <Quality qualityNumber={quality} setQuality={setQuality} />
-
-        <Read isVertical={isVertical} setIsVertical={setIsVertical} />
-      </div>
-      <div className="relative min-h-screen w-screen mt-2">
-        {!isVertical && (
-          <Image
-            src={`/${slug}/${volume}/${imageName}.webp`}
-            alt={`${slug} Page ${pageNumber}`}
-            style={{ objectFit: "contain" }}
-            sizes="125vw"
-            quality={quality}
-            fill
-            priority
-            onLoad={() => setIsLoading(false)}
+    <NavbarContext.Provider value={{ isVisible, setIsVisible }}>
+      <div>
+        <MobileNavbarComponent />
+        <div className="flex justify-center text-white">
+          {SelectPageNumber(pageNumber, setPageNumber, totalPages)}
+          <Fullscreen
+            isFullscreen={isFullscreen}
+            setIsFullscreen={setIsFullscreen}
           />
-        )}
-        {isLoading && !isVertical && (
-          <div className="loading-screen">
-            <div className="spinner"></div>
-          </div>
-        )}
-        {nextPageExists && !isVertical && (
-          <>
+        </div>
+        <div className="flex justify-center space-x-4 ">
+          <Quality qualityNumber={quality} setQuality={setQuality} />
+
+          <Read isVertical={isVertical} setIsVertical={setIsVertical} />
+        </div>
+        <div className="relative min-h-screen w-screen mt-2">
+          {!isVertical && (
             <Image
-              src={`/${slug}/${volume}/${nextImageName}.webp`}
-              alt={`${slug} Page ${pageNumber + 1}`}
+              src={`/${slug}/${volume}/${imageName}.webp`}
+              alt={`${slug} Page ${pageNumber}`}
               style={{ objectFit: "contain" }}
               sizes="125vw"
               quality={quality}
               fill
               priority
-              className="hidden"
+              onLoad={() => setIsLoading(false)}
             />
-          </>
-        )}
-        <div className="flex flex-col">
-          {isVertical && (
+          )}
+          {isLoading && !isVertical && (
+            <div className="loading-screen">
+              <div className="spinner"></div>
+            </div>
+          )}
+          {nextPageExists && !isVertical && (
             <>
-              {images.map((imageName, index) => (
-                <div
-                  key={index}
-                  ref={(ref) => (imageRefs.current[index] = ref)}
-                >
-                  <Image
-                    id={`image-${index}`}
-                    src={`/${slug}/${volume}/${imageName}.webp`}
-                    alt={`${slug} Page ${index + 1}`}
-                    width={3840}
-                    height={2160}
-                    style={{ objectFit: "contain" }}
-                    sizes="125vw"
-                    quality={quality}
-                    loading="lazy"
-                    onLoad={() => {
-                      if (index + 1 === pageNumber && isLoading) {
-                        imageRefs.current[index]?.scrollIntoView();
-                        setIsLoading(false);
-                      }
-                    }}
-                    onClick={async () => {
-                      setPageNumber(index + 1);
-                      await new Promise((resolve) => setTimeout(resolve, 10));
-                      setIsLoading(false);
-                    }}
-                    className={isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"}
-                  />
-                </div>
-              ))}
-              {isLoading && (
-                <div className="loading-screen">
-                  <div className="spinner"></div>
-                </div>
-              )}
-
-              <FloatingButton
-                qualityNumber={quality || 0}
-                setQuality={setQuality}
-                setIsVertical={setIsVertical}
-                isVertical={isVertical}
-                volumes={[...volumes]}
-                slug={slug}
-                currentVolume={decodeURIComponent(volume)}
+              <Image
+                src={`/${slug}/${volume}/${nextImageName}.webp`}
+                alt={`${slug} Page ${pageNumber + 1}`}
+                style={{ objectFit: "contain" }}
+                sizes="125vw"
+                quality={quality}
+                fill
+                priority
+                className="hidden"
               />
             </>
           )}
+          <div className="flex flex-col">
+            {isVertical && (
+              <>
+                {images.map((imageName, index) => (
+                  <div
+                    key={index}
+                    ref={(ref) => (imageRefs.current[index] = ref)}
+                  >
+                    <Image
+                      id={`image-${index}`}
+                      src={`/${slug}/${volume}/${imageName}.webp`}
+                      alt={`${slug} Page ${index + 1}`}
+                      width={3840}
+                      height={2160}
+                      style={{ objectFit: "contain" }}
+                      sizes="125vw"
+                      quality={quality}
+                      loading="lazy"
+                      onLoad={() => {
+                        if (index + 1 === pageNumber && isLoading) {
+                          imageRefs.current[index]?.scrollIntoView();
+                          setIsLoading(false);
+                        }
+                      }}
+                      onClick={async () => {
+                        setPageNumber(index + 1);
+                        await new Promise((resolve) => setTimeout(resolve, 10));
+                        setIsLoading(false);
+                      }}
+                      className={
+                        isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"
+                      }
+                    />
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="loading-screen">
+                    <div className="spinner"></div>
+                  </div>
+                )}
+
+                <FloatingButton
+                  qualityNumber={quality || 0}
+                  setQuality={setQuality}
+                  setIsVertical={setIsVertical}
+                  isVertical={isVertical}
+                  volumes={[...volumes]}
+                  slug={slug}
+                  currentVolume={decodeURIComponent(volume)}
+                />
+              </>
+            )}
+          </div>
+          {pageNumber > 1 && !isVertical && (
+            <PreviousPageButton previousPage={previousPage} />
+          )}
+          {!isVertical && (
+            <NextPageButton
+              nextPageExists={nextPageExists}
+              nextPage={nextPage}
+              disabled={isLoading}
+            />
+          )}
         </div>
-        {pageNumber > 1 && !isVertical && (
-          <PreviousPageButton previousPage={previousPage} />
-        )}
-        {!isVertical && (
-          <NextPageButton
-            nextPageExists={nextPageExists}
-            nextPage={nextPage}
-            disabled={isLoading}
-          />
-        )}
       </div>
-    </div>
+    </NavbarContext.Provider>
   );
 }
 //---------------------------------------------
@@ -319,12 +327,16 @@ interface FullscreenProps {
   setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// Utilisez le contexte dans le composant Fullscreen
 function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
+  const { setIsVisible } = useContext(NavbarContext);
+
   const goFullScreen = () => {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
     }
     setIsFullscreen(true);
+    setIsVisible(false);
   };
 
   const exitFullScreen = () => {
@@ -332,6 +344,7 @@ function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
       document.exitFullscreen();
     }
     setIsFullscreen(false);
+    setIsVisible(true);
   };
 
   return (

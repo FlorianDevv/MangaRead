@@ -44,7 +44,9 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <div className="absolute w-full mt-2  z-10 bg-black bg-opacity-90 h-auto z-99 rounded shadow-lg shadow-black border-1 border-white border-opacity-50">
+      <div
+        className={`absolute w-full mt-2 z-10 bg-black bg-opacity-90 h-auto z-99 rounded shadow-lg shadow-black border-1 border-white border-opacity-50`}
+      >
         {search !== "" &&
           results.map((result) => (
             <motion.div
