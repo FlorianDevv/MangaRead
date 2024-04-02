@@ -1,4 +1,5 @@
 // app/manga/[slug]/page.server.tsx
+import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
 import VolumeSelect from "@/app/components/volumeselect";
 import fs from "fs";
 import Image from "next/image";
@@ -77,6 +78,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         currentVolume=""
         isPage={false}
       />
+      <MobileNavbarComponent />
     </div>
   );
 }
