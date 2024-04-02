@@ -21,7 +21,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   let synopsis: string | undefined;
   const synopsisPath = path.join(mangaDirectory, "resume.json");
   if (fs.existsSync(synopsisPath)) {
-    synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).en.synopsis;
+    synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
   }
 
   let banner: string | undefined;
@@ -65,7 +65,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </div>
       )}
       {manga.synopsis && ( // Check if synopsis exists before rendering
-        <p className="w-full text-center text-lg m-8 px-12 overflow-wrap-break break-words">
+        <p className="w-full justify-start text-sm m-8 px-12 overflow-wrap-break break-words">
           {manga.synopsis}
         </p>
       )}
