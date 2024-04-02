@@ -1,7 +1,12 @@
 {
   "icons": [
     {
-      "src": "https://static.thenounproject.com/png/4415190-200.png",
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "https://cdn.discordapp.com/attachments/1223923276913446965/1224654978623344690/pngwing.com_1.png?ex=661e47d3&is=660bd2d3&hm=1fc4e64f9b19bce99e65d82da335d2b8b3e89badf2bc5e1574bfacbda22e1e40&",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
@@ -13,14 +18,14 @@
       "purpose": "maskable"
     }
   ],
-  "background_color": "#000000",
+  "background_color": "#000",
   "display": "standalone",
   "name": "mangaboiboi",
   "orientation": "any",
   "scope": "/",
   "short_name": "mangaboiboi",
   "start_url": "/",
-  "theme_color": "#000000",
+  "theme_color": "#000",
   "id": "boiboi",
   "description": "mangaboiboi - app for reading local manga"
 }
