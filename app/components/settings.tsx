@@ -71,9 +71,9 @@ export function Quality({
       const qualitySetting = settings.find(
         (setting: any) => "quality" in setting
       );
-      return qualitySetting ? qualitySetting.quality : 50;
+      return qualitySetting ? qualitySetting.quality : 75;
     }
-    return 50;
+    return 75;
   };
 
   const [qualityNumber, setQualityNumber] = useState<number>(getInitialQuality);
@@ -223,7 +223,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     >
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="ghost" title="Paramètres">
+          <Button variant="default" title="Paramètres">
             <Settings />
           </Button>
         </DialogTrigger>

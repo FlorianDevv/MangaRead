@@ -75,7 +75,7 @@ export default function VolumeSelect({
   );
 
   return (
-    <div className="flex flex-wrap">
+    <div className="flex flex-wrap items-center justify-center">
       {currentVolume && (
         <div className="flex justify-center space-x-2">
           {parseInt(previousVolume) > 0 ? (
@@ -117,36 +117,38 @@ export default function VolumeSelect({
           )}
         </div>
       )}
-      <Select
-        name="volume"
-        value={isPage ? formatVolume(selectedVolume) : selectedVolume}
-        onValueChange={handleChange}
-      >
-        <SelectTrigger className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto">
-          {isPage ? formatVolume(selectedVolume) : selectedVolume}
-        </SelectTrigger>
-        <SelectContent>
-          {volumes
-            .sort((a, b) => {
-              const volumeANumber = parseInt(a.name.replace("Tome ", ""));
-              const volumeBNumber = parseInt(b.name.replace("Tome ", ""));
-              return volumeANumber - volumeBNumber;
-            })
-            .map((volume, index) => (
-              <SelectItem key={index} value={volume.name}>
-                {volume.name}
-              </SelectItem>
-            ))}
-        </SelectContent>
-      </Select>
-      <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
-        <Button
-          variant="secondary"
-          className={`inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer`}
+      <div className="flex flex-wrap justify-center  mt-2 w-full">
+        <Select
+          name="volume"
+          value={isPage ? formatVolume(selectedVolume) : selectedVolume}
+          onValueChange={handleChange}
         >
-          Valider
-        </Button>
-      </Link>
+          <SelectTrigger className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto">
+            {isPage ? formatVolume(selectedVolume) : selectedVolume}
+          </SelectTrigger>
+          <SelectContent>
+            {volumes
+              .sort((a, b) => {
+                const volumeANumber = parseInt(a.name.replace("Tome ", ""));
+                const volumeBNumber = parseInt(b.name.replace("Tome ", ""));
+                return volumeANumber - volumeBNumber;
+              })
+              .map((volume, index) => (
+                <SelectItem key={index} value={volume.name}>
+                  {volume.name}
+                </SelectItem>
+              ))}
+          </SelectContent>
+        </Select>
+        <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
+          <Button
+            variant="secondary"
+            className={`inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer`}
+          >
+            Valider
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -175,7 +177,7 @@ export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
     >
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="ghost" title="Navigation">
+          <Button variant="default" title="Navigation">
             <Navigation />
           </Button>
         </DialogTrigger>

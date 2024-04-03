@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 // components/MangaPage.tsx
 
-import { FullscreenIcon } from "lucide-react";
+import { Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FloatingButton } from "./floatingButtons";
@@ -182,7 +182,40 @@ export default function MangaPage({
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
   const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
   const [isVisible, setIsVisible] = useState(true);
+  useEffect(() => {
+    if (!isVertical) {
+      setIsVisible(true);
+    }
+  }, [isVertical]);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isVertical) {
+        setIsVisible(false);
+      }
+    };
 
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isVertical]);
+  const [isScrollingUp, setIsScrollingUp] = useState(false);
+  let lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.pageYOffset;
+      setIsScrollingUp(lastScrollY.current > currentScrollY);
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <NavbarContext.Provider value={{ isVisible, setIsVisible }}>
       <MobileNavbarComponent>
@@ -261,6 +294,7 @@ export default function MangaPage({
                             setTimeout(resolve, 10)
                           );
                           setIsLoading(false);
+                          setTimeout(() => setIsVisible(true), 10);
                         }}
                         className={
                           isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"
@@ -275,6 +309,11 @@ export default function MangaPage({
                   )}
 
                   <FloatingButton
+                    className={`transition-all ease-in-out duration-300 transform ${
+                      isScrollingUp
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-10 opacity-0"
+                    }`}
                     qualityNumber={quality || 0}
                     setQuality={setQuality}
                     setIsVertical={setIsVertical}
@@ -282,6 +321,8 @@ export default function MangaPage({
                     volumes={[...volumes]}
                     slug={slug}
                     currentVolume={decodeURIComponent(volume)}
+                    isFullscreen={isFullscreen}
+                    setIsFullscreen={setIsFullscreen}
                   />
                 </>
               )}
@@ -331,7 +372,7 @@ interface FullscreenProps {
 }
 
 // Utilisez le contexte dans le composant Fullscreen
-function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
+export function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
   const { setIsVisible } = useContext(NavbarContext);
 
   const goFullScreen = () => {
@@ -356,7 +397,7 @@ function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
       onClick={isFullscreen ? exitFullScreen : goFullScreen}
       title="Fullscreen"
     >
-      <FullscreenIcon />
+      {isFullscreen ? <Minimize2 /> : <Maximize2 />}
     </button>
   );
 }

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Menu, MoveUp } from "lucide-react";
-import { useState } from "react";
+import { ArrowDownToDot, Menu, MoveUp } from "lucide-react";
+import { useRef, useState } from "react";
+import { Fullscreen } from "./mangapage";
 import { SettingsDialog } from "./settings";
 import { VolumeSelectDialog } from "./volumeselect";
 
@@ -17,6 +18,9 @@ interface FloatingButtonProps {
   volumes: Volume[];
   slug: string;
   currentVolume: string;
+  className?: string;
+  isFullscreen: boolean;
+  setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const FloatingButton: React.FC<FloatingButtonProps> = ({
@@ -27,68 +31,146 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
   volumes,
   slug,
   currentVolume,
+  className,
+  isFullscreen,
+  setIsFullscreen,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVolumeDialogOpen, setIsVolumeDialogOpen] = useState(false);
+  const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+  const scrollInterval = useRef<NodeJS.Timeout | null>(null);
 
+  const autoScroll = () => {
+    if (isAutoScrolling) {
+      if (scrollInterval.current) {
+        clearInterval(scrollInterval.current);
+      }
+      setIsAutoScrolling(false);
+    } else {
+      scrollInterval.current = setInterval(() => {
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollPosition = window.pageYOffset + window.innerHeight;
+        if (scrollPosition >= scrollHeight) {
+          if (scrollInterval.current) {
+            clearInterval(scrollInterval.current);
+          }
+          setIsAutoScrolling(false);
+        } else {
+          window.scrollBy({
+            top: 10, // Change this value to adjust the speed of the auto scroll
+            behavior: "smooth",
+          });
+        }
+      }, 100); // Change this value to adjust the frequency of the auto scroll
+
+      setIsAutoScrolling(true);
+    }
+  };
+
+  const quitAutoScroll = () => {
+    if (scrollInterval.current) {
+      clearInterval(scrollInterval.current);
+    }
+    setIsAutoScrolling(false);
+  };
   return (
-    <div
-      className={`fixed bottom-12 right-12 text-4xl  px-4 py-2 ${
-        isOpen ? "open" : ""
-      }`}
-    >
-      <Button
-        title="Menu"
-        variant="ghost"
-        className={`absolute transition-all duration-300 ease-in-out z-10  ${
-          isOpen ? "transform scale-125" : "opacity-60 hover:opacity-100"
-        }`}
-        onClick={() => setIsOpen(!isOpen)}
+    <>
+      <div
+        className={`fixed bottom-12 right-12 text-4xl px-4 py-2 ${
+          isOpen ? "open" : ""
+        } ${className}`}
       >
-        <Menu />
-      </Button>
+        <Button
+          title="Menu"
+          variant="default"
+          className={`absolute transition-all duration-300 ease-in-out z-10  ${
+            isOpen ? "transform scale-125" : "opacity-80 hover:opacity-100"
+          }`}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <Menu />
+        </Button>
 
+        <Button
+          title="Retour en haut"
+          variant="default"
+          className={`absolute transition-all duration-300 ease-in-out ${
+            isOpen ? "opacity-100 transform  -translate-y-32" : "opacity-0"
+          }`}
+          onClick={() => window.scrollTo(0, 0)}
+        >
+          <MoveUp />
+        </Button>
+
+        <Button
+          title="Scroll Automatique"
+          variant="default"
+          className={`absolute transition-all duration-300 ease-in-out ${
+            isOpen || isAutoScrolling
+              ? "opacity-100 transform -translate-x-16 -translate-y-32"
+              : "opacity-0"
+          }`}
+          onClick={autoScroll}
+        >
+          <ArrowDownToDot />
+        </Button>
+
+        <Button
+          title="Plein écran"
+          variant="default"
+          className={`absolute transition-all duration-300 ease-in-out ${
+            isOpen
+              ? "opacity-100 transform -translate-x-32 -translate-y-16"
+              : "opacity-0"
+          }`}
+        >
+          <Fullscreen
+            isFullscreen={isFullscreen}
+            setIsFullscreen={setIsFullscreen}
+          />
+        </Button>
+
+        <SettingsDialog
+          isOpen={isOpen}
+          classNames={[
+            "absolute",
+            "transition-all",
+            "duration-300",
+            "ease-in-out",
+            "z-10",
+            isOpen
+              ? "opacity-100 transform -translate-x-32 -translate-y-0"
+              : "opacity-0",
+          ]}
+          settings={{ qualityNumber, setQuality, setIsVertical, isVertical }}
+        />
+
+        <VolumeSelectDialog
+          isOpen={isOpen}
+          volumes={volumes}
+          slug={slug}
+          currentVolume={currentVolume}
+          classNames={[
+            "absolute",
+            "transition-all",
+            "duration-300",
+            "ease-in-out",
+            "z-10",
+            isOpen
+              ? "opacity-100 transform -translate-x-32 -translate-y-32"
+              : "opacity-0",
+          ]}
+        />
+      </div>
       <Button
-        title="Retour en haut"
-        variant="ghost"
-        className={`absolute transition-all duration-300 ease-in-out ${
-          isOpen ? "opacity-100 transform -translate-y-16" : "opacity-0"
+        title="Scroll Automatique"
+        variant="default"
+        className={`fixed bottom-16 right-2  transition-all duration-300 ease-in-out ${
+          isAutoScrolling ? "opacity-70" : "opacity-0"
         }`}
-        onClick={() => window.scrollTo(0, 0)}
+        onClick={quitAutoScroll}
       >
-        <MoveUp />
+        <ArrowDownToDot />
       </Button>
-      <SettingsDialog
-        isOpen={isOpen}
-        classNames={[
-          "absolute",
-          "transition-all",
-          "duration-300",
-          "ease-in-out",
-          "z-10",
-          isOpen
-            ? "opacity-100 transform -translate-x-16 -translate-y-0"
-            : "opacity-0",
-        ]}
-        settings={{ qualityNumber, setQuality, setIsVertical, isVertical }}
-      />
-
-      <VolumeSelectDialog
-        isOpen={isOpen}
-        volumes={volumes}
-        slug={slug}
-        currentVolume={currentVolume}
-        classNames={[
-          "absolute",
-          "transition-all",
-          "duration-300",
-          "ease-in-out",
-          "z-10",
-          isOpen
-            ? "opacity-100 transform -translate-x-16 -translate-y-16"
-            : "opacity-0",
-        ]}
-      />
-    </div>
+    </>
   );
 };
