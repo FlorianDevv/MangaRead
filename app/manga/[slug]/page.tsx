@@ -48,7 +48,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   const manga: Manga = { synopsis, banner };
 
   return (
-    <MobileNavbarComponent activePage="Home">
+    <MobileNavbarComponent>
       <div className="flex flex-wrap justify-center text-white">
         <h1 className="w-full text-center text-2xl my-5">
           {decodeURIComponent(params.slug)}

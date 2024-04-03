@@ -16,7 +16,12 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { GalleryHorizontal, GalleryVertical, Settings } from "lucide-react";
+import {
+  GalleryHorizontal,
+  GalleryVertical,
+  Settings,
+  Star,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function getSettings() {
@@ -108,7 +113,9 @@ export function Quality({
 
   return (
     <div className="flex items-center flex-col ">
-      <label htmlFor="quality">Qualité 📈:</label>
+      <label htmlFor="quality" className="flex flex-row">
+        Qualité <Star /> :
+      </label>
       <Slider
         id="quality"
         name="quality"

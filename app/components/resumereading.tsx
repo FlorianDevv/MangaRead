@@ -91,12 +91,16 @@ export default function ResumeReading() {
                     <p>Page {mangaInfo.page}</p>
                   </div>
                   <div className="ml-auto flex flex-col items-center">
-                    <Progress value={calculateProgress(mangaInfo)} />
-                    <p className="mt-2 text-gray-200 text-sm">
-                      {`${
-                        decodeURIComponent(mangaInfo.volume).split(" ")[1]
-                      } / ${mangaInfo.totalVolumes}`}
-                    </p>
+                    {mangaInfo.totalVolumes !== undefined && (
+                      <>
+                        <Progress value={calculateProgress(mangaInfo)} />
+                        <p className="mt-2 text-gray-200 text-sm">
+                          {`${
+                            decodeURIComponent(mangaInfo.volume).split(" ")[1]
+                          } / ${mangaInfo.totalVolumes}`}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </Link>
