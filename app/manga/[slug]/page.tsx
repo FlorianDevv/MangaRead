@@ -52,7 +52,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               src={`/${params.slug}/Tome 01/01-001.webp`}
               alt="Banner"
               style={{ objectFit: "contain" }}
-              quality={30}
+              quality={1}
               fill
               sizes="100vw"
             />
