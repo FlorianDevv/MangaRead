@@ -2,6 +2,7 @@ import fs from "fs";
 import Link from "next/link";
 import path from "path";
 import MangaCard from "./components/mangaCard";
+import MangaDetails from "./components/mangaDetails";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
 import "./scrollbar.css";
@@ -13,6 +14,12 @@ export default function Home() {
     return fs.lstatSync(itemPath).isDirectory() && name !== "icons";
   });
 
+  let synopsis: string | undefined;
+  const synopsisPath = path.join(mangaDirectory, "resume.json");
+  if (fs.existsSync(synopsisPath)) {
+    synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
+  }
+
   // Write the mangaNames array to a JSON file
   fs.writeFileSync(
     path.join(mangaDirectory, "manga.json"),
@@ -22,6 +29,10 @@ export default function Home() {
   return (
     <MobileNavbarComponent activePage="Home">
       <div className="text-white">
+        <h2 className="text-center text-3xl mb-4">Découvrez nos Mangas</h2>
+        <div className="flex overflow-x-scroll overflow-wrap break-word">
+          <MangaDetails mangaNames={mangaNames} />
+        </div>
         <ResumeReading />
         <hr className="my-8" />
         <h2 className="text-center text-3xl mb-4">
