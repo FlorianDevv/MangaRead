@@ -10,7 +10,7 @@ export default function Home() {
   const mangaDirectory = path.join(process.cwd(), "public");
   const mangaNames = fs.readdirSync(mangaDirectory).filter((name) => {
     const itemPath = path.join(mangaDirectory, name);
-    return fs.lstatSync(itemPath).isDirectory();
+    return fs.lstatSync(itemPath).isDirectory() && name !== "icons";
   });
 
   // Write the mangaNames array to a JSON file
