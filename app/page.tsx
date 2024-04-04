@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <MobileNavbarComponent activePage="Home">
-      <div>
+      <div className="lg:mx-48 md:mx-24">
         <h2 className="flex justify-center items-center text-3xl mb-4 mt-2">
           Découverte
           <div className="ml-2">

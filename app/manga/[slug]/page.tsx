@@ -45,8 +45,8 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <MobileNavbarComponent>
-      <div className="flex flex-wrap md:flex-nowrap justify-center text-white">
-        <div className="w-full h-96 relative mt-8 ">
+      <div className="flex flex-wrap md:flex-nowrap justify-center text-white lg:mx-48 md:mx-24">
+        <div className="w-full h-96 relative mt-8">
           <Link href={`/manga/${params.slug}/Tome 01/`}>
             <Image
               src={`/${params.slug}/Tome 01/01-001.webp`}
@@ -72,7 +72,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         </div>
       </div>
       <h1 className="text-center text-2xl mb-8">
-        total: {volumes.length} volumes
+        Total: {volumes.length} volumes
       </h1>
 
       <VolumeSelect

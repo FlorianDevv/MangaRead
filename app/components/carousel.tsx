@@ -33,46 +33,57 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
   );
 
   return (
-    <section className="embla">
-      <div className="embla__viewport" ref={emblaRef}>
-        <div className="embla__container">
+    <section className="mx-auto">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div
+          className="flex ml-[-1rem] backface-hidden touch-action[pan-y]"
+          style={{ backfaceVisibility: "hidden", touchAction: "pan-y" }}
+        >
           {selectedMangaDetails.map((mangaDetail) => (
-            <div className="embla__slide" key={mangaDetail.name}>
-              <div className="embla__slide__inner">
+            <div
+              className="flex-none pl-[1rem] min-w-0"
+              key={mangaDetail.name}
+              style={{ flex: "0 0 100%" }}
+            >
+              <div className="relative w-full h-[19rem] overflow-hidden flex">
                 <Image
                   src={`/${mangaDetail.name}/Tome 01/01-001.webp`}
                   alt={mangaDetail.name}
-                  className="absolute w-full h-full object-cover opacity-30"
+                  className="absolute w-full h-full object-cover opacity-30 z-0"
                   fill
+                  sizes="50vw"
                   quality={1}
-                  style={{ filter: "blur(10px)", objectFit: "cover" }}
+                  style={{ filter: "blur(12px)", objectFit: "cover" }}
                 />
-                <div className="relative flex justify-center h-screen w-screen">
-                  <div className="w-1/2 text-left  mt-2 ml-2  sm:ml-24 space-y-4 flex flex-col">
-                    <h1 className="text-3xl">{mangaDetail.name}</h1>
-                    <p className="text-sm pr-2 line-clamp-4 lg:line-clamp-6 text-gray-200 font-light">
-                      {mangaDetail.synopsis}
-                    </p>
-                    <Link
-                      href={`/manga/${mangaDetail.name}`}
-                      className="space-x-2"
-                    >
-                      <Button>
-                        <BookOpen className="mr-2" /> Commencer la lecture
-                      </Button>
-                    </Link>
-                  </div>
-                  <div className="relative flex sm:items-center sm:justify-center w-full h-1/4 sm:h-1/3 overflow-hidden">
-                    <Link href={`/manga/${mangaDetail.name}`}>
-                      <Image
-                        src={`/${mangaDetail.name}/Tome 01/01-001.webp`}
-                        alt={mangaDetail.name}
-                        className="object-contain transform transition-transform duration-500 rotate-12 hover:rotate-0"
-                        quality={25}
-                        fill
-                      />
-                    </Link>
-                  </div>
+                <div className="w-1/2 text-left mt-2 ml-2 sm:ml-24 space-y-4 flex flex-col justify-center  z-10">
+                  <h1 className="text-3xl">{mangaDetail.name}</h1>
+                  <p className="text-sm pr-2 line-clamp-4 lg:line-clamp-6 text-gray-200 font-light">
+                    {mangaDetail.synopsis}
+                  </p>
+                  <Link
+                    href={`/manga/${mangaDetail.name}`}
+                    className="space-x-2"
+                  >
+                    <Button>
+                      <BookOpen className="mr-2" />
+                      <span className="sm:hidden">Lire</span>
+                      <span className="hidden sm:block">
+                        Commencer la lecture
+                      </span>
+                    </Button>
+                  </Link>
+                </div>
+                <div className="relative w-1/2 flex justify-center items-center">
+                  <Link href={`/manga/${mangaDetail.name}`}>
+                    <Image
+                      src={`/${mangaDetail.name}/Tome 01/01-001.webp`}
+                      alt={mangaDetail.name}
+                      className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125 w-full h-full shine"
+                      quality={1}
+                      fill
+                      sizes="100vw"
+                    />
+                  </Link>
                 </div>
               </div>
             </div>
