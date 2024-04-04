@@ -2,7 +2,7 @@
 "use client";
 import { Progress } from "@/components/ui/progress";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { BookOpen, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -47,8 +47,11 @@ export default function ResumeReading() {
 
   return (
     <div>
-      <h2 className="w-full text-center text-3xl mb-4 mt-6">
+      <h2 className="w-full flex justify-center items-center text-3xl mb-4 mt-6">
         Reprendre la lecture
+        <div className="ml-2">
+          <BookOpen />
+        </div>
       </h2>
       <div className="flex overflow-x-scroll  hover:cursor-default overflow-y-hidden">
         {state.map((mangaInfo, index) => (

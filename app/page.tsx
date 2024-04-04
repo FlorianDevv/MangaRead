@@ -1,4 +1,5 @@
 import fs from "fs";
+import { Telescope } from "lucide-react";
 import Link from "next/link";
 import path from "path";
 import MangaCard from "./components/mangaCard";
@@ -14,11 +15,16 @@ export default function Home() {
     return fs.lstatSync(itemPath).isDirectory() && name !== "icons";
   });
 
-  let synopsis: string | undefined;
-  const synopsisPath = path.join(mangaDirectory, "resume.json");
-  if (fs.existsSync(synopsisPath)) {
-    synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
-  }
+  const mangaDetails = mangaNames.map((name) => {
+    const itemPath = path.join(mangaDirectory, name);
+    let synopsis: string | undefined;
+    const synopsisPath = path.join(itemPath, "resume.json");
+    if (fs.existsSync(synopsisPath)) {
+      synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
+    }
+
+    return { name, synopsis };
+  });
 
   // Write the mangaNames array to a JSON file
   fs.writeFileSync(
@@ -28,15 +34,20 @@ export default function Home() {
 
   return (
     <MobileNavbarComponent activePage="Home">
-      <div className="text-white">
-        <h2 className="text-center text-3xl mb-4">Découvrez nos Mangas</h2>
-        <div className="flex overflow-x-scroll overflow-wrap break-word">
-          <MangaDetails mangaNames={mangaNames} />
+      <div>
+        <h2 className="flex justify-center items-center text-3xl mb-4 mt-2">
+          Découverte
+          <div className="ml-2">
+            <Telescope />
+          </div>
+        </h2>
+        <div className="mx-1 md:mx-8">
+          <MangaDetails mangaDetails={mangaDetails} />
         </div>
         <ResumeReading />
         <hr className="my-8" />
-        <h2 className="text-center text-3xl mb-4">
-          Tous les Mangas disponible
+        <h2 className="flex justify-center items-center text-3xl mb-4">
+          Tous les Mangas disponibles
         </h2>
         <div className="mx-4">
           <div className="flex overflow-x-scroll overflow-wrap break-word">

@@ -1,24 +1,14 @@
-import Image from "next/image";
-
+import { EmblaOptionsType } from "embla-carousel";
+import EmblaCarousel from "./carousel";
 interface MangaDetailsProps {
-  mangaNames: string[];
+  mangaDetails: { name: string; synopsis?: string }[];
 }
 
-export default function MangaDetails({ mangaNames }: MangaDetailsProps) {
+export default function MangaDetails({ mangaDetails }: MangaDetailsProps) {
+  const OPTIONS: EmblaOptionsType = { loop: true };
   return (
     <>
-      {mangaNames.map((mangaName) => (
-        <div key={mangaName} className="">
-          <Image
-            src={`/${mangaName}/Tome 01/01-001.webp`}
-            alt={mangaName}
-            className="rounded-md"
-            width={64}
-            height={64}
-          />
-          <div className="text-center mt-2 text-sm">{mangaName}</div>
-        </div>
-      ))}
+      <EmblaCarousel mangaDetails={mangaDetails} options={OPTIONS} />
     </>
   );
 }
