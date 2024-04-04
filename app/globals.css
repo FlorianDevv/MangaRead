@@ -176,9 +176,9 @@
   }
 }
 
-/* embla-carousel */
+/* 
 .embla {
-  /* max-width: 48rem; */
+
   margin: auto;
   --slide-height: 19rem;
   --slide-spacing: 1rem;
@@ -186,6 +186,9 @@
   @media (max-width: 640px) {
     --slide-height: 16rem;
   }
+}
+.emba::hover {
+  cursor: grab;
 }
 .embla__viewport {
   overflow: hidden;
@@ -207,4 +210,4 @@
   width: 100%;
   height: var(--slide-height);
   overflow: hidden;
-}
+} */

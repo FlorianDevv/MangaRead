@@ -56,12 +56,12 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
           setIsAutoScrolling(false);
         } else {
           window.scrollBy({
-            top: 10, // Change this value to adjust the speed of the auto scroll
+            top: 5, // Reduced this value to make the auto scroll smoother
             behavior: "smooth",
           });
         }
-      }, 100); // Change this value to adjust the frequency of the auto scroll
-
+      }, 50); // Change this value to adjust the frequency of the auto scroll
+      setIsOpen(!isOpen);
       setIsAutoScrolling(true);
     }
   };
@@ -71,6 +71,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
       clearInterval(scrollInterval.current);
     }
     setIsAutoScrolling(false);
+    setIsOpen(false);
   };
   return (
     <>
@@ -84,8 +85,9 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
           variant="default"
           className={`absolute transition-all duration-300 ease-in-out z-10  ${
             isOpen ? "transform scale-125" : "opacity-80 hover:opacity-100"
-          }`}
-          onClick={() => setIsOpen(!isOpen)}
+          } ${isAutoScrolling ? "hidden" : ""}`}
+          onClick={() => !isAutoScrolling && setIsOpen(!isOpen)}
+          disabled={isAutoScrolling}
         >
           <Menu />
         </Button>
@@ -95,8 +97,9 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
           variant="default"
           className={`absolute transition-all duration-300 ease-in-out ${
             isOpen ? "opacity-100 transform  -translate-y-32" : "opacity-0"
-          }`}
+          } ${isAutoScrolling ? "hidden" : ""}`}
           onClick={() => window.scrollTo(0, 0)}
+          disabled={isAutoScrolling}
         >
           <MoveUp />
         </Button>
@@ -108,8 +111,9 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
             isOpen || isAutoScrolling
               ? "opacity-100 transform -translate-x-16 -translate-y-32"
               : "opacity-0"
-          }`}
+          } ${isAutoScrolling ? "hidden" : ""}`}
           onClick={autoScroll}
+          disabled={isAutoScrolling}
         >
           <ArrowDownToDot />
         </Button>
@@ -121,7 +125,8 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
             isOpen
               ? "opacity-100 transform -translate-x-32 -translate-y-16"
               : "opacity-0"
-          }`}
+          } ${isAutoScrolling ? "hidden" : ""}`}
+          disabled={isAutoScrolling}
         >
           <Fullscreen
             isFullscreen={isFullscreen}

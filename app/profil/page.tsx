@@ -8,7 +8,7 @@ import { Quality, Read } from "../components/settings";
 export default function Profile() {
   return (
     <MobileNavbarComponent activePage="Profil">
-      <div>
+      <div className="lg:mx-48 md:mx-24">
         <ResumeReading />
         <Card className="w-64 ">
           <CardHeader className="items-center justify-center flex">
