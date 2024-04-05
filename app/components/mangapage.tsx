@@ -127,12 +127,13 @@ export default function MangaPage({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [nextPageExists, previousPage, nextPage, isVertical]);
-
+  const totalVolumes = volumes.length;
   useEffect(() => {
     const mangaInfo = {
       manga: slug,
       volume: volume,
       page: pageNumber,
+      totalVolumes: totalVolumes,
     };
 
     let existingMangaInfo = JSON.parse(
