@@ -1,5 +1,7 @@
 ## Self-hosted website for reading local manga 📚
 
+## 🚧 WORK IN PROGRESS 🚧
+
 ### Features ✨
 
 - [x] Read manga from /public folder 📖
@@ -7,15 +9,16 @@
 - [x] Resume reading with the last read page (local storage) 📌
 - [x] Image preloading & optimization for faster navigation 🚀
 - [x] Keyboard navigation (left/right arrow keys) ⌨️
-- [x] Mobile friendly 📱
+- [x] Mobile App PWA 📱
 - [x] Black mode for OLED screens 🌑
 - [x] Reel full screen mode using all available space for the images 🖼️
-- [X] Search Bar 
+- [X] Search Bar 🔎
+- [ ] .env file for preselected settings ⚙️
 
 ### Languages 🌐
 
 - [x] French (fr)
-- [x] English (en) 
+- [ ] English (en) (In the future, use .env for one language per site.)
 
 ### How to use 🚀
 
