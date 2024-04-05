@@ -1,12 +1,12 @@
 {
-  "background_color": "#3982c2",
+  "background_color": "#000",
   "display": "fullscreen",
   "name": "Manga BoiBoi",
   "orientation": "any",
   "scope": "/",
   "short_name": "Manga BoiBoi",
   "start_url": "/",
-  "theme_color": "#3982c2",
+  "theme_color": "#000",
   "id": "boiboi",
   "description": "Manga BoiBoi - pour lire des classiques",
   "icons": [
