@@ -14,7 +14,6 @@ const DynamicBlur: React.FC<{ src: string; alt: string }> = async ({
   try {
     file = await fs.readFile(imagePath);
   } catch (err) {
-    console.error(`Failed to read image file: ${err}`);
     return null; // Or handle the error in another way
   }
 
@@ -22,7 +21,6 @@ const DynamicBlur: React.FC<{ src: string; alt: string }> = async ({
   try {
     base64 = await getPlaiceholder(file);
   } catch (error) {
-    console.error("Failed to process image with plaiceholder:", error);
     return null; // Or handle the error in another way
   }
 

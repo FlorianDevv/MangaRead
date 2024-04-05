@@ -163,7 +163,6 @@ export default function MangaPage({
   const images = Array.from({ length: totalPages }, (_, i) => {
     const pageNumber = i + 1;
     if (isNaN(pageNumber)) {
-      console.error("i + 1 is not a number:", i + 1);
       return;
     }
 

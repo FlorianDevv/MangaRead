@@ -1,5 +1,7 @@
 // app/manga/[slug]/page.server.tsx
+import { ButtonAddBookmark } from "@/app/components/bookmark";
 import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
+import ResumeReading from "@/app/components/resumereading";
 import VolumeSelect from "@/app/components/volumeselect";
 import fs from "fs";
 import Image from "next/image";
@@ -70,6 +72,10 @@ export default function Page({ params }: { params: { slug: string } }) {
             </p>
           )}
         </div>
+      </div>
+      <ResumeReading mangaName={params.slug} />
+      <div className="flex justify-center items-center mb-4">
+        <ButtonAddBookmark mangaName={params.slug} />
       </div>
       <h1 className="text-center text-2xl mb-8">
         Total: {volumes.length} volumes

@@ -113,8 +113,14 @@ export function Quality({
 
   return (
     <div className="flex items-center flex-col ">
-      <label htmlFor="quality" className="flex flex-row">
-        Qualité <Star /> :
+      <label
+        htmlFor="quality"
+        className="flex justify-center items-center my-1"
+      >
+        Qualité
+        <div className="ml-1">
+          <Star />
+        </div>
       </label>
       <Slider
         id="quality"
@@ -124,7 +130,7 @@ export function Quality({
         step={1}
         value={[qualityNumber]}
         onValueChange={(value: number[]) => setQuality(value[0])}
-        className="w-40"
+        className="w-40 my-1"
       />
       <p className={`${qualityColor(qualityNumber)}`}>
         {qualityNumber} - {qualityIndicator(qualityNumber)}
@@ -184,8 +190,11 @@ export function Read({
 
   return (
     <div className="flex items-center flex-col ">
-      <label htmlFor="read" className="flex items-center flex-row">
-        Lecture {isVertical ? <GalleryVertical /> : <GalleryHorizontal />}
+      <label htmlFor="read" className="flex items-center justify-center my-1">
+        Lecture{" "}
+        <div className="ml-1">
+          {isVertical ? <GalleryVertical /> : <GalleryHorizontal />}
+        </div>
       </label>
       <Select
         name="read"
@@ -237,8 +246,11 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              <div className="flex items-center">
-                Paramètres <Settings />
+              <div className="flex items-center justify-center">
+                Paramètres
+                <div className="ml-2">
+                  <Settings />
+                </div>
               </div>
             </DialogTitle>
             <DialogDescription>Modifier vos paramètres</DialogDescription>
