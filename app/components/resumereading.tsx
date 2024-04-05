@@ -15,15 +15,27 @@ interface MangaInfo {
   totalVolumes: number;
 }
 
-export default function ResumeReading() {
+interface ResumeReadingProps {
+  mangaName?: string;
+}
+
+export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   const [state, setState] = useState<MangaInfo[]>([]);
 
   useEffect(() => {
     const storedState = localStorage.getItem("mangaInfo");
     if (storedState) {
-      setState(JSON.parse(storedState));
+      const parsedState = JSON.parse(storedState);
+      if (mangaName) {
+        const filteredState = parsedState.filter(
+          (manga: MangaInfo) => manga.manga === mangaName
+        );
+        setState(filteredState);
+      } else {
+        setState(parsedState);
+      }
     }
-  }, []);
+  }, [mangaName]);
 
   const deleteManga = (index: number) => {
     const newState = [...state];
@@ -41,7 +53,6 @@ export default function ResumeReading() {
       decodeURIComponent(mangaInfo.volume).split(" ")[1]
     );
     const totalVolumes = mangaInfo.totalVolumes;
-    console.log(currentVolumeNumber, totalVolumes);
     return (currentVolumeNumber / totalVolumes) * 100;
   };
 
@@ -78,7 +89,7 @@ export default function ResumeReading() {
                     fill
                     style={{ objectFit: "cover" }}
                     sizes="70vw"
-                    className="transition-all duration-500 ease-in-out transform 5  "
+                    className="transition-all duration-500 ease-in-out transform"
                   />
                 </div>
                 <div className="p-2 flex-grow">
