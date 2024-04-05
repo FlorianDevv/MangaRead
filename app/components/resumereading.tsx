@@ -89,7 +89,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                     fill
                     style={{ objectFit: "cover" }}
                     sizes="70vw"
-                    className="transition-all duration-500 ease-in-out transform 5  "
+                    className="transition-all duration-500 ease-in-out transform"
                   />
                 </div>
                 <div className="p-2 flex-grow">
