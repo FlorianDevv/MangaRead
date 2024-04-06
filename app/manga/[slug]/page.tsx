@@ -19,7 +19,8 @@ type Manga = {
 };
 
 export default function Page({ params }: { params: { slug: string } }) {
-  const mangaDirectory = path.join(process.cwd(), "public", params.slug);
+  const decodedSlug = decodeURIComponent(params.slug);
+  const mangaDirectory = path.join(process.cwd(), "public", decodedSlug);
 
   let synopsis: string | undefined;
   const synopsisPath = path.join(mangaDirectory, "resume.json");
@@ -56,7 +57,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               style={{ objectFit: "contain" }}
               quality={1}
               fill
-              sizes="100vw"
+              sizes="70vw"
             />
           </Link>
         </div>

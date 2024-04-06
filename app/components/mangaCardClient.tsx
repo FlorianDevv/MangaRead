@@ -12,7 +12,7 @@ export default function MangaCardClient({ mangaName }: { mangaName: string }) {
             style={{ objectFit: "cover" }}
             quality={1}
             fill
-            sizes="90vw"
+            sizes="70vw"
             className="transition-all duration-500 ease-in-out transform "
           />
         </Link>
