@@ -80,10 +80,15 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
             className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
           >
             <motion.div
-              className="flex flex-col items-stretch  bg-black rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
+              className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
               initial={{ opacity: 0, y: -10 }}
               animate={isLoaded ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.2 }}
+              whileTap={{
+                scale: 0.9,
+                transition: { duration: 0.1 },
+                zIndex: 1,
+              }}
             >
               <Link
                 key={index}
@@ -101,23 +106,23 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                     className="transition-all duration-500 ease-in-out transform"
                   />
                 </div>
-                <div className="p-2 flex-grow">
-                  <p className=" text-sm text-white overflow-wrap  transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
+                <div className="flex-grow p-2">
+                  <p className="text-sm text-white overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
                     {decodeURIComponent(mangaInfo.manga)}
                   </p>
                   <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
-                    <p>
+                    <p className="sm:px-2">
                       Volume{" "}
                       {decodeURIComponent(mangaInfo.volume).split(" ")[1]}
                     </p>
-                    <p className="sm:mx-2 sm:my-0 my-2 hidden sm:block">-</p>
-                    <p>Page {mangaInfo.page}</p>
+                    <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">-</p>
+                    <p className="sm:px-2">Page {mangaInfo.page}</p>
                   </div>
                   <div className="ml-auto flex flex-col items-center">
                     {mangaInfo.totalVolumes !== undefined && (
                       <>
                         <Progress value={calculateProgress(mangaInfo)} />
-                        <p className="mt-2 text-gray-200 text-sm">
+                        <p className="mt-2 text-gray-200 text-sm sm:px-2">
                           {`${
                             decodeURIComponent(mangaInfo.volume).split(" ")[1]
                           } / ${mangaInfo.totalVolumes}`}
