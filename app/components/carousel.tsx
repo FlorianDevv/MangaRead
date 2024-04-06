@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 type PropType = {
-  mangaDetails: { name: string; synopsis?: string }[];
+  mangaDetails: { name: string; synopsis?: string; volume: number }[];
   options?: EmblaOptionsType;
 };
 
@@ -23,6 +23,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       pauseOnHover: true,
     }),
   ]);
+
   // Shuffle mangaDetails array
   const shuffledMangaDetails = mangaDetails.sort(() => Math.random() - 0.5);
 
@@ -51,14 +52,17 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                   alt={mangaDetail.name}
                   className="absolute w-full h-full object-cover opacity-30 z-0"
                   fill
-                  sizes="50vw"
+                  sizes="30vw"
                   quality={1}
                   style={{ filter: "blur(12px)", objectFit: "cover" }}
                 />
                 <div className="w-1/2 text-left mt-2 ml-2 sm:ml-24 space-y-4 flex flex-col justify-center  z-10">
                   <h1 className="text-3xl">{mangaDetail.name}</h1>
-                  <p className="text-sm pr-2 line-clamp-4 lg:line-clamp-6 text-gray-200 font-light">
+                  <p className="text-sm pr-2 line-clamp-4 lg:line-clamp-6 text-gray-100 font-normal">
                     {mangaDetail.synopsis}
+                  </p>
+                  <p className="text-lg text-gray-100 font-normal">
+                    {mangaDetail.volume} Volumes
                   </p>
                   <Link
                     href={`/manga/${mangaDetail.name}`}
@@ -78,10 +82,10 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                     <Image
                       src={`/${mangaDetail.name}/Tome 01/01-001.webp`}
                       alt={mangaDetail.name}
-                      className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125 w-full h-full shine"
+                      className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125 shine"
                       quality={1}
                       fill
-                      sizes="100vw"
+                      sizes="70vw"
                     />
                   </Link>
                 </div>
