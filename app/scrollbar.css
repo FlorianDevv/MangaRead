@@ -1,15 +1,21 @@
 /* scrollbar.css */
 ::-webkit-scrollbar {
   height: 10px;
+  width: 14px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.41990563315169815) 100%,
+    rgba(9, 9, 121, 1) 100%,
+    rgba(0, 212, 255, 1) 100%
+  );
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 94, 255, 0.586);
-  border-radius: 20px;
+  background: #29437c;
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
