@@ -41,17 +41,21 @@ export default function CheckPage({
   };
 
   const [initialPageNumber] = useState<number>(getInitialPageNumber());
-
   useEffect(() => {
     const totalVolumes = volumes.length;
-    const mangaInfos = JSON.parse(localStorage.getItem("mangaInfo") || "[]");
+    let mangaInfos = JSON.parse(localStorage.getItem("mangaInfo") || "[]");
     const mangaInfoIndex = mangaInfos.findIndex(
       (info: { manga: string; volume: string }) =>
         info.manga === slug && info.volume === volume
     );
 
     if (mangaInfoIndex !== -1) {
-      mangaInfos[mangaInfoIndex].totalVolumes = totalVolumes;
+      const updatedMangaInfo = mangaInfos[mangaInfoIndex];
+      updatedMangaInfo.totalVolumes = totalVolumes;
+      mangaInfos = mangaInfos.filter(
+        (_: any, index: number) => index !== mangaInfoIndex
+      );
+      mangaInfos.push(updatedMangaInfo);
     } else {
       mangaInfos.push({
         manga: slug,
@@ -60,6 +64,8 @@ export default function CheckPage({
         totalVolumes: totalVolumes,
       });
     }
+
+    mangaInfos = mangaInfos.reverse(); // Reverse the order of the array
 
     localStorage.setItem("mangaInfo", JSON.stringify(mangaInfos));
   }, [volumes]);
