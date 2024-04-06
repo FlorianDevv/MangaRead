@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { BookOpen, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../scrollbar.css";
 
 interface MangaInfo {
@@ -21,6 +21,7 @@ interface ResumeReadingProps {
 
 export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   const [state, setState] = useState<MangaInfo[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const storedState = localStorage.getItem("mangaInfo");
@@ -35,26 +36,34 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
         setState(parsedState);
       }
     }
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 500);
+    return () => clearTimeout(timer);
   }, [mangaName]);
 
   const deleteManga = (index: number) => {
-    const newState = [...state];
-    newState.splice(index, 1);
-    setState(newState);
-    localStorage.setItem("mangaInfo", JSON.stringify(newState));
+    setState((prevState) => {
+      const newState = [...prevState];
+      newState.splice(index, 1);
+      localStorage.setItem("mangaInfo", JSON.stringify(newState));
+      return newState;
+    });
   };
+
+  const calculateProgress = useMemo(() => {
+    return (mangaInfo: MangaInfo) => {
+      const currentVolumeNumber = parseInt(
+        decodeURIComponent(mangaInfo.volume).split(" ")[1]
+      );
+      const totalVolumes = mangaInfo.totalVolumes;
+      return (currentVolumeNumber / totalVolumes) * 100;
+    };
+  }, []);
 
   if (!state.length) {
     return null;
   }
-
-  const calculateProgress = (mangaInfo: MangaInfo) => {
-    const currentVolumeNumber = parseInt(
-      decodeURIComponent(mangaInfo.volume).split(" ")[1]
-    );
-    const totalVolumes = mangaInfo.totalVolumes;
-    return (currentVolumeNumber / totalVolumes) * 100;
-  };
 
   return (
     <div>
@@ -73,7 +82,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
             <motion.div
               className="flex flex-col items-stretch  bg-black rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
               initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.2 }}
             >
               <Link
