@@ -121,7 +121,10 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                   <div className="ml-auto flex flex-col items-center">
                     {mangaInfo.totalVolumes !== undefined && (
                       <>
-                        <Progress value={calculateProgress(mangaInfo)} />
+                        <Progress
+                          value={calculateProgress(mangaInfo)}
+                          aria-label="Reading progress"
+                        />
                         <p className="mt-2 text-gray-200 text-sm sm:px-2">
                           {`${
                             decodeURIComponent(mangaInfo.volume).split(" ")[1]

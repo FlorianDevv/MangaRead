@@ -259,7 +259,6 @@ export default function MangaPage({
                   sizes="125vw"
                   quality={quality}
                   fill
-                  priority
                   className="hidden"
                 />
               </>
@@ -354,7 +353,12 @@ function SelectPageNumber(
     <Select
       onValueChange={(value) => setPageNumber(Number(value.split(" / ")[0]))}
     >
-      <SelectTrigger className="m-2 overflow-hidden max-w-sm p-2 hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto">{`${pageNumber} / ${totalPages}`}</SelectTrigger>
+      <SelectTrigger
+        className="m-2 overflow-hidden max-w-sm p-2 hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
+        aria-label={`Changer de page. Page actuelle: ${pageNumber} page sur ${totalPages} pages`}
+      >
+        {`${pageNumber} / ${totalPages}`}
+      </SelectTrigger>
       <SelectContent>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
           <SelectItem key={num} value={`${num} / ${totalPages}`}>

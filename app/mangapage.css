@@ -1,0 +1,48 @@
+.loading-screen {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  pointer-events: auto;
+}
+.floating-button-container {
+  position: fixed;
+  bottom: 4rem;
+  right: 4rem;
+}
+
+.floating-button {
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+}
+
+.floating-button.main-button {
+  z-index: 1;
+}
+
+.floating-button-container.open .button-top {
+  transform: translateY(-3rem);
+}
+
+.floating-button-container.open .button-left {
+  transform: translateX(-3rem);
+}
+
+.floating-button-container.open .button-diagonal {
+  transform: translate(-3rem, -3rem);
+}

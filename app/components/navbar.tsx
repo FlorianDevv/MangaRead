@@ -34,6 +34,7 @@ export default function Navbar() {
             href="https://github.com/FlorianDevv/MangaRead"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="View source on GitHub"
             className="md:block hidden"
           >
             <p className="text-white hover:opacity-75 duration-200 ease-in-out transition-opacity md:block hidden ">
