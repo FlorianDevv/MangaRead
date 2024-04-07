@@ -3,7 +3,7 @@ import { Telescope } from "lucide-react";
 import Link from "next/link";
 import path from "path";
 import MangaCard from "./components/mangaCard";
-import MangaDetails from "./components/mangaDetails";
+import EmblaCarousel from "./components/mangaDetails";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
 import "./scrollbar.css";
@@ -54,7 +54,7 @@ export default function Home() {
           </div>
         </h2>
         <div className="mx-1 md:mx-8">
-          <MangaDetails mangaDetails={mangaDetails} />
+          <EmblaCarousel mangaDetails={mangaDetails} />
         </div>
         <div className=" p-4 rounded-lg shadow-lg mt-6 ">
           <ResumeReading />

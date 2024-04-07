@@ -27,11 +27,12 @@ const DynamicBlur: React.FC<{ src: string; alt: string }> = async ({
   return (
     <Image
       src={src}
-      alt={alt}
+      alt={`Cover image de ${alt}`} // if the image conveys information
       style={{ objectFit: "cover" }}
       quality={1}
       fill
       sizes="70vw"
+      priority={true}
       placeholder="blur"
       blurDataURL={base64.base64} // Convert base64 object to string
       className="transition-all duration-500 ease-in-out transform "

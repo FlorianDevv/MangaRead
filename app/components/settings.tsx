@@ -131,6 +131,7 @@ export function Quality({
         value={[qualityNumber]}
         onValueChange={(value: number[]) => setQuality(value[0])}
         className="w-40 my-1"
+        aria-label={`Qualité: ${qualityNumber}`}
       />
       <p className={`${qualityColor(qualityNumber)}`}>
         {qualityNumber} - {qualityIndicator(qualityNumber)}
@@ -201,7 +202,14 @@ export function Read({
         value={isVertical ? "vertical" : "horizontal"}
         onValueChange={(value) => setReadMode(value === "vertical")}
       >
-        <SelectTrigger className="p-2 mx-2 text-xs hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none cursor-pointer w-auto">
+        <SelectTrigger
+          className="p-2 mx-2 text-xs hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none cursor-pointer w-auto"
+          aria-label={
+            isVertical
+              ? "Changer la lecture en mode horizontal"
+              : "Changer la lecture en mode vertical"
+          }
+        >
           {isVertical ? "Vertical" : "Horizontal"}
         </SelectTrigger>
         <SelectContent>

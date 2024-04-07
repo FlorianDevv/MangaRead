@@ -3,38 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  /* :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-
-    --radius: 0.5rem;
-  } */
-
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
@@ -69,34 +37,6 @@
     --radius: 0.3rem;
   }
 }
-
-.floating-button-container {
-  position: fixed;
-  bottom: 4rem;
-  right: 4rem;
-}
-
-.floating-button {
-  position: absolute;
-  transition: all 0.3s ease-in-out;
-}
-
-.floating-button.main-button {
-  z-index: 1;
-}
-
-.floating-button-container.open .button-top {
-  transform: translateY(-3rem);
-}
-
-.floating-button-container.open .button-left {
-  transform: translateX(-3rem);
-}
-
-.floating-button-container.open .button-diagonal {
-  transform: translate(-3rem, -3rem);
-}
-
 @layer base {
   * {
     @apply border-border;
@@ -118,29 +58,6 @@
       text-wrap: balance;
     }
   }
-}
-
-.loading-screen {
-  position: fixed;
-  z-index: 999;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-}
-
-.spinner {
-  border: 16px solid #f3f3f3;
-  border-top: 16px solid #3498db;
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-  pointer-events: auto;
 }
 
 .shine::after {
@@ -175,39 +92,3 @@
     transform: rotate(360deg);
   }
 }
-
-/* 
-.embla {
-
-  margin: auto;
-  --slide-height: 19rem;
-  --slide-spacing: 1rem;
-  --slide-size: 100%;
-  @media (max-width: 640px) {
-    --slide-height: 16rem;
-  }
-}
-.emba::hover {
-  cursor: grab;
-}
-.embla__viewport {
-  overflow: hidden;
-}
-.embla__container {
-  backface-visibility: hidden;
-  display: flex;
-  touch-action: pan-y;
-  margin-left: calc(var(--slide-spacing) * -1);
-}
-.embla__slide {
-  flex: 0 0 var(--slide-size);
-  min-width: 0;
-  padding-left: var(--slide-spacing);
-}
-
-.embla__slide__inner {
-  position: relative;
-  width: 100%;
-  height: var(--slide-height);
-  overflow: hidden;
-} */
