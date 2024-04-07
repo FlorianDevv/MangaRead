@@ -259,6 +259,7 @@ export default function MangaPage({
                   sizes="125vw"
                   quality={quality}
                   fill
+                  priority
                   className="hidden"
                 />
               </>
