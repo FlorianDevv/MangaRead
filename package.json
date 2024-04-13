@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 4000 ",
-    "lint": "next lint",
-    "push": "npm version patch && git push",
-    "push-minor": "npm version minor && git push",
-    "push-major": "npm version major && git push"
+    "lint": "next lint"
   },
   "dependencies": {
     "@plaiceholder/next": "^3.0.0",
@@ -28,12 +25,14 @@
     "embla-carousel-react": "^8.0.1",
     "framer-motion": "^11.0.23",
     "lucide-react": "^0.363.0",
-    "next": "^14.1.4",
+    "next": "^14.2",
     "next-themes": "^0.3.0",
     "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-slick": "^0.30.2",
     "sharp": "^0.33.3",
+    "slick-carousel": "^1.8.1",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7"
@@ -42,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-slick": "^0.23.13",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",

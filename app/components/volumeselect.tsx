@@ -42,20 +42,17 @@ export default function VolumeSelect({
     setSelectedVolume(value);
   };
 
+  const isWindowDefined = typeof window !== "undefined";
+
   useEffect(() => {
     setSelectedVolume(currentVolume || volumes[0]?.name || "");
   }, [currentVolume, volumes]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const currentPath = window.location.pathname;
-      const volumeFromUrl = currentPath
-        .split("/")
-        .pop()
-        ?.replace("Tome%20", "");
-      setCurrentVolumeFromUrl(volumeFromUrl || "");
-    }
-  }, [typeof window !== "undefined" ? window.location.pathname : ""]);
+    const currentPath = isWindowDefined ? window.location.pathname : "";
+    const volumeFromUrl = currentPath.split("/").pop()?.replace("Tome%20", "");
+    setCurrentVolumeFromUrl(volumeFromUrl || "");
+  }, [isWindowDefined]);
   const previousVolume = (parseInt(currentVolumeFromUrl) - 1)
     .toString()
     .padStart(2, "0");
@@ -180,7 +177,7 @@ export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
     >
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="default" title="Navigation">
+          <Button title="Navigation">
             <Navigation />
           </Button>
         </DialogTrigger>

@@ -82,7 +82,6 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
       >
         <Button
           title="Menu"
-          variant="default"
           className={`absolute transition-all duration-300 ease-in-out z-10  ${
             isOpen ? "transform scale-125" : "opacity-80 hover:opacity-100"
           } ${isAutoScrolling ? "hidden" : ""}`}
@@ -94,7 +93,6 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
 
         <Button
           title="Retour en haut"
-          variant="default"
           className={`absolute transition-all duration-300 ease-in-out ${
             isOpen ? "opacity-100 transform  -translate-y-32" : "opacity-0"
           } ${isAutoScrolling ? "hidden" : ""}`}
@@ -106,7 +104,6 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
 
         <Button
           title="Scroll Automatique"
-          variant="default"
           className={`absolute transition-all duration-300 ease-in-out ${
             isOpen || isAutoScrolling
               ? "opacity-100 transform -translate-x-16 -translate-y-32"
@@ -120,7 +117,6 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
 
         <Button
           title="Plein écran"
-          variant="default"
           className={`absolute transition-all duration-300 ease-in-out ${
             isOpen
               ? "opacity-100 transform -translate-x-32 -translate-y-16"
@@ -168,7 +164,6 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
       </div>
       <Button
         title="Scroll Automatique"
-        variant="default"
         className={`fixed bottom-16 right-2  transition-all duration-300 ease-in-out ${
           isAutoScrolling ? "opacity-70" : "opacity-0"
         }`}
