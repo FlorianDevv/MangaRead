@@ -156,7 +156,7 @@ export default function MangaPage({
 
     // Stocker le tableau à nouveau
     localStorage.setItem("mangaInfo", JSON.stringify(existingMangaInfo));
-  }, [slug, volume, pageNumber]);
+  }, [slug, volume, pageNumber, totalVolumes]);
 
   const formattedPageNumber = String(pageNumber).padStart(3, "0");
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -269,7 +269,11 @@ export default function MangaPage({
                   {images.map((imageName, index) => (
                     <div
                       key={index}
-                      ref={(ref) => (imageRefs.current[index] = ref)}
+                      ref={(ref: HTMLDivElement | null) => {
+                        if (ref) {
+                          imageRefs.current[index] = ref;
+                        }
+                      }}
                     >
                       <Image
                         id={`image-${index}`}
@@ -351,7 +355,9 @@ function SelectPageNumber(
 ) {
   return (
     <Select
-      onValueChange={(value) => setPageNumber(Number(value.split(" / ")[0]))}
+      onValueChange={(value: string) =>
+        setPageNumber(Number(value.split(" / ")[0]))
+      }
     >
       <SelectTrigger
         className="m-2 overflow-hidden max-w-sm p-2 hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
