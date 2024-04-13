@@ -68,7 +68,7 @@ export default function CheckPage({
     mangaInfos = mangaInfos.reverse(); // Reverse the order of the array
 
     localStorage.setItem("mangaInfo", JSON.stringify(mangaInfos));
-  }, [volumes]);
+  }, [initialPageNumber, slug, volume, volumes]);
 
   return (
     <MangaPage
