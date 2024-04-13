@@ -1,7 +1,7 @@
 import fs from "fs";
-import { Telescope } from "lucide-react";
 import Link from "next/link";
 import path from "path";
+import { Suspense } from "react";
 import MangaCard from "./components/mangaCard";
 import Carousel from "./components/mangaDetails";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
@@ -47,15 +47,11 @@ export default function Home() {
   return (
     <MobileNavbarComponent activePage="Home">
       <div className="lg:mx-48 md:mx-24 md:bg-[#0c0c0c]">
-        <h2 className="flex justify-center items-center text-3xl mb-4 mt-2">
-          Découverte
-          <div className="ml-2">
-            <Telescope />
+        <Suspense fallback={<div>Loading...</div>}>
+          <div className="mx-1 md:mx-8 mt-2">
+            <Carousel mangaDetails={mangaDetails} />
           </div>
-        </h2>
-        <div className="mx-1 md:mx-8">
-          <Carousel mangaDetails={mangaDetails} />
-        </div>
+        </Suspense>
         <div className=" p-4 rounded-lg shadow-lg mt-6 ">
           <ResumeReading />
         </div>
