@@ -22,7 +22,7 @@ import {
   Settings,
   Star,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function getSettings() {
   if (typeof window === "undefined") {
@@ -83,33 +83,36 @@ export function Quality({
 
   const [qualityNumber, setQualityNumber] = useState<number>(getInitialQuality);
 
-  const setQuality = (value: number) => {
-    setQualityNumber(value);
-    if (externalSetQuality) {
-      externalSetQuality(value);
-    }
-    if (typeof window !== "undefined") {
-      const settings = JSON.parse(localStorage.getItem("settings") || "[]");
-      const qualityExists = settings.some(
-        (setting: any) => "quality" in setting
-      );
-      let newSettings;
-      if (!qualityExists) {
-        newSettings = [...settings, { quality: value }];
-      } else {
-        newSettings = settings.map((setting: { quality: number }) =>
-          "quality" in setting ? { quality: value } : setting
-        );
+  const setQuality = useCallback(
+    (value: number) => {
+      setQualityNumber(value);
+      if (externalSetQuality) {
+        externalSetQuality(value);
       }
-      localStorage.setItem("settings", JSON.stringify(newSettings));
-    }
-  };
+      if (typeof window !== "undefined") {
+        const settings = JSON.parse(localStorage.getItem("settings") || "[]");
+        const qualityExists = settings.some(
+          (setting: any) => "quality" in setting
+        );
+        let newSettings;
+        if (!qualityExists) {
+          newSettings = [...settings, { quality: value }];
+        } else {
+          newSettings = settings.map((setting: { quality: number }) =>
+            "quality" in setting ? { quality: value } : setting
+          );
+        }
+        localStorage.setItem("settings", JSON.stringify(newSettings));
+      }
+    },
+    [externalSetQuality]
+  );
 
   useEffect(() => {
     if (initialQualityNumber) {
       setQuality(initialQualityNumber);
     }
-  }, [initialQualityNumber]);
+  }, [initialQualityNumber, setQuality]);
 
   return (
     <div className="flex items-center flex-col ">
@@ -158,36 +161,39 @@ export function Read({
 
   const [isVertical, setIsVertical] = useState<boolean>(getInitialReadMode);
 
-  const setReadMode = (value: boolean) => {
-    setIsVertical(value);
-    if (externalSetIsVertical) {
-      externalSetIsVertical(value);
-    }
-    if (typeof window !== "undefined") {
-      const settings = JSON.parse(localStorage.getItem("settings") || "[]");
-      const readExists = settings.some((setting: any) => "read" in setting);
-      let newSettings;
-      if (!readExists) {
-        newSettings = [
-          ...settings,
-          { read: value ? "vertical" : "horizontal" },
-        ];
-      } else {
-        newSettings = settings.map((setting: { read: string }) =>
-          "read" in setting
-            ? { read: value ? "vertical" : "horizontal" }
-            : setting
-        );
+  const setReadMode = useCallback(
+    (value: boolean) => {
+      setIsVertical(value);
+      if (externalSetIsVertical) {
+        externalSetIsVertical(value);
       }
-      localStorage.setItem("settings", JSON.stringify(newSettings));
-    }
-  };
+      if (typeof window !== "undefined") {
+        const settings = JSON.parse(localStorage.getItem("settings") || "[]");
+        const readExists = settings.some((setting: any) => "read" in setting);
+        let newSettings;
+        if (!readExists) {
+          newSettings = [
+            ...settings,
+            { read: value ? "vertical" : "horizontal" },
+          ];
+        } else {
+          newSettings = settings.map((setting: { read: string }) =>
+            "read" in setting
+              ? { read: value ? "vertical" : "horizontal" }
+              : setting
+          );
+        }
+        localStorage.setItem("settings", JSON.stringify(newSettings));
+      }
+    },
+    [externalSetIsVertical]
+  );
 
   useEffect(() => {
     if (initialIsVertical !== undefined) {
       setReadMode(initialIsVertical);
     }
-  }, [initialIsVertical]);
+  }, [initialIsVertical, setReadMode]);
 
   return (
     <div className="flex items-center flex-col ">
@@ -200,7 +206,7 @@ export function Read({
       <Select
         name="read"
         value={isVertical ? "vertical" : "horizontal"}
-        onValueChange={(value) => setReadMode(value === "vertical")}
+        onValueChange={(value: string) => setReadMode(value === "vertical")}
       >
         <SelectTrigger
           className="p-2 mx-2 text-xs hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none cursor-pointer w-auto"
@@ -247,7 +253,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     >
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="default" title="Paramètres">
+          <Button title="Paramètres">
             <Settings />
           </Button>
         </DialogTrigger>
