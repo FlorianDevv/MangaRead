@@ -1,7 +1,6 @@
 // ResumeReading.tsx
 "use client";
 import { Progress } from "@/components/ui/progress";
-import { motion } from "framer-motion";
 import { BookOpen, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,7 +20,7 @@ interface ResumeReadingProps {
 
 export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   const [state, setState] = useState<MangaInfo[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Ajouter un état de chargement
 
   useEffect(() => {
     const storedState = localStorage.getItem("mangaInfo");
@@ -36,10 +35,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
         setState(parsedState);
       }
     }
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 500);
-    return () => clearTimeout(timer);
+    setIsLoading(false); // Mettre à jour l'état de chargement une fois les données chargées
   }, [mangaName]);
 
   const deleteManga = (index: number) => {
@@ -61,6 +57,22 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
     };
   }, []);
 
+  if (isLoading) {
+    return (
+      <div>
+        <h2 className="w-full flex justify-center items-center text-3xl mb-4 mt-6">
+          Reprendre la lecture
+          <div className="ml-2">
+            <BookOpen />
+          </div>
+        </h2>
+        <div className="flex justify-center items-center h-96">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    ); // Afficher un état de chargement
+  }
+
   if (!state.length) {
     return null;
   }
@@ -79,17 +91,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
             key={index}
             className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
           >
-            <motion.div
-              className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
-              initial={{ opacity: 0, y: -10 }}
-              animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.2 }}
-              whileTap={{
-                scale: 0.9,
-                transition: { duration: 0.1 },
-                zIndex: 1,
-              }}
-            >
+            <div className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  transition-transform duration-300">
               <Link
                 key={index}
                 href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
@@ -145,7 +147,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
               >
                 <X />
               </button>
-            </motion.div>
+            </div>
           </div>
         ))}
       </div>
