@@ -12,14 +12,12 @@ interface CheckPageProps {
   params: { slug: string; volume: string };
   totalPages: number;
   volumes: Volume[];
-  currentVolume: string;
 }
 
 export default function CheckPage({
   params,
   totalPages,
   volumes,
-  currentVolume,
 }: CheckPageProps) {
   const { slug, volume } = params;
 
@@ -77,7 +75,6 @@ export default function CheckPage({
       initialPageNumber={initialPageNumber}
       totalPages={totalPages}
       volumes={volumes}
-      currentVolume={currentVolume}
     />
   );
 }
