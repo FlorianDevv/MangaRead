@@ -27,7 +27,6 @@ type MangaPageProps = {
   initialPageNumber: number;
   totalPages: number;
   volumes: Volume[];
-  currentVolume: string;
 };
 
 export default function MangaPage({
@@ -36,7 +35,6 @@ export default function MangaPage({
   initialPageNumber,
   totalPages,
   volumes,
-  currentVolume,
 }: MangaPageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(initialPageNumber);

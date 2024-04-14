@@ -5,7 +5,6 @@ import { BookOpen, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import "../scrollbar.css";
 
 interface MangaInfo {
   manga: string;
@@ -119,8 +118,9 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                     quality={1}
                     fill
                     style={{ objectFit: "cover" }}
-                    sizes="70vw"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
                     className="transition-all duration-500 ease-in-out transform"
+                    width={640} // Add this line
                   />
                 </div>
                 <div className="flex-grow p-2">

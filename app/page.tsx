@@ -1,12 +1,16 @@
 import fs from "fs";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import path from "path";
 import { Suspense } from "react";
 import MangaCard from "./components/mangaCard";
-import Carousel from "./components/mangaDetails";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
-import "./scrollbar.css";
+
+// ...
+
+// Load the Carousel component asynchronously
+const Carousel = dynamic(() => import("./components/mangaDetails"));
 
 export default function Home() {
   const mangaDirectory = path.join(process.cwd(), "public");

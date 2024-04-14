@@ -50,7 +50,7 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                   alt={"cover image"}
                   className="absolute w-full h-full object-cover opacity-25 z-0"
                   fill
-                  sizes="30vw"
+                  sizes="(max-width: 640px) 70vw, (max-width: 1024px) 50vw, 30vw"
                   quality={1}
                   style={{ filter: "blur(12px)", objectFit: "cover" }}
                 />
@@ -82,7 +82,7 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                     className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125 shine w-full h-full"
                     quality={1}
                     fill
-                    sizes="70vw"
+                    sizes="(max-width: 640px) 70vw, (max-width: 1024px) 50vw, 30vw"
                   />
                 </div>
               </div>

@@ -1,5 +1,4 @@
 "use client";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -49,12 +48,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
       >
         {search !== "" &&
           results.map((result) => (
-            <motion.div
-              key={result}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-            >
+            <div key={result}>
               <Link href={`/manga/${result}`}>
                 <div
                   className="group flex items-center rounded border-t-2 border-sky-600 hover:bg-gray-700 text-white hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
@@ -72,7 +66,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
                   <p className="ml-2">{result}</p>
                 </div>
               </Link>
-            </motion.div>
+            </div>
           ))}
       </div>
     </div>
