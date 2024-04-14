@@ -2,7 +2,7 @@
 import CheckPage from "@/app/components/checkpage";
 import VolumeSelect from "@/app/components/volumeselect";
 import "@/app/mangapage.css";
-import "@/app/noscrollbar.css";
+// import "@/app/noscrollbar.css";
 import fs from "fs";
 import path from "path";
 
@@ -69,12 +69,7 @@ export default function Page({
         />
       </div>
       <div className="flex justify-center">
-        <CheckPage
-          params={params}
-          totalPages={totalPages}
-          volumes={volumes}
-          currentVolume={decodedVolume}
-        />{" "}
+        <CheckPage params={params} totalPages={totalPages} volumes={volumes} />
       </div>
     </div>
   );
