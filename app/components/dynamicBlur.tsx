@@ -31,7 +31,7 @@ const DynamicBlur: React.FC<{ src: string; alt: string }> = async ({
       style={{ objectFit: "cover" }}
       quality={1}
       fill
-      sizes="70vw"
+      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
       priority={true}
       placeholder="blur"
       blurDataURL={base64.base64} // Convert base64 object to string
