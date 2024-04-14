@@ -1,6 +1,5 @@
 import fs from "fs";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import path from "path";
 import { Suspense } from "react";
 import MangaCard from "./components/mangaCard";
@@ -48,12 +47,23 @@ export default function Home() {
   }
   shuffleArray(mangaNames);
 
+  // Shuffle mangaDetails array
+  const shuffledMangaDetails = [...mangaDetails].sort(
+    () => Math.random() - 0.5
+  );
+
+  // Get the first 5 elements or less if there are less than 5
+  const selectedMangaDetails = shuffledMangaDetails.slice(
+    0,
+    Math.min(shuffledMangaDetails.length, 5)
+  );
+
   return (
     <MobileNavbarComponent activePage="Home">
       <div className="lg:mx-48 md:mx-24 md:bg-[#0c0c0c]">
         <Suspense fallback={<div>Loading...</div>}>
           <div className="mx-1 md:mx-8 mt-2">
-            <Carousel mangaDetails={mangaDetails} />
+            <Carousel mangaDetails={selectedMangaDetails} />
           </div>
         </Suspense>
         <div className=" p-4 rounded-lg shadow-lg mt-6 ">
@@ -63,18 +73,10 @@ export default function Home() {
         <h2 className="flex justify-center items-center text-3xl mb-4">
           Tous les Mangas disponibles
         </h2>
-        <div className="mx-4">
-          <div className="flex overflow-x-scroll overflow-wrap break-word">
-            {mangaNames.map((mangaName) => (
-              <Link
-                key={mangaName}
-                href={`/manga/${mangaName}`}
-                className="m-2"
-              >
-                <MangaCard key={mangaName} mangaName={mangaName} />
-              </Link>
-            ))}
-          </div>
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {mangaNames.map((mangaName) => (
+            <MangaCard key={mangaName} mangaName={mangaName} />
+          ))}
         </div>
       </div>
     </MobileNavbarComponent>

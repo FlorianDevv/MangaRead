@@ -22,15 +22,6 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
     }),
   ]);
 
-  // Shuffle mangaDetails array
-  const shuffledMangaDetails = mangaDetails.sort(() => Math.random() - 0.5);
-
-  // Get the first 5 elements or less if there are less than 5
-  const selectedMangaDetails = shuffledMangaDetails.slice(
-    0,
-    Math.min(shuffledMangaDetails.length, 5)
-  );
-
   return (
     <section className="mx-auto">
       <div className="overflow-hidden" ref={emblaRef}>
@@ -38,7 +29,7 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
           className="flex ml-[-1rem] backface-hidden touch-action[pan-y]"
           style={{ backfaceVisibility: "hidden", touchAction: "pan-y" }}
         >
-          {selectedMangaDetails.map((mangaDetail) => (
+          {mangaDetails.map((mangaDetail) => (
             <div
               className="flex-none pl-4 min-w-0 "
               key={mangaDetail.name}

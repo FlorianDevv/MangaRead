@@ -14,18 +14,20 @@ export default function Navbar() {
   return (
     <nav className="bg-black p-2 shadow-md border-b-2 border-sky-600 md:block hidden">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
-        <div className="flex items-center space-x-4 lg:space-x-8">
-          <Link href="/">
-            <div className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity">
-              <Home />
-              <span className="ml-2">Accueil</span>
-            </div>
+        <div className="flex items-center">
+          <Link
+            href="/"
+            className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity mr-4 lg:mr-8"
+          >
+            <Home />
+            <span className="ml-2">Accueil</span>
           </Link>
-          <Link href="/profil">
-            <div className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity">
-              <CircleUser />
-              <span className="ml-2">Profil</span>
-            </div>
+          <Link
+            href="/profil"
+            className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity"
+          >
+            <CircleUser />
+            <span className="ml-2">Profil</span>
           </Link>
         </div>
         <div className="flex items-center space-x-4">
