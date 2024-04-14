@@ -92,3 +92,26 @@
     transform: rotate(360deg);
   }
 }
+
+::-webkit-scrollbar {
+  height: 10px;
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.41990563315169815) 100%,
+    rgba(9, 9, 121, 1) 100%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+::-webkit-scrollbar-thumb {
+  background: #29437c;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 36, 232, 0.5);
+}
