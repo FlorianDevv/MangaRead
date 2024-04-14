@@ -26,7 +26,7 @@ import { useCallback, useEffect, useState } from "react";
 
 export function getSettings() {
   if (typeof window === "undefined") {
-    return { qualityNumber: 75, read: "vertical" };
+    return { qualityNumber: 75, read: "horizontal" };
   }
 
   const settings = JSON.parse(localStorage.getItem("settings") || "[]");
@@ -35,7 +35,7 @@ export function getSettings() {
       ?.quality || 75;
   const read =
     settings.find((setting: { read: string }) => setting.read)?.read ||
-    "vertical";
+    "horizontal";
   return { quality, read };
 }
 
@@ -154,9 +154,9 @@ export function Read({
     if (typeof window !== "undefined") {
       const settings = JSON.parse(localStorage.getItem("settings") || "[]");
       const readSetting = settings.find((setting: any) => "read" in setting);
-      return readSetting ? readSetting.read === "vertical" : false;
+      return readSetting ? readSetting.read === "vertical" : true;
     }
-    return false;
+    return true;
   };
 
   const [isVertical, setIsVertical] = useState<boolean>(getInitialReadMode);
