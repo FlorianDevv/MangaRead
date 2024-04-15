@@ -107,6 +107,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
         />
 
         <VolumeSelectDialog
+          isPage={true}
           isOpen={isOpen}
           volumes={volumes}
           slug={slug}
