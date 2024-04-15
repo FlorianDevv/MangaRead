@@ -20,6 +20,7 @@ A self-hosted website for reading local manga.
   - [Contributing 🤝](#contributing-)
   - [Contributors ✨](#contributors-)
   - [Tech Stack 🛠️](#tech-stack-️)
+  - [Lighthouse 🦅](#lighthouse-)
   - [License 📝](#license-)
 
 ## Status 🚦
@@ -92,6 +93,11 @@ This project uses the following technologies:
 - ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
 - ![Tailwind CSS](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
 - ![shadcn/ui](https://img.shields.io/badge/-Shadcn/ui-000000?style=flat&logo=shadcn/ui&logoColor=white)
+
+## Lighthouse 🦅
+
+![Lighthouse Image](readme/image/lighthouse.png)
+Performance is the main focus of this project to ensure a smooth reading experience. The website is optimized for mobile and desktop devices, with a focus on image optimization and preloading.
 
 ## License 📝
 
