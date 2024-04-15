@@ -1,7 +1,7 @@
 // ResumeReading.tsx
 "use client";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, X } from "lucide-react";
+import { Clock3, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
@@ -59,10 +59,10 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   if (isLoading) {
     return (
       <div>
-        <h2 className="w-full flex justify-center items-center text-3xl mb-4 mt-6">
-          Reprendre la lecture
+        <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
+          Reprenez votre visionnage
           <div className="ml-2">
-            <BookOpen />
+            <Clock3 />
           </div>
         </h2>
         <div className="flex overflow-x-scroll  hover:cursor-default overflow-y-hidden">
@@ -93,10 +93,10 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
 
   return (
     <div>
-      <h2 className="w-full flex justify-center items-center text-3xl mb-4 mt-6">
-        Reprendre la lecture
+      <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
+        Reprenez votre visionnage
         <div className="ml-2">
-          <BookOpen />
+          <Clock3 />
         </div>
       </h2>
       <div className="flex overflow-x-scroll  hover:cursor-default overflow-y-hidden">
