@@ -17,6 +17,7 @@ import {
 import { Navigation } from "lucide-react";
 // VolumeSelect.tsx
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Volume = {
@@ -37,9 +38,14 @@ export default function VolumeSelect({
 }) {
   const [selectedVolume, setSelectedVolume] = useState(currentVolume || "");
   const [currentVolumeFromUrl, setCurrentVolumeFromUrl] = useState("");
+  const router = useRouter();
 
   const handleChange = (value: string) => {
     setSelectedVolume(value);
+    const volume = volumes.find((volume) => volume.name === value);
+    if (volume) {
+      router.push(`/manga/${slug}/Tome%20${formatVolume(volume.name)}`);
+    }
   };
 
   const isWindowDefined = typeof window !== "undefined";
@@ -124,7 +130,7 @@ export default function VolumeSelect({
             className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
             aria-label={`Changer de volume. actuellement sur le volume  ${selectedVolume} `}
           >
-            {isPage ? formatVolume(selectedVolume) : selectedVolume}
+            {isPage ? "Tome " + formatVolume(selectedVolume) : selectedVolume}
           </SelectTrigger>
           <SelectContent>
             {volumes
@@ -135,19 +141,22 @@ export default function VolumeSelect({
               })
               .map((volume, index) => (
                 <SelectItem key={index} value={volume.name}>
-                  {volume.name}
+                  {isPage ? `Tome ${volume.name}` : volume.name}
                 </SelectItem>
               ))}
           </SelectContent>
         </Select>
-        <Link href={`/manga/${slug}/Tome%20${formatVolume(selectedVolume)}`}>
-          <Button
-            variant="secondary"
-            className={`inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer`}
-          >
-            Valider
-          </Button>
-        </Link>
+        {!isPage && (
+          //commencer la lecture button
+          <Link href={`/manga/${slug}/${selectedVolume}`}>
+            <Button
+              variant="secondary"
+              className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
+            >
+              Commencer la lecture
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );
