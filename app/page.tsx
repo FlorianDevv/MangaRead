@@ -1,4 +1,5 @@
 import fs from "fs";
+import { BookImage } from "lucide-react";
 import dynamic from "next/dynamic";
 import path from "path";
 import { Suspense } from "react";
@@ -70,8 +71,11 @@ export default function Home() {
           <ResumeReading />
         </div>
         <hr className="my-8" />
-        <h2 className="flex justify-center items-center text-3xl mb-4">
+        <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
           Tous les Mangas disponibles
+          <div className="ml-2">
+            <BookImage />
+          </div>
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {mangaNames.map((mangaName) => (
