@@ -115,3 +115,6 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(26, 36, 232, 0.5);
 }
+.fullscreen::-webkit-scrollbar {
+  display: none;
+}

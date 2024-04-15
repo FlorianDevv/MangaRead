@@ -4,6 +4,7 @@ import VolumeSelect from "@/app/components/volumeselect";
 import "@/app/mangapage.css";
 // import "@/app/noscrollbar.css";
 import fs from "fs";
+import Link from "next/link";
 import path from "path";
 
 type Volume = {
@@ -58,7 +59,9 @@ export default function Page({
     <div className="overflow-x-hidden overflow-y-hidden">
       <div className="flex flex-wrap justify-center text-white">
         <h1 className="w-full text-center text-3xl my-4">
-          {decodeURIComponent(params.slug)}
+          <Link href={`/manga/${encodeURIComponent(params.slug)}`}>
+            <p>{decodeURIComponent(params.slug)}</p>
+          </Link>
         </h1>
 
         <VolumeSelect
