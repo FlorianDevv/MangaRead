@@ -387,6 +387,7 @@ export function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen();
     }
+    document.body.classList.add("fullscreen");
     setIsFullscreen(true);
     setIsVisible(false);
   };
@@ -395,6 +396,7 @@ export function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
     if (document.fullscreenElement && document.exitFullscreen) {
       document.exitFullscreen();
     }
+    document.body.classList.remove("fullscreen");
     setIsFullscreen(false);
     setIsVisible(true);
   };
