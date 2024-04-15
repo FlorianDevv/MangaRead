@@ -168,6 +168,7 @@ interface VolumeSelectDialogProps {
   slug: string;
   currentVolume: string;
   classNames?: string[];
+  isPage: boolean;
 }
 
 export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
@@ -176,6 +177,7 @@ export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
   slug,
   currentVolume,
   classNames,
+  isPage,
 }) => {
   const decodedVolume = currentVolume.replace(/\D/g, "");
   return (
@@ -199,7 +201,7 @@ export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
             volumes={volumes}
             slug={slug}
             currentVolume={decodedVolume}
-            isPage={false}
+            isPage={isPage}
           />
         </DialogContent>
       </Dialog>
