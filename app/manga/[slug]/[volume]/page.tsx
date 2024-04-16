@@ -59,7 +59,7 @@ export default function Page({
     <div className="overflow-x-hidden overflow-y-hidden">
       <div className="flex flex-wrap justify-center text-white">
         <h1 className="w-full text-center text-3xl my-4 hover:text-red-500 ease-in-out transform transition-colors duration-300">
-          <Link href={`/manga/${encodeURIComponent(params.slug)}`}>
+          <Link href={`/manga/${decodeURIComponent(params.slug)}`}>
             {decodeURIComponent(params.slug)}
           </Link>
         </h1>
