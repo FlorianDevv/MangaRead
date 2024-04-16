@@ -9,6 +9,7 @@ export default function MangaCard({ mangaName }: { mangaName: string }) {
           <DynamicBlur
             src={`/${mangaName}/Tome 01/01-001.webp`}
             alt={mangaName}
+            className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-68 xl:h-64"
           />
           <div className="p-2">
             <h1 className="text-xs sm:text-sm md:text-base text-center text-white transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
