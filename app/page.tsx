@@ -10,7 +10,7 @@ import ResumeReading from "./components/resumereading";
 // ...
 
 // Load the Carousel component asynchronously
-const Carousel = dynamic(() => import("./components/mangaDetails"));
+const Carousel = dynamic(() => import("./components/mangaCarousel"));
 
 export default function Home() {
   const mangaDirectory = path.join(process.cwd(), "public");
@@ -67,7 +67,7 @@ export default function Home() {
             <Carousel mangaDetails={selectedMangaDetails} />
           </div>
         </Suspense>
-        <div className=" p-4 rounded-lg shadow-lg mt-6 ">
+        <div className=" p-4 mt-6 ">
           <ResumeReading />
         </div>
         <hr className="my-8" />
