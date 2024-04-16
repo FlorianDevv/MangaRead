@@ -5,7 +5,6 @@ import ResumeReading from "@/app/components/resumereading";
 import VolumeSelect from "@/app/components/volumeselect";
 import fs from "fs";
 import Image from "next/image";
-import Link from "next/link";
 import path from "path";
 
 type Volume = {
@@ -48,35 +47,33 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <MobileNavbarComponent>
-      <h1 className="text-center items-center justify-center text-4xl mt-5 mb:mb-3">
+      <h1 className="text-center items-center justify-center text-2xl lg:text-4xl mt-5 mb:mb-3">
         {decodeURIComponent(params.slug)}
       </h1>
-      <div className="flex flex-wrap md:flex-nowrap justify-center text-white ">
-        <Link href={`/manga/${params.slug}/Tome 01/`}>
-          <div className="w-full h-full relative my-8">
-            <Image
-              src={`/${params.slug}/Tome 01/01-001.webp`}
-              alt={`${params.slug}`}
-              // style={{ objectFit: "cover" }}
-              quality={1}
-              width={400}
-              height={900}
-              sizes="70vw"
-            />
-          </div>
-        </Link>
+      <div className="flex flex-wrap lg:flex-nowrap justify-center text-white ">
+        <div className="w-80  my-8 items-center justify-center flex flex-col space-y-4">
+          <Image
+            src={`/${params.slug}/Tome 01/01-001.webp`}
+            alt={`${params.slug}`}
+            quality={1}
+            width={500}
+            height={300}
+            layout="responsive"
+            // className="object-contain"
+            sizes="70vw"
+          />
+          <ButtonAddBookmark mangaName={params.slug} />
+        </div>
 
-        <div className="w-full md:w-1/2 md:flex md:flex-row justify-center items-center text-center md:ml-8 space-y-6 md:space-y-0 mx-4">
-          {manga.synopsis && ( // Check if synopsis exists before rendering
-            <p className="text-xs sm:text-sm overflow-wrap-break break-words text-left md:text-justify md:mr-4">
-              {manga.synopsis}
-            </p>
-          )}
-
-          <div className="md:flex md:flex-col md:justify-center md:items-center">
-            <ButtonAddBookmark mangaName={params.slug} />
-
+        <div className="w-full lg:w-1/2 lg:flex lg:flex-row justify-center items-center text-center lg:ml-8 space-y-6 lg:space-y-0 mx-4">
+          <div className="flex flex-col items-center justify-center md:items-start md:justify-start">
             <h1 className="text-2xl my-4">Total: {volumes.length} volumes</h1>
+
+            {manga.synopsis && ( // Check if synopsis exists before rendering
+              <p className="text-xs sm:text-sm overflow-wrap-break break-words text-left lg:text-justify lg:mr-4 mb-4">
+                {manga.synopsis}
+              </p>
+            )}
             <VolumeSelect
               volumes={volumes}
               slug={params.slug}
@@ -86,7 +83,8 @@ export default function Page({ params }: { params: { slug: string } }) {
           </div>
         </div>
       </div>
-      <div className="flex items-center text-center md:mr-28 md:ml-56">
+
+      <div className="flex items-center ml-4 md:mr-28 md:ml-56">
         <ResumeReading mangaName={params.slug} />
       </div>
     </MobileNavbarComponent>
