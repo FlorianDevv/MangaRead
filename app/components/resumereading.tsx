@@ -65,15 +65,12 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
             <Clock3 />
           </div>
         </h2>
-        <div className="flex overflow-x-scroll  hover:cursor-default overflow-y-hidden">
+        <div className="flex overflow-x-scroll overflow-y-hidden">
           {Array(4)
             .fill(0)
             .map((_, index) => (
-              <div
-                key={index}
-                className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
-              >
-                <div className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  transition-transform duration-300">
+              <div key={index} className="m-2 relative">
+                <div className="flex flex-col items-stretch rounded-lg overflow-hidden ">
                   <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 animate-pulse bg-gray-800"></div>
                   <div className="flex-grow p-2">
                     <div className="h-4 animate-pulse bg-gray-800"></div>
