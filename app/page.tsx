@@ -61,7 +61,7 @@ export default function Home() {
 
   return (
     <MobileNavbarComponent activePage="Home">
-      <div className="lg:mx-48 md:mx-24 md:bg-[#0c0c0c]">
+      <div className="md:bg-[#0c0c0c] md:mx-24 lg:mx-48 2xl:mx-64">
         <Suspense fallback={<div>Loading...</div>}>
           <div className="mx-1 md:mx-8 mt-2">
             <Carousel mangaDetails={selectedMangaDetails} />
@@ -77,7 +77,7 @@ export default function Home() {
             <BookImage />
           </div>
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-2 lg:mx-4">
           {mangaNames.map((mangaName) => (
             <MangaCard key={mangaName} mangaName={mangaName} />
           ))}
