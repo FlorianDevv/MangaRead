@@ -74,7 +74,9 @@ export default function Page({ params }: { params: { slug: string } }) {
           )}
         </div>
       </div>
-      <ResumeReading mangaName={params.slug} />
+      <div className="flex justify-center items-center mb-4 md:mx-28">
+        <ResumeReading mangaName={params.slug} />
+      </div>
       <div className="flex justify-center items-center mb-4">
         <ButtonAddBookmark mangaName={params.slug} />
       </div>
