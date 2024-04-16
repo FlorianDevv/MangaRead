@@ -30,11 +30,13 @@ export default function VolumeSelect({
   slug,
   currentVolume,
   isPage,
+  className,
 }: {
   volumes: Volume[];
   slug: string;
   currentVolume: string;
   isPage: boolean;
+  className?: string;
 }) {
   const [selectedVolume, setSelectedVolume] = useState(currentVolume || "");
   const [currentVolumeFromUrl, setCurrentVolumeFromUrl] = useState("");
@@ -78,7 +80,7 @@ export default function VolumeSelect({
   );
 
   return (
-    <div className="flex flex-wrap items-center justify-center">
+    <div className={`flex flex-wrap items-center justify-center ${className}`}>
       {currentVolume && (
         <div className="flex justify-center space-x-2">
           {parseInt(previousVolume) > 0 ? (
