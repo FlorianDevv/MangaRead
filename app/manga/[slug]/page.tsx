@@ -59,7 +59,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             width={500}
             height={300}
             layout="responsive"
-            // className="object-contain"
+            priority={true}
             sizes="70vw"
           />
           <ButtonAddBookmark mangaName={params.slug} />
