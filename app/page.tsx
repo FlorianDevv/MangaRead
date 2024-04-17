@@ -58,7 +58,8 @@ export default function Home() {
     0,
     Math.min(shuffledMangaDetails.length, 5)
   );
-
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`../locales/${language}.json`);
   return (
     <MobileNavbarComponent activePage="Home">
       <div className="md:bg-[#0c0c0c] md:mx-24 lg:mx-48 2xl:mx-64">
@@ -72,7 +73,7 @@ export default function Home() {
         </div>
         <hr className="my-8" />
         <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
-          Tous les Mangas disponibles
+          {data.home.allMangasAvailable}
           <div className="ml-2">
             <BookImage />
           </div>

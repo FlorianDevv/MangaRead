@@ -56,6 +56,8 @@ function qualityColor(quality: number) {
   return "text-red-500";
 }
 function qualityIndicator(quality: number) {
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   if (quality === 100) return "Sans perte";
   if (quality >= 75) return "Excellent";
   if (quality >= 50) return "Bon";
@@ -113,7 +115,8 @@ export function Quality({
       setQuality(initialQualityNumber);
     }
   }, [initialQualityNumber, setQuality]);
-
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   return (
     <div className="flex items-center flex-col ">
       <label
@@ -194,7 +197,8 @@ export function Read({
       setReadMode(initialIsVertical);
     }
   }, [initialIsVertical, setReadMode]);
-
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   return (
     <div className="flex items-center flex-col ">
       <label htmlFor="read" className="flex items-center justify-center my-1">
@@ -245,6 +249,8 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
   isOpen,
   settings,
 }) => {
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   return (
     <div
       className={`${classNames?.join(" ")} ${

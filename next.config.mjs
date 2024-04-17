@@ -19,9 +19,9 @@ const nextConfig = {
   images: {
     formats: ["image/webp"],
   },
-  // env: {
-  //   version,
-  // },
+  env: {
+    DEFAULT_LANGUAGE: process.env.DEFAULT_LANGUAGE,
+  },
 };
 
 export default withSerwist(withPlaiceholder(nextConfig));

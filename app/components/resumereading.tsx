@@ -18,6 +18,8 @@ interface ResumeReadingProps {
 }
 
 export default function ResumeReading({ mangaName }: ResumeReadingProps) {
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   const [state, setState] = useState<MangaInfo[]>([]);
   const [isLoading, setIsLoading] = useState(true); // Ajouter un état de chargement
 
@@ -60,7 +62,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
     return (
       <div>
         <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
-          Reprenez votre visionnage
+          {data.resume.title}
           <div className="ml-2">
             <Clock3 />
           </div>
@@ -91,7 +93,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   return (
     <div>
       <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
-        Reprenez votre visionnage
+        {data.resume.title}
         <div className="ml-2">
           <Clock3 />
         </div>

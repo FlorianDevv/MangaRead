@@ -1,0 +1,41 @@
+{
+  "home": {
+    "allMangasAvailable": "Tous les mangas disponibles"
+  },
+  "carousel": {
+    "read": "Lire",
+    "start": "Commencer la lecture"
+  },
+  "resume": {
+    "title": "Reprenez votre visionnage"
+  },
+  "volumeSelect": {
+    "next": "Volume Suivant",
+    "previous": "Volume Précédent",
+    "start": "Commencer la lecture",
+    "dialog": {
+      "title": "Navigation",
+      "desc": "Changer de volume rapidement"
+    }
+  },
+  "bookmark": {
+    "title": "Signet",
+    "add": "Ajoutez à votre liste de lecture",
+    "remove": "Retirer de la liste de lecture",
+    "addToast": "Ajouter un signet",
+    "removeToast": "a été retiré de votre liste",
+    "cancel": "Annuler"
+  },
+  "search": {
+    "title": "Recherche"
+  },
+  "profil": {
+    "settings": "Paramètres"
+  },
+  "settings": {
+    "read": {
+      "title": "Lecture",
+      "desc": "Paramètres de lecture"
+    }
+  }
+}

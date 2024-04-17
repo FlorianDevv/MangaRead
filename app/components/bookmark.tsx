@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import MangaCardClient from "./mangaCardClient";
 export default function Bookmark() {
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function Bookmark() {
   return (
     <div className="mx-2">
       <h2 className="flex justify-center items-center text-3xl mb-4 mt-2">
-        Signets
+        {data.bookmark.title}
         <div className="ml-2">
           <BookmarkIcon />
         </div>
@@ -44,7 +46,7 @@ export default function Bookmark() {
                 deleteManga(index);
               }}
               className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
-              title="Supprimer de la liste de lecture"
+              title={data.bookmark.remove}
             >
               <X />
             </button>
@@ -59,6 +61,8 @@ interface ButtonAddBookmarkProps {
 }
 
 export function ButtonAddBookmark({ mangaName }: ButtonAddBookmarkProps) {
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
@@ -75,9 +79,9 @@ export function ButtonAddBookmark({ mangaName }: ButtonAddBookmarkProps) {
       localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
       setIsBookmarked(false);
 
-      toast(`${decodeURIComponent(mangaName)} a été retiré de votre liste`, {
+      toast(`${decodeURIComponent(mangaName)} ${data.bookmark.removeToast}`, {
         action: {
-          label: "Annuler",
+          label: data.bookmark.cancel,
           onClick: () => {
             const bookmarks = JSON.parse(
               localStorage.getItem("bookmarks") || "[]"
@@ -95,27 +99,22 @@ export function ButtonAddBookmark({ mangaName }: ButtonAddBookmarkProps) {
       localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
       setIsBookmarked(true);
 
-      toast(
-        `${decodeURIComponent(
-          mangaName
-        )} a été ajouté à votre liste dans Profil`,
-        {
-          action: {
-            label: "Annuler",
-            onClick: () => {
-              const bookmarks = JSON.parse(
-                localStorage.getItem("bookmarks") || "[]"
-              );
-              const index = bookmarks.indexOf(mangaName);
-              if (index !== -1) {
-                bookmarks.splice(index, 1);
-                localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
-                setIsBookmarked(false);
-              }
-            },
+      toast(`${decodeURIComponent(mangaName)} ${data.bookmark.addToast}`, {
+        action: {
+          label: data.bookmark.cancel,
+          onClick: () => {
+            const bookmarks = JSON.parse(
+              localStorage.getItem("bookmarks") || "[]"
+            );
+            const index = bookmarks.indexOf(mangaName);
+            if (index !== -1) {
+              bookmarks.splice(index, 1);
+              localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+              setIsBookmarked(false);
+            }
           },
-        }
-      );
+        },
+      });
     }
   };
 
@@ -123,9 +122,7 @@ export function ButtonAddBookmark({ mangaName }: ButtonAddBookmarkProps) {
     <div>
       <Button variant="secondary" className="" onClick={handleClick}>
         <BookmarkIcon className="mr-1" />
-        {isBookmarked
-          ? "Retirer de la liste de lecture"
-          : "Ajoutez à votre liste de lecture"}
+        {isBookmarked ? data.bookmark.remove : data.bookmark.add}
       </Button>
     </div>
   );
