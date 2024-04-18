@@ -21,6 +21,9 @@ const nextConfig = {
   },
   env: {
     DEFAULT_LANGUAGE: process.env.DEFAULT_LANGUAGE,
+    MAX_QUALITY: process.env.MAX_QUALITY,
+    MIN_QUALITY: process.env.MIN_QUALITY,
+    DEFAULT_QUALITY: process.env.DEFAULT_QUALITY,
   },
 };
 
