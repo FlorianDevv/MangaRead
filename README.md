@@ -38,11 +38,11 @@ A self-hosted website for reading local manga.
 - Dark mode for OLED screens 🌑
 - Full screen mode using all available space for the images 🖼️
 - Search Bar 🔎
+- English, French and custom language support 🌐
 
 ## Upcoming Features 📅
 
 - .env file for preselected settings ⚙️
-- English and custom language support 🌐
 - Watching anime videos 📺
 - Docker for self-hosting 🐳
 
