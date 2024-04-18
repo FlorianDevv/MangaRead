@@ -32,7 +32,7 @@ export function getSettings() {
   const settings = JSON.parse(localStorage.getItem("settings") || "[]");
   const quality =
     settings.find((setting: { qualityNumber: number }) => setting.qualityNumber)
-      ?.quality || 75;
+      ?.quality || process.env.DEFAULT_QUALITY;
   const read =
     settings.find((setting: { read: string }) => setting.read)?.read ||
     "horizontal";
@@ -84,7 +84,9 @@ export function Quality({
       const qualitySetting = settings.find(
         (setting: any) => "quality" in setting
       );
-      return qualitySetting ? qualitySetting.quality : 75;
+      return qualitySetting
+        ? qualitySetting.quality
+        : process.env.DEFAULT_QUALITY;
     }
     return 75;
   };
@@ -123,6 +125,8 @@ export function Quality({
   }, [initialQualityNumber, setQuality]);
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
+  const maxQuality: number = Number(process.env.MAX_QUALITY);
+  const minQuality: number = Number(process.env.MIN_QUALITY);
   return (
     <div className="flex items-center flex-col ">
       <label
@@ -137,8 +141,8 @@ export function Quality({
       <Slider
         id="quality"
         name="quality"
-        min={1}
-        max={100}
+        min={minQuality}
+        max={maxQuality}
         step={1}
         value={[qualityNumber]}
         onValueChange={(value: number[]) => setQuality(value[0])}
