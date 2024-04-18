@@ -127,11 +127,13 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                   </p>
                   <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
                     <p className="sm:px-2">
-                      Volume{" "}
+                      {data.resume.volume + " "}
                       {decodeURIComponent(mangaInfo.volume).split(" ")[1]}
                     </p>
                     <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">-</p>
-                    <p className="sm:px-2">Page {mangaInfo.page}</p>
+                    <p className="sm:px-2">
+                      {data.resume.page + " "} {mangaInfo.page}
+                    </p>
                   </div>
                   <div className="ml-auto flex flex-col items-center">
                     {mangaInfo.totalVolumes !== undefined && (

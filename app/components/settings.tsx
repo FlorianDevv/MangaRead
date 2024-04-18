@@ -58,11 +58,17 @@ function qualityColor(quality: number) {
 function qualityIndicator(quality: number) {
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
-  if (quality === 100) return "Sans perte";
-  if (quality >= 75) return "Excellent";
-  if (quality >= 50) return "Bon";
-  if (quality >= 25) return "Moyen";
-  return "Faible";
+
+  let qualityMessage;
+  if (quality === 100) qualityMessage = data.settings.qualityIndicator.lossless;
+  else if (quality >= 75)
+    qualityMessage = data.settings.qualityIndicator.excellent;
+  else if (quality >= 50) qualityMessage = data.settings.qualityIndicator.good;
+  else if (quality >= 25)
+    qualityMessage = data.settings.qualityIndicator.average;
+  else qualityMessage = data.settings.qualityIndicator.low;
+
+  return qualityMessage;
 }
 
 export function Quality({
@@ -123,7 +129,7 @@ export function Quality({
         htmlFor="quality"
         className="flex justify-center items-center my-1"
       >
-        Qualité
+        {data.settings.quality.title}
         <div className="ml-1">
           <Star />
         </div>
@@ -199,10 +205,11 @@ export function Read({
   }, [initialIsVertical, setReadMode]);
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
+
   return (
     <div className="flex items-center flex-col ">
       <label htmlFor="read" className="flex items-center justify-center my-1">
-        Lecture{" "}
+        {data.settings.read.reading}{" "}
         <div className="ml-1">
           {isVertical ? <GalleryVertical /> : <GalleryHorizontal />}
         </div>
@@ -216,15 +223,21 @@ export function Read({
           className="p-2 mx-2 text-xs hover:shadow-lg hover:opacity-75 transition-opacity ease-in-out duration-300 focus:outline-none cursor-pointer w-auto"
           aria-label={
             isVertical
-              ? "Changer la lecture en mode horizontal"
-              : "Changer la lecture en mode vertical"
+              ? data.settings.read.changeToHorizontal
+              : data.settings.read.changeToVertical
           }
         >
-          {isVertical ? "Vertical" : "Horizontal"}
+          {isVertical
+            ? data.settings.read.vertical
+            : data.settings.read.horizontal}
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="vertical">Lecture Vertical</SelectItem>
-          <SelectItem value="horizontal">Lecture Horizontal</SelectItem>
+          <SelectItem value="vertical">
+            {data.settings.read.verticalReading}
+          </SelectItem>
+          <SelectItem value="horizontal">
+            {data.settings.read.horizontalReading}
+          </SelectItem>
         </SelectContent>
       </Select>
     </div>
@@ -259,7 +272,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
     >
       <Dialog>
         <DialogTrigger asChild>
-          <Button title="Paramètres">
+          <Button title={data.settings.dialog.button}>
             <Settings />
           </Button>
         </DialogTrigger>
@@ -267,13 +280,13 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
           <DialogHeader>
             <DialogTitle>
               <div className="flex items-center justify-center">
-                Paramètres
+                {data.settings.dialog.settings}
                 <div className="ml-2">
                   <Settings />
                 </div>
               </div>
             </DialogTitle>
-            <DialogDescription>Modifier vos paramètres</DialogDescription>
+            <DialogDescription>{data.settings.dialog.modify}</DialogDescription>
           </DialogHeader>
           <Quality
             qualityNumber={settings?.qualityNumber}

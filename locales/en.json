@@ -1,3 +1,76 @@
 {
-  "allMangasAvailable": "Tous les mangas disponibles"
+  "home": {
+    "allMangasAvailable": "All mangas available"
+  },
+  "navbar": {
+    "home": "Home",
+    "search": "Search",
+    "profil": "Profil"
+  },
+  "carousel": {
+    "read": "Read",
+    "start": "Start reading"
+  },
+  "resume": {
+    "title": "Resume your viewing",
+    "volume": "Volume",
+    "page": "Page"
+  },
+  "volumeSelect": {
+    "next": "Next Volume",
+    "previous": "Previous Volume",
+    "start": "Start reading",
+    "dialog": {
+      "title": "Navigation",
+      "desc": "Change volume quickly"
+    }
+  },
+  "bookmark": {
+    "title": "Bookmark",
+    "add": "Add to your reading list",
+    "remove": "Remove from reading list",
+    "addToast": "Bookmark added",
+    "removeToast": "has been removed from your list",
+    "cancel": "Cancel"
+  },
+  "search": {
+    "title": "Search"
+  },
+  "profil": {
+    "settings": "Settings"
+  },
+  "floatingButton": {
+    "menu": "Menu",
+    "backTop": "Back to top",
+    "home": "Home",
+    "fullScreen": "Full screen"
+  },
+  "settings": {
+    "read": {
+      "title": "Reading",
+      "desc": "Reading settings",
+      "reading": "Reading",
+      "changeToHorizontal": "Change reading to horizontal mode",
+      "changeToVertical": "Change reading to vertical mode",
+      "vertical": "Vertical",
+      "horizontal": "Horizontal",
+      "verticalReading": "Vertical Reading",
+      "horizontalReading": "Horizontal Reading"
+    },
+    "quality": {
+      "title": "Quality"
+    },
+    "qualityIndicator": {
+      "lossless": "Lossless",
+      "excellent": "Excellent",
+      "good": "Good",
+      "average": "Average",
+      "low": "Low"
+    },
+    "dialog": {
+      "button": "Settings",
+      "settings": "Settings",
+      "modify": "Modify your settings"
+    }
+  }
 }

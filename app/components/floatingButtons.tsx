@@ -37,7 +37,8 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
   setIsFullscreen,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   return (
     <>
       <div
@@ -46,7 +47,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
         } ${className}`}
       >
         <Button
-          title="Menu"
+          title={data.floatingButton.menu}
           className={`absolute transition-all duration-300 ease-in-out z-10  ${
             isOpen ? "transform scale-125" : "opacity-80 hover:opacity-100"
           }`}
@@ -56,7 +57,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
         </Button>
 
         <Button
-          title="Retour en haut"
+          title={data.floatingButton.backTop}
           className={`absolute transition-all duration-300 ease-in-out ${
             isOpen ? "opacity-100 transform  -translate-y-32" : "opacity-0"
           }`}
@@ -66,7 +67,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
         </Button>
         <Link href="/">
           <Button
-            title="Accueil"
+            title={data.floatingButton.home}
             className={`absolute transition-all duration-300 ease-in-out ${
               isOpen
                 ? "opacity-100 transform -translate-x-16 -translate-y-32"
@@ -78,7 +79,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
         </Link>
 
         <Button
-          title="Plein écran"
+          title={data.floatingButton.fullScreen}
           className={`absolute transition-all duration-300 ease-in-out ${
             isOpen
               ? "opacity-100 transform -translate-x-32 -translate-y-16"

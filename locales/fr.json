@@ -2,12 +2,19 @@
   "home": {
     "allMangasAvailable": "Tous les mangas disponibles"
   },
+  "navbar": {
+    "home": "Accueil",
+    "search": "Recherche",
+    "profil": "Profil"
+  },
   "carousel": {
     "read": "Lire",
     "start": "Commencer la lecture"
   },
   "resume": {
-    "title": "Reprenez votre visionnage"
+    "title": "Reprenez votre visionnage",
+    "volume": "Volume",
+    "page": "Page"
   },
   "volumeSelect": {
     "next": "Volume Suivant",
@@ -32,10 +39,38 @@
   "profil": {
     "settings": "Paramètres"
   },
+  "floatingButton": {
+    "menu": "Menu",
+    "backTop": "Retour en haut",
+    "home": "Accueil",
+    "fullScreen": "Plein écran"
+  },
   "settings": {
     "read": {
       "title": "Lecture",
-      "desc": "Paramètres de lecture"
+      "desc": "Paramètres de lecture",
+      "reading": "Lecture",
+      "changeToHorizontal": "Changer la lecture en mode horizontal",
+      "changeToVertical": "Changer la lecture en mode vertical",
+      "vertical": "Vertical",
+      "horizontal": "Horizontal",
+      "verticalReading": "Lecture Vertical",
+      "horizontalReading": "Lecture Horizontal"
+    },
+    "quality": {
+      "title": "Qualité"
+    },
+    "qualityIndicator": {
+      "lossless": "Sans perte",
+      "excellent": "Excellent",
+      "good": "Bon",
+      "average": "Moyen",
+      "low": "Faible"
+    },
+    "dialog": {
+      "button": "Paramètres",
+      "settings": "Paramètres",
+      "modify": "Modifier vos paramètres"
     }
   }
 }

@@ -3,12 +3,13 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "./components/navbar";
 import "./globals.css";
+import manifest from "./manifest.json";
 const inter = Inter({ subsets: ["latin"] });
 
-const APP_NAME = "mangaboiboi";
-const APP_DEFAULT_TITLE = "MangaBoiBoi";
-const APP_TITLE_TEMPLATE = "%s | MangaBoiBoi";
-const APP_DESCRIPTION = "mangaBoiBoi";
+const APP_NAME = manifest.name;
+const APP_DEFAULT_TITLE = manifest.short_name;
+const APP_TITLE_TEMPLATE = `%s | ${manifest.short_name}`;
+const APP_DESCRIPTION = manifest.description;
 export const metadata: Metadata = {
   applicationName: APP_NAME,
   title: {
