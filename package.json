@@ -28,6 +28,7 @@
     "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-player": "^2.16.0",
     "sharp": "^0.33.3",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.2",
