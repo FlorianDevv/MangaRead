@@ -18,6 +18,8 @@ export function MobileNavbarComponent({
       ? "flex flex-col items-center text-blue-500 hover:opacity-75 duration-200 ease-in-out transition-opacity "
       : "flex flex-col items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity";
   };
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
 
   return (
     <>
@@ -30,19 +32,19 @@ export function MobileNavbarComponent({
         <Link href="/">
           <div className={linkClass("Home")}>
             <Home />
-            <span className="mt-1 text-xs">Accueil</span>
+            <span className="mt-1 text-xs">{data.navbar.home}</span>
           </div>
         </Link>
         <Link href="/search">
           <div className={linkClass("Search")}>
             <Search />
-            <span className="mt-1 text-xs">Recherche</span>
+            <span className="mt-1 text-xs">{data.navbar.search}</span>
           </div>
         </Link>
         <Link href="/profil">
           <div className={linkClass("Profil")}>
             <CircleUser />
-            <span className="mt-1 text-xs">Profil</span>
+            <span className="mt-1 text-xs">{data.navbar.profil}</span>
           </div>
         </Link>
       </nav>

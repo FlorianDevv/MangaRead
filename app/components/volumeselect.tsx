@@ -78,7 +78,8 @@ export default function VolumeSelect({
   const nextVolumeExists = volumes.some(
     (volume) => formatVolume(volume.name) === nextVolume
   );
-
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   return (
     <div className={`flex flex-wrap items-center justify-center ${className}`}>
       {currentVolume && (
@@ -89,7 +90,7 @@ export default function VolumeSelect({
                 variant="secondary"
                 className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
               >
-                Volume précédent
+                {data.volumeSelect.previous}
               </Button>
             </Link>
           ) : (
@@ -98,7 +99,7 @@ export default function VolumeSelect({
               className="inline-block px-4 py-2 text-center uppercase focus:outline-none opacity-50 cursor-not-allowed"
               onClick={(e) => e.preventDefault()}
             >
-              Volume précédent
+              {data.volumeSelect.previous}
             </Button>
           )}
 
@@ -108,7 +109,7 @@ export default function VolumeSelect({
                 variant="secondary"
                 className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
               >
-                Volume suivant
+                {data.volumeSelect.next}
               </Button>
             </Link>
           ) : (
@@ -117,7 +118,7 @@ export default function VolumeSelect({
               className="inline-block px-4 py-2 text-center uppercase focus:outline-none opacity-50 cursor-not-allowed"
               onClick={(e) => e.preventDefault()}
             >
-              Volume suivant
+              {data.volumeSelect.next}
             </Button>
           )}
         </div>
@@ -155,7 +156,7 @@ export default function VolumeSelect({
               variant="secondary"
               className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
             >
-              Commencer la lecture
+              {data.volumeSelect.start}
             </Button>
           </Link>
         )}
@@ -182,6 +183,8 @@ export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
   isPage,
 }) => {
   const decodedVolume = currentVolume.replace(/\D/g, "");
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
   return (
     <div
       className={`${classNames?.join(" ")} ${
@@ -196,8 +199,10 @@ export const VolumeSelectDialog: React.FC<VolumeSelectDialogProps> = ({
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Navigation</DialogTitle>
-            <DialogDescription>Changer de volume rapidement</DialogDescription>
+            <DialogTitle>{data.volumeSelect.dialog.title}</DialogTitle>
+            <DialogDescription>
+              {data.volumeSelect.dialog.desc}
+            </DialogDescription>
           </DialogHeader>
           <VolumeSelect
             volumes={volumes}

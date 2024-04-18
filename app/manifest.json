@@ -1,14 +1,14 @@
 {
   "background_color": "#000",
   "display": "fullscreen",
-  "name": "Manga BoiBoi",
+  "name": "Manga Reader",
   "orientation": "any",
   "scope": "/",
-  "short_name": "Manga BoiBoi",
+  "short_name": "Manga Reader",
   "start_url": "/",
   "theme_color": "#000",
-  "id": "boiboi",
-  "description": "Manga BoiBoi - pour lire des classiques",
+  "id": "MangaReader",
+  "description": "Manga Reader - custom description",
   "icons": [
     {
       "src": "icons/48.png",

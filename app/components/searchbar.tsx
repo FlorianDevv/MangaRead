@@ -10,6 +10,8 @@ interface SearchBarProps {
 export default function SearchBar({ mangaNames }: SearchBarProps) {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState<string[]>([]);
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
 
   // Update search results when search changes
   useEffect(() => {
@@ -35,9 +37,9 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
     <div className="relative">
       <div className="flex items-center justify-center flex-col lg:mr-8 ">
         <input
-          name="search"
+          name={data.search.title}
           type="search"
-          placeholder="Recherche"
+          placeholder={data.search.title}
           className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600 "
           value={search}
           onChange={(e) => setSearch(e.target.value)}

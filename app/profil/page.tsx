@@ -5,7 +5,8 @@ import Bookmark from "../components/bookmark";
 import { MobileNavbarComponent } from "../components/mobilenavbar";
 import ResumeReading from "../components/resumereading";
 import { Quality, Read } from "../components/settings";
-
+const language = process.env.DEFAULT_LANGUAGE;
+const data = require(`@/locales/${language}.json`);
 export default function Profile() {
   return (
     <MobileNavbarComponent activePage="Profil">
@@ -18,7 +19,7 @@ export default function Profile() {
           <Card className="w-64">
             <CardHeader className="items-center justify-center flex">
               <CardTitle className="flex flex-row">
-                Paramètres <Settings />
+                {data.profil.settings} <Settings />
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 items-center">
