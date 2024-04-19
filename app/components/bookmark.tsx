@@ -14,7 +14,6 @@ export default function Bookmark() {
       localStorage.getItem("bookmarks") || "[]"
     );
     setBookmarks(storedBookmarks);
-    console.log(storedBookmarks);
   }, []);
 
   const deleteManga = (index: number) => {

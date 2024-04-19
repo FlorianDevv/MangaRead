@@ -40,7 +40,7 @@ export default function EpisodeSelect({
   const formatEpisodeNameRoute = (filename: string) => {
     const match = filename.match(/(\d+)-(\d+)\.mp4/);
     if (match) {
-      const [, episode] = match;
+      const [, , episode] = match;
       const episodeNumber = parseInt(episode);
       const formattedEpisodeNumber =
         episodeNumber < 10 ? `0${episodeNumber}` : `${episodeNumber}`;
@@ -48,16 +48,14 @@ export default function EpisodeSelect({
     }
     return filename;
   };
-
   const formatEpisodeName = (filename: string) => {
     const match = filename.match(/(\d+)-(\d+)\.mp4/);
     if (match) {
-      const [episode] = match;
+      const [, , episode] = match;
       return `Episode ${parseInt(episode)}`;
     }
     return filename;
   };
-
   const formatCurrentEpisodeName = (slug: string) => {
     const match = slug.match(/episode(\d+)/i);
     if (match) {
@@ -66,6 +64,10 @@ export default function EpisodeSelect({
     }
     return slug;
   };
+
+  const filteredEpisodes = episodes.filter(
+    (episode) => !episode.name.endsWith(".webp")
+  );
 
   return (
     <Select
@@ -82,7 +84,7 @@ export default function EpisodeSelect({
         {formatCurrentEpisodeName(currentEpisode)}
       </SelectTrigger>
       <SelectContent>
-        {episodes
+        {filteredEpisodes
           .sort((a, b) => {
             const episodeANumber = parseInt(a.name.replace("Episode ", ""));
             const episodeBNumber = parseInt(b.name.replace("Episode ", ""));

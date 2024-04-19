@@ -9,73 +9,102 @@ interface Anime {
 
 export default function Player(anime: Anime) {
   const playerRef = useRef<HTMLVideoElement | null>(null);
-  const lastSeasonRef = useRef(anime.season);
-  const lastEpisodeRef = useRef(anime.episode);
+  const lastAnimeRef = useRef(anime);
+
+  const updateAnimeInfo = useCallback(
+    (
+      animeList: any[],
+      animeIndex: number,
+      savedTime?: number,
+      duration?: string
+    ) => {
+      const currentSavedTime =
+        savedTime !== undefined
+          ? savedTime
+          : animeList[animeIndex]?.savedTime || 0;
+      const currentDuration =
+        duration || animeList[animeIndex]?.duration || "00:00:00";
+      const animeInfo =
+        animeIndex === -1
+          ? {
+              anime: anime.title,
+              season: anime.season,
+              episode: anime.episode,
+              savedTime: currentSavedTime,
+              duration: currentDuration,
+            }
+          : {
+              ...animeList[animeIndex],
+              season: anime.season,
+              episode: anime.episode,
+              savedTime:
+                animeList[animeIndex].season !== lastAnimeRef.current.season ||
+                animeList[animeIndex].episode !== lastAnimeRef.current.episode
+                  ? 0
+                  : currentSavedTime,
+              duration: currentDuration,
+            };
+      if (animeIndex === -1) animeList.push(animeInfo);
+      else animeList[animeIndex] = animeInfo;
+      localStorage.setItem("animeInfo", JSON.stringify(animeList));
+      return animeInfo;
+    },
+    [anime]
+  );
 
   const initializePlayer = useCallback(() => {
     import("plyr").then((Plyr) => {
       if (playerRef.current) {
         const player = new Plyr.default(playerRef.current);
-        let isCurrentTimeSet = false;
 
-        player.on("canplay", () => {
-          if (!isCurrentTimeSet) {
-            const animeInfo = JSON.parse(
-              localStorage.getItem("animeInfo") || "{}"
-            );
-            if (animeInfo.savedTime) {
-              setTimeout(() => {
-                player.currentTime = Number(animeInfo.savedTime);
-              }, 100);
-            } else {
-              setTimeout(() => {
-                player.currentTime = 0;
-              }, 100);
-            }
-
-            isCurrentTimeSet = true;
-          }
+        player.on("loadedmetadata", () => {
+          const duration = new Date(player.duration * 1000)
+            .toISOString()
+            .substr(11, 8);
+          const animeList = JSON.parse(
+            localStorage.getItem("animeInfo") || "[]"
+          );
+          const animeIndex = animeList.findIndex(
+            (a: { anime: string }) => a.anime === anime.title
+          );
+          updateAnimeInfo(animeList, animeIndex, undefined, duration);
         });
 
-        let lastSavedTime = Math.round(player.currentTime);
         player.on("timeupdate", () => {
           const currentSecond = Math.round(player.currentTime);
-          if (currentSecond !== lastSavedTime) {
-            const animeInfo = {
-              anime: anime.title,
-              season: anime.season,
-              episode: anime.episode,
-              savedTime: currentSecond,
-            };
-            localStorage.setItem("animeInfo", JSON.stringify(animeInfo));
-            lastSavedTime = currentSecond;
+          const animeList = JSON.parse(
+            localStorage.getItem("animeInfo") || "[]"
+          );
+          const animeIndex = animeList.findIndex(
+            (a: { anime: string }) => a.anime === anime.title
+          );
+          if (animeIndex !== -1) {
+            updateAnimeInfo(animeList, animeIndex, currentSecond);
           }
         });
       }
     });
-  }, [anime.episode, anime.season, anime.title]);
+  }, [anime.title, updateAnimeInfo]);
+
+  useEffect(() => {
+    const animeList = JSON.parse(localStorage.getItem("animeInfo") || "[]");
+    const animeIndex = animeList.findIndex(
+      (a: { anime: string }) => a.anime === anime.title
+    );
+    if (animeIndex !== -1) {
+      const savedTime = animeList[animeIndex].savedTime;
+      updateAnimeInfo(animeList, animeIndex, savedTime);
+    }
+  }, [anime.episode, anime.season, anime.title, updateAnimeInfo]);
 
   useEffect(() => {
     initializePlayer();
-  }, [anime.episode, anime.season, anime.title, initializePlayer]);
+    lastAnimeRef.current = anime;
+  }, [anime, initializePlayer]);
 
-  useEffect(() => {
-    if (
-      anime.season !== lastSeasonRef.current ||
-      anime.episode !== lastEpisodeRef.current
-    ) {
-      const animeInfo = JSON.parse(localStorage.getItem("animeInfo") || "{}");
-      animeInfo.savedTime = 0;
-      localStorage.setItem("animeInfo", JSON.stringify(animeInfo));
-      initializePlayer();
-    }
-    lastSeasonRef.current = anime.season;
-    lastEpisodeRef.current = anime.episode;
-  }, [anime.season, anime.episode, initializePlayer]);
-
-  const seasonNumber = anime.season.split("season")[1];
-  const episodeNumber = anime.episode.split("episode")[1];
-  const videoSrc = `/${anime.title}/anime/Season${seasonNumber}/${episodeNumber}-001.mp4`;
+  const seasonNumber = anime.season.split("season")[1].padStart(2, "0");
+  const episodeNumber = anime.episode.split("episode")[1].padStart(3, "0");
+  const videoSrc = `/${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`;
 
   return <video ref={playerRef} src={videoSrc} controls />;
 }

@@ -17,7 +17,10 @@ export default function Page({
 
   return (
     <MobileNavbarComponent>
-      <div>
+      <div className="flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-bold">{params.slug}</h2>
+        <p className="text-lg">{params.season}</p>
+        <p className="text-lg">{params.episode}</p>
         <EpisodeSelect
           episodes={episodes}
           slug={params.slug}

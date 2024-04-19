@@ -1,7 +1,6 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Settings } from "lucide-react";
-import Link from "next/link";
 import Bookmark from "../components/bookmark";
 import { MobileNavbarComponent } from "../components/mobilenavbar";
 import ResumeReading from "../components/resumereading";
@@ -12,11 +11,6 @@ const data = require(`@/locales/${language}.json`);
 export default function Profile() {
   return (
     <MobileNavbarComponent activePage="Profil">
-      <div className="flex justify-center items-center  mb-4 mt-8 ">
-        <Link href="/anime/example/season01/episode01/">
-          <p> TEST</p>
-        </Link>
-      </div>
       <div className="lg:mx-48 md:mx-24">
         <ResumeReading />
         <hr className="my-8" />

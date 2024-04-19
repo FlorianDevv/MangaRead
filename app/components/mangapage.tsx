@@ -233,7 +233,7 @@ export default function MangaPage({
           <div className="relative min-h-screen w-screen mt-2">
             {!isVertical && (
               <Image
-                src={`/${slug}/${volume}/${imageName}.webp`}
+                src={`/${slug}/manga/${volume}/${imageName}.webp`}
                 alt={`${slug} Page ${pageNumber}`}
                 style={{ objectFit: "contain" }}
                 sizes="125vw"
@@ -251,7 +251,7 @@ export default function MangaPage({
             {nextPageExists && !isVertical && (
               <>
                 <Image
-                  src={`/${slug}/${volume}/${nextImageName}.webp`}
+                  src={`/${slug}/manga/${volume}/${nextImageName}.webp`}
                   alt={`${slug} Page ${pageNumber + 1}`}
                   style={{ objectFit: "contain" }}
                   sizes="125vw"
@@ -275,7 +275,7 @@ export default function MangaPage({
                     >
                       <Image
                         id={`image-${index}`}
-                        src={`/${slug}/${volume}/${imageName}.webp`}
+                        src={`/${slug}/manga/${volume}/${imageName}.webp`}
                         alt={`${slug} Page ${index + 1}`}
                         width={3840}
                         height={2160}

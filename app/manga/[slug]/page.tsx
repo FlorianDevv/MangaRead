@@ -24,7 +24,18 @@ type Season = {
 
 export default function Page({ params }: { params: { slug: string } }) {
   const decodedSlug = decodeURIComponent(params.slug);
-  const mangaDirectory = path.join(process.cwd(), "public", decodedSlug);
+  const mangaDirectory = path.join(
+    process.cwd(),
+    "public",
+    decodedSlug,
+    "manga"
+  );
+  const animeDirectory = path.join(
+    process.cwd(),
+    "public",
+    decodedSlug,
+    "anime"
+  );
 
   let synopsis: string | undefined;
   const synopsisPath = path.join(mangaDirectory, "resume.json");
@@ -51,7 +62,6 @@ export default function Page({ params }: { params: { slug: string } }) {
   const manga: Manga = { synopsis };
 
   // Check if anime directory exists
-  const animeDirectory = path.join(mangaDirectory, "anime");
   const isAnimeDirectoryExists = fs.existsSync(animeDirectory);
   const seasons: Season[] = fs
     .readdirSync(decodeURIComponent(animeDirectory))

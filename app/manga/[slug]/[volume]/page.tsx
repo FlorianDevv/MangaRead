@@ -21,7 +21,8 @@ export default function Page({
   const mangaDirectory = path.join(
     process.cwd(),
     "public",
-    decodeURIComponent(params.slug)
+    decodeURIComponent(params.slug),
+    "manga"
   );
   const volumes: Volume[] = fs
     .readdirSync(mangaDirectory)
@@ -50,6 +51,7 @@ export default function Page({
     process.cwd(),
     "public",
     params.slug,
+    "manga",
     decodedVolume
   );
   const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
