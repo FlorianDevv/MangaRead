@@ -7,7 +7,7 @@ export default function MangaCard({ mangaName }: { mangaName: string }) {
       <Link key={mangaName} href={`/manga/${mangaName}`}>
         <div className="flex flex-col items-stretch">
           <DynamicBlur
-            src={`/${mangaName}/Tome 01/01-001.webp`}
+            src={`/${mangaName}/manga/Tome 01/01-001.webp`}
             alt={mangaName}
             className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
           />

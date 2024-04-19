@@ -112,7 +112,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
               >
                 <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
                   <Image
-                    src={`/${mangaInfo.manga}/Tome 01/01-001.webp`}
+                    src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
                     alt={mangaInfo.manga}
                     quality={1}
                     fill

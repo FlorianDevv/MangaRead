@@ -5,6 +5,7 @@ import ResumeReading from "@/app/components/resumereading";
 import VolumeSelect from "@/app/components/volumeselect";
 import fs from "fs";
 import Image from "next/image";
+import Link from "next/link";
 import path from "path";
 
 type Volume = {
@@ -15,6 +16,10 @@ type Volume = {
 type Manga = {
   synopsis?: string;
   banner?: string;
+};
+
+type Season = {
+  name: string;
 };
 
 export default function Page({ params }: { params: { slug: string } }) {
@@ -45,6 +50,21 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   const manga: Manga = { synopsis };
 
+  // Check if anime directory exists
+  const animeDirectory = path.join(mangaDirectory, "anime");
+  const isAnimeDirectoryExists = fs.existsSync(animeDirectory);
+  const seasons: Season[] = fs
+    .readdirSync(decodeURIComponent(animeDirectory))
+    .map((season) => {
+      const seasonDirectory = path.join(animeDirectory, season);
+      if (
+        fs.existsSync(decodeURIComponent(seasonDirectory)) &&
+        fs.lstatSync(decodeURIComponent(seasonDirectory)).isDirectory()
+      ) {
+        return { name: season };
+      }
+    })
+    .filter(Boolean) as Season[];
   return (
     <MobileNavbarComponent>
       <h1 className="text-center items-center justify-center text-2xl lg:text-4xl mt-5 mb:mb-3">
@@ -53,7 +73,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       <div className="flex flex-wrap lg:flex-nowrap justify-center text-white ">
         <div className="w-80  my-8 items-center justify-center flex flex-col space-y-4">
           <Image
-            src={`/${params.slug}/Tome 01/01-001.webp`}
+            src={`/${params.slug}/manga/Tome 01/01-001.webp`}
             alt={`${params.slug}`}
             quality={1}
             width={500}
@@ -63,6 +83,11 @@ export default function Page({ params }: { params: { slug: string } }) {
             sizes="70vw"
           />
           <ButtonAddBookmark mangaName={params.slug} />
+          {isAnimeDirectoryExists && (
+            <Link href={`/anime/${params.slug}/season01/episode01`}>
+              <p className="btn">Go to Anime</p>
+            </Link>
+          )}
         </div>
 
         <div className="w-full lg:w-1/2 lg:flex lg:flex-row justify-center items-center text-center lg:ml-8 space-y-6 lg:space-y-0 mx-4">

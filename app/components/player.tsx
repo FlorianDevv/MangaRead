@@ -3,14 +3,14 @@ import { useCallback, useEffect, useRef } from "react";
 
 interface Anime {
   title: string;
-  episodes: number;
-  season: number;
+  episode: string;
+  season: string;
 }
 
 export default function Player(anime: Anime) {
   const playerRef = useRef<HTMLVideoElement | null>(null);
   const lastSeasonRef = useRef(anime.season);
-  const lastEpisodeRef = useRef(anime.episodes);
+  const lastEpisodeRef = useRef(anime.episode);
 
   const initializePlayer = useCallback(() => {
     import("plyr").then((Plyr) => {
@@ -44,7 +44,7 @@ export default function Player(anime: Anime) {
             const animeInfo = {
               anime: anime.title,
               season: anime.season,
-              episode: anime.episodes,
+              episode: anime.episode,
               savedTime: currentSecond,
             };
             localStorage.setItem("animeInfo", JSON.stringify(animeInfo));
@@ -53,17 +53,16 @@ export default function Player(anime: Anime) {
         });
       }
     });
-  }, [anime.episodes, anime.season, anime.title]);
+  }, [anime.episode, anime.season, anime.title]);
 
   useEffect(() => {
     initializePlayer();
-  }, [anime.episodes, anime.season, anime.title, initializePlayer]);
+  }, [anime.episode, anime.season, anime.title, initializePlayer]);
 
-  // Ajoutez un effet secondaire pour réinitialiser savedTime lorsque la saison ou l'épisode change
   useEffect(() => {
     if (
       anime.season !== lastSeasonRef.current ||
-      anime.episodes !== lastEpisodeRef.current
+      anime.episode !== lastEpisodeRef.current
     ) {
       const animeInfo = JSON.parse(localStorage.getItem("animeInfo") || "{}");
       animeInfo.savedTime = 0;
@@ -71,20 +70,12 @@ export default function Player(anime: Anime) {
       initializePlayer();
     }
     lastSeasonRef.current = anime.season;
-    lastEpisodeRef.current = anime.episodes;
-  }, [anime.season, anime.episodes, initializePlayer]);
+    lastEpisodeRef.current = anime.episode;
+  }, [anime.season, anime.episode, initializePlayer]);
 
-  return (
-    <>
-      <p>{anime.title}</p>
-      <p>{anime.episodes}</p>
-      <p>{anime.season}</p>
-      <p>Player</p>
-      <video
-        ref={playerRef}
-        src="https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4"
-        controls
-      />
-    </>
-  );
+  const seasonNumber = anime.season.split("season")[1];
+  const episodeNumber = anime.episode.split("episode")[1];
+  const videoSrc = `/${anime.title}/anime/Season${seasonNumber}/${episodeNumber}-001.mp4`;
+
+  return <video ref={playerRef} src={videoSrc} controls />;
 }
