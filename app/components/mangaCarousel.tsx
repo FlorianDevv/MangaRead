@@ -27,14 +27,14 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
     <section className="mx-auto">
       <div className="overflow-hidden" ref={emblaRef}>
         <div
-          className="flex ml-[-1rem] backface-hidden touch-action[pan-y]"
+          className="flex"
           style={{ backfaceVisibility: "hidden", touchAction: "pan-y" }}
         >
           {mangaDetails.map((mangaDetail) => (
             <div
-              className="flex-none pl-4 min-w-0 "
+              className="flex-none pl-4 min-w-0"
               key={mangaDetail.name}
-              style={{ flex: "0 0 100%" }}
+              style={{ flex: "0 0 100%", minWidth: "0" }}
             >
               <div className="relative w-full h-[19rem] overflow-hidden flex">
                 <Image
@@ -54,18 +54,17 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                   <p className="text-lg text-gray-100 font-normal">
                     {mangaDetail.volume} Volumes
                   </p>
-                  <Link
-                    href={`/manga/${mangaDetail.name}`}
-                    className="space-x-2"
-                  >
-                    <Button>
-                      <BookOpen className="mr-2" />
-                      <span className="sm:hidden">{data.carousel.read}</span>
-                      <span className="hidden sm:block">
-                        {data.carousel.start}
-                      </span>
-                    </Button>
-                  </Link>
+                  <div>
+                    <Link href={`/manga/${mangaDetail.name}`}>
+                      <Button>
+                        <BookOpen className="mr-2" />
+                        <span className="sm:hidden">{data.carousel.read}</span>
+                        <span className="hidden sm:block">
+                          {data.carousel.start}
+                        </span>
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
                 <div className="relative w-56 flex justify-end items-end xl:ml-20">
                   <Image

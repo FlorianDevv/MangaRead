@@ -6,16 +6,6 @@ import { Suspense } from "react";
 import MangaCard from "./components/mangaCard";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
-interface MangaCardProps {
-  mangaDetail: {
-    name: string;
-    synopsis: string | undefined;
-    volume: number;
-    type: "manga" | "anime" | "both";
-  };
-}
-// ...
-
 // Load the Carousel component asynchronously
 const Carousel = dynamic(() => import("./components/mangaCarousel"));
 
@@ -28,20 +18,22 @@ export default function Home() {
 
   const mangaDetails = mangaNames.map((name) => {
     const itemPath = path.join(mangaDirectory, name);
+    // Check if it's a manga, an anime or both
+    const isManga = fs.existsSync(path.join(itemPath, "manga"));
+    const isAnime = fs.existsSync(path.join(itemPath, "anime"));
+    let type: "manga" | "anime" | "both";
+
     let synopsis: string | undefined;
     const synopsisPath = path.join(itemPath, "resume.json");
     if (fs.existsSync(synopsisPath)) {
       synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
     }
-    const volume = fs.readdirSync(itemPath).filter((volume) => {
-      const volumePath = path.join(itemPath, volume);
-      return fs.lstatSync(volumePath).isDirectory();
-    }).length;
-
-    // Check if it's a manga, an anime or both
-    const isManga = fs.existsSync(path.join(itemPath, "manga"));
-    const isAnime = fs.existsSync(path.join(itemPath, "anime"));
-    let type: "manga" | "anime" | "both";
+    const volume = isManga
+      ? fs.readdirSync(path.join(itemPath, "manga")).filter((volume) => {
+          const volumePath = path.join(itemPath, "manga", volume);
+          return fs.lstatSync(volumePath).isDirectory();
+        }).length
+      : 0;
     if (isManga && isAnime) {
       type = "both";
     } else if (isManga) {
