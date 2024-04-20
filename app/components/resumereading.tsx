@@ -84,24 +84,21 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
       new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
   );
 
-  const deleteManga = (index: number) => {
+  const deleteManga = (mangaName: string) => {
     setState((prevState) => {
-      const newState = [...prevState];
-      newState.splice(index, 1);
+      const newState = prevState.filter((manga) => manga.manga !== mangaName);
       localStorage.setItem("mangaInfo", JSON.stringify(newState));
       return newState;
     });
   };
 
-  const deleteAnime = (index: number) => {
+  const deleteAnime = (animeName: string) => {
     setAnimeState((prevState) => {
-      const newState = [...prevState];
-      newState.splice(index, 1);
+      const newState = prevState.filter((anime) => anime.anime !== animeName);
       localStorage.setItem("animeInfo", JSON.stringify(newState));
       return newState;
     });
   };
-
   const calculateProgress = useMemo(() => {
     return (mangaInfo: MangaInfo) => {
       const currentVolumeNumber = parseInt(
@@ -224,7 +221,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteManga(index);
+                      deleteManga(item.manga);
                     }}
                     className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
                     title="Supprimer de la liste de lecture"
@@ -303,7 +300,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteAnime(index);
+                      deleteAnime(item.anime);
                     }}
                     className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
                     title="Supprimer de la liste de lecture"
