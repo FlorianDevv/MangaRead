@@ -1,6 +1,6 @@
 // app/manga/[slug]/[volume]/page.tsx
 import CheckPage from "@/app/components/checkpage";
-import VolumeSelect from "@/app/components/volumeselect";
+import VolumeSelect from "@/app/components/select/volumeselect";
 import "@/app/mangapage.css";
 // import "@/app/noscrollbar.css";
 import fs from "fs";

@@ -11,6 +11,7 @@ interface MangaInfo {
   volume: string;
   page: number;
   totalVolumes: number;
+  dateWatched: number;
 }
 
 interface AnimeInfo {
@@ -19,6 +20,7 @@ interface AnimeInfo {
   episode: string;
   savedTime: number;
   duration: string;
+  dateWatched: number;
 }
 interface ResumeReadingProps {
   mangaName?: string;
@@ -34,7 +36,10 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   useEffect(() => {
     const storedState = localStorage.getItem("mangaInfo");
     if (storedState) {
-      const parsedState = JSON.parse(storedState);
+      const parsedState = JSON.parse(storedState).map((item: MangaInfo) => ({
+        ...item,
+        dateWatched: new Date(item.dateWatched),
+      }));
       if (mangaName) {
         const filteredState = parsedState.filter(
           (manga: MangaInfo) => manga.manga === mangaName
@@ -46,11 +51,38 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
     }
     const storedAnimeState = localStorage.getItem("animeInfo");
     if (storedAnimeState) {
-      const parsedAnimeState = JSON.parse(storedAnimeState);
-      setAnimeState(parsedAnimeState);
+      const parsedAnimeState = JSON.parse(storedAnimeState).map(
+        (item: AnimeInfo) => ({
+          ...item,
+          dateWatched: new Date(item.dateWatched),
+        })
+      );
+      if (mangaName) {
+        const filteredAnimeState = parsedAnimeState.filter(
+          (anime: AnimeInfo) => anime.anime === mangaName
+        );
+        setAnimeState(filteredAnimeState);
+      } else {
+        setAnimeState(parsedAnimeState);
+      }
     }
+
     setIsLoading(false);
   }, [mangaName]);
+
+  const sortedMangaState = [...state].sort(
+    (a, b) =>
+      new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
+  );
+  const sortedAnimeState = [...animeState].sort(
+    (a, b) =>
+      new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
+  );
+
+  const combinedState = [...sortedMangaState, ...sortedAnimeState].sort(
+    (a, b) =>
+      new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
+  );
 
   const deleteManga = (index: number) => {
     setState((prevState) => {
@@ -128,136 +160,161 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
         </div>
       </h2>
       <div className="flex overflow-x-scroll  hover:cursor-default overflow-y-hidden">
-        {state.map((mangaInfo, index) => (
-          <div
-            key={index}
-            className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
-          >
-            <div className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  transition-transform duration-300">
-              <Link
+        {combinedState.map((item, index) => {
+          if ("manga" in item) {
+            const mangaInfo = item as MangaInfo;
+            return (
+              <div
                 key={index}
-                href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
-                className="hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
+                className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
               >
-                <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
-                  <Image
-                    src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
-                    alt={mangaInfo.manga}
-                    quality={1}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
-                    className="transition-all duration-500 ease-in-out transform"
-                  />
-                </div>
-                <div className="flex-grow p-2">
-                  <p className="text-sm text-white overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
-                    {decodeURIComponent(mangaInfo.manga)}
-                  </p>
-                  <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
-                    <p className="sm:px-2">
-                      {data.resume.volume + " "}
-                      {decodeURIComponent(mangaInfo.volume).split(" ")[1]}
-                    </p>
-                    <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">-</p>
-                    <p className="sm:px-2">
-                      {data.resume.page + " "} {mangaInfo.page}
-                    </p>
-                  </div>
-                </div>
-                <div className="ml-auto flex flex-col items-center">
-                  {mangaInfo.totalVolumes !== undefined && (
-                    <>
-                      <Progress
-                        value={calculateProgress(mangaInfo)}
-                        aria-label="Reading progress"
+                <div className="flex flex-col   overflow-hidden ">
+                  <Link
+                    key={index}
+                    href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
+                    className="hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
+                  >
+                    <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
+                      <Image
+                        src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
+                        alt={mangaInfo.manga}
+                        quality={1}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
+                        className="transition-all duration-500 ease-in-out transform"
                       />
-                      <p className="mt-2 text-gray-200 text-sm sm:px-2">
-                        {`${
-                          decodeURIComponent(mangaInfo.volume).split(" ")[1]
-                        } / ${mangaInfo.totalVolumes}`}
+                      <div className="absolute bottom-2 left-2 bg-blue-900 text-white text-xs px-2 py-1 rounded">
+                        Manga
+                      </div>
+                    </div>
+                    <div className="flex-grow p-2">
+                      <p className="text-sm text-white overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
+                        {decodeURIComponent(mangaInfo.manga)}
                       </p>
-                    </>
-                  )}
+                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
+                        <p className="sm:px-2">
+                          {data.resume.volume + " "}
+                          {decodeURIComponent(mangaInfo.volume).split(" ")[1]}
+                        </p>
+                        <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">
+                          -
+                        </p>
+                        <p className="sm:px-2">
+                          {data.resume.page + " "} {mangaInfo.page}
+                        </p>
+                      </div>
+                    </div>
+                    <div className=" flex flex-col items-center mx-4">
+                      {mangaInfo.totalVolumes !== undefined && (
+                        <>
+                          <Progress
+                            value={calculateProgress(mangaInfo)}
+                            aria-label="Reading progress"
+                          />
+                          <p className="my-2 text-gray-200 text-sm sm:px-2">
+                            {`${
+                              decodeURIComponent(mangaInfo.volume).split(" ")[1]
+                            } / ${mangaInfo.totalVolumes}`}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  </Link>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteManga(index);
+                    }}
+                    className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
+                    title="Supprimer de la liste de lecture"
+                  >
+                    <X />
+                  </button>
                 </div>
-              </Link>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteManga(index);
-                }}
-                className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
-                title="Supprimer de la liste de lecture"
-              >
-                <X />
-              </button>
-            </div>
-          </div>
-        ))}
-        {animeState.map((animeInfo, index) => (
-          <div
-            key={index}
-            className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
-          >
-            <div className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  transition-transform duration-300">
-              <Link
+              </div>
+            );
+          } else {
+            const animeInfo = item as AnimeInfo;
+            return (
+              <div
                 key={index}
-                href={`/anime/${animeInfo.anime}/${animeInfo.season}/${animeInfo.episode}`}
-                className="hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
+                className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
               >
-                <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
-                  <Image
-                    src={`/${animeInfo.anime}/anime/Season01/01-001.webp`}
-                    alt={animeInfo.anime}
-                    quality={1}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
-                    className="transition-all duration-500 ease-in-out transform"
-                  />
+                <div className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  transition-transform duration-300">
+                  <Link
+                    key={index}
+                    href={`/anime/${animeInfo.anime}/${animeInfo.season}/${animeInfo.episode}`}
+                    className="hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
+                  >
+                    <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
+                      <Image
+                        src={`/${animeInfo.anime}/anime/Season01/01-001.webp`}
+                        alt={animeInfo.anime}
+                        quality={1}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
+                        className="transition-all duration-500 ease-in-out transform"
+                      />
+                      <div className="absolute bottom-2 left-2 bg-red-900 text-white text-xs px-2 py-1 rounded">
+                        Anime
+                      </div>
+                    </div>
+                    <div className="flex-grow p-2">
+                      <p className="text-sm text-white overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
+                        {decodeURIComponent(animeInfo.anime)}
+                      </p>
+                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
+                        <p className="sm:px-2">
+                          {data.episodeSelect.episode +
+                            " " +
+                            animeInfo.season.split("season")[1]}
+                        </p>
+                        <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">
+                          -
+                        </p>
+                        <p className="sm:px-2">
+                          {data.seasonSelect.season +
+                            " " +
+                            animeInfo.episode.split("episode")[1]}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mx-4 flex flex-col items-center">
+                      <Progress
+                        value={calculateAnimeProgress(animeInfo)}
+                        aria-label="Watching progress"
+                      />
+                      <p className="my-2 text-gray-200 text-sm sm:px-2">
+                        {`-${new Date(
+                          (animeInfo.duration
+                            .split(":")
+                            .reduce((acc, time) => 60 * acc + +time, 0) -
+                            animeInfo.savedTime) *
+                            1000
+                        )
+                          .toISOString()
+                          .substr(11, 8)
+                          .replace(/^00:/, "")}`}
+                      </p>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteAnime(index);
+                    }}
+                    className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
+                    title="Supprimer de la liste de lecture"
+                  >
+                    <X />
+                  </button>
                 </div>
-                <div className="flex-grow p-2">
-                  <p className="text-sm text-white overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
-                    {decodeURIComponent(animeInfo.anime)}
-                  </p>
-                  <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
-                    <p className="sm:px-2">{animeInfo.season}</p>
-                    <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">-</p>
-                    <p className="sm:px-2">{animeInfo.episode}</p>
-                  </div>
-                </div>
-                <div className="ml-auto flex flex-col items-center">
-                  <Progress
-                    value={calculateAnimeProgress(animeInfo)}
-                    aria-label="Watching progress"
-                  />
-                  <p className="mt-2 text-gray-200 text-sm sm:px-2">
-                    {`-${new Date(
-                      (animeInfo.duration
-                        .split(":")
-                        .reduce((acc, time) => 60 * acc + +time, 0) -
-                        animeInfo.savedTime) *
-                        1000
-                    )
-                      .toISOString()
-                      .substr(11, 8)
-                      .replace(/^00:/, "")}`}
-                  </p>
-                </div>
-              </Link>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  deleteAnime(index);
-                }}
-                className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
-                title="Supprimer de la liste de lecture"
-              >
-                <X />
-              </button>
-            </div>
-          </div>
-        ))}
+              </div>
+            );
+          }
+        })}
       </div>
     </div>
   );

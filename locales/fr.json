@@ -1,6 +1,6 @@
 {
   "home": {
-    "allMangasAvailable": "Tous les mangas disponibles"
+    "allMangasAvailable": "Tous les mangas/animes disponibles"
   },
   "navbar": {
     "home": "Accueil",
@@ -25,13 +25,24 @@
       "desc": "Changer de volume rapidement"
     }
   },
+  "episodeSelect": {
+    "episode": "Épisode",
+    "next": "Épisode Suivant",
+    "previous": "Épisode Précédent"
+  },
+  "seasonSelect": {
+    "season": "Saison",
+    "next": "Saison Suivante",
+    "previous": "Saison Précédente"
+  },
   "bookmark": {
     "title": "Signet",
     "add": "Ajoutez à votre liste de lecture",
     "remove": "Retirer de la liste de lecture",
     "addToast": "Ajouter un signet",
     "removeToast": "a été retiré de votre liste",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "empty": "Votre liste de lecture est vide"
   },
   "search": {
     "title": "Recherche"

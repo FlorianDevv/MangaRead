@@ -32,6 +32,7 @@ export default function Player(anime: Anime) {
               episode: anime.episode,
               savedTime: currentSavedTime,
               duration: currentDuration,
+              dateWatched: Date.now(),
             }
           : {
               ...animeList[animeIndex],
@@ -43,6 +44,7 @@ export default function Player(anime: Anime) {
                   ? 0
                   : currentSavedTime,
               duration: currentDuration,
+              dateWatched: Date.now(),
             };
       if (animeIndex === -1) animeList.push(animeInfo);
       else animeList[animeIndex] = animeInfo;
@@ -67,7 +69,15 @@ export default function Player(anime: Anime) {
           const animeIndex = animeList.findIndex(
             (a: { anime: string }) => a.anime === anime.title
           );
-          updateAnimeInfo(animeList, animeIndex, undefined, duration);
+          const animeInfo = updateAnimeInfo(
+            animeList,
+            animeIndex,
+            undefined,
+            duration
+          );
+          if (animeIndex !== -1) {
+            player.currentTime = animeInfo.savedTime;
+          }
         });
 
         player.on("timeupdate", () => {

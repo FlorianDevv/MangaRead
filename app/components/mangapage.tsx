@@ -127,13 +127,6 @@ export default function MangaPage({
   }, [nextPageExists, previousPage, nextPage, isVertical]);
   const totalVolumes = volumes.length;
   useEffect(() => {
-    const mangaInfo = {
-      manga: slug,
-      volume: volume,
-      page: pageNumber,
-      totalVolumes: totalVolumes,
-    };
-
     let existingMangaInfo = JSON.parse(
       localStorage.getItem("mangaInfo") || "[]"
     );
@@ -146,13 +139,21 @@ export default function MangaPage({
       (info: { manga: string }) => info.manga === slug
     );
 
+    const mangaInfo = {
+      manga: slug,
+      volume: volume,
+      page: pageNumber,
+      totalVolumes: totalVolumes,
+      dateWatched:
+        existingMangaInfo[existingMangaIndex]?.dateWatched || Date.now(),
+    };
+
     if (existingMangaIndex !== -1) {
       existingMangaInfo[existingMangaIndex] = mangaInfo;
     } else {
       existingMangaInfo.push(mangaInfo);
     }
 
-    // Stocker le tableau à nouveau
     localStorage.setItem("mangaInfo", JSON.stringify(existingMangaInfo));
   }, [slug, volume, pageNumber, totalVolumes]);
 

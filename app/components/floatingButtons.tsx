@@ -3,8 +3,8 @@ import { Home, Menu, MoveUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Fullscreen } from "./mangapage";
+import { VolumeSelectDialog } from "./select/volumeselect";
 import { SettingsDialog } from "./settings";
-import { VolumeSelectDialog } from "./volumeselect";
 
 type Volume = {
   name: string;
