@@ -13,12 +13,25 @@ export default function Page({
   //use fs to get the list of episodes
   const episodes = fs
     .readdirSync(
-      path.join(process.cwd(), "public", params.slug, "anime", params.season)
+      path.join(
+        process.cwd(),
+        "public",
+        decodeURIComponent(params.slug),
+        "anime",
+        params.season
+      )
     )
     .map((episodeName: string) => ({ name: episodeName }));
 
   const seasons = fs
-    .readdirSync(path.join(process.cwd(), "public", params.slug, "anime"))
+    .readdirSync(
+      path.join(
+        process.cwd(),
+        "public",
+        decodeURIComponent(params.slug),
+        "anime"
+      )
+    )
     .map((seasonName: string) => ({ name: seasonName }));
 
   return (

@@ -32,6 +32,9 @@ export default function EpisodeSelect({
 
   const handleChange = (value: string) => {
     const episode = episodes.find((episode) => episode.name === value);
+    if (!isPage) {
+      season = "season01";
+    }
     if (episode) {
       const formattedName = formatEpisodeNameRoute(episode.name);
       setSelectedEpisode(formattedName);
