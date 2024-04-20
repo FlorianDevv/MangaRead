@@ -38,7 +38,7 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
             >
               <div className="relative w-full h-[19rem] overflow-hidden flex">
                 <Image
-                  src={`/${mangaDetail.name}/Tome 01/01-001.webp`}
+                  src={`/${mangaDetail.name}/manga/Tome 01/01-001.webp`}
                   alt={"cover image"}
                   className="absolute w-full h-full object-cover opacity-25 z-0"
                   fill
@@ -69,7 +69,7 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                 </div>
                 <div className="relative w-56 flex justify-end items-end xl:ml-20">
                   <Image
-                    src={`/${mangaDetail.name}/Tome 01/01-001.webp`}
+                    src={`/${mangaDetail.name}/manga/Tome 01/01-001.webp`}
                     alt={"cover image"}
                     className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125"
                     quality={1}

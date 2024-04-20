@@ -1,6 +1,6 @@
 {
   "home": {
-    "allMangasAvailable": "All mangas available"
+    "allMangasAvailable": "All mangas/animes available"
   },
   "navbar": {
     "home": "Home",
@@ -25,13 +25,24 @@
       "desc": "Change volume quickly"
     }
   },
+  "episodeSelect": {
+    "episode": "Episode",
+    "next": "Next episode",
+    "previous": "Previous episode"
+  },
+  "seasonSelect": {
+    "season": "Season",
+    "next": "Next Season",
+    "previous": "Previous Season"
+  },
   "bookmark": {
     "title": "Bookmark",
     "add": "Add to your reading list",
     "remove": "Remove from reading list",
     "addToast": "Bookmark added",
     "removeToast": "has been removed from your list",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "empty": "Your reading list is empty"
   },
   "search": {
     "title": "Search"

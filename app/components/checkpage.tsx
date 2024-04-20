@@ -50,6 +50,7 @@ export default function CheckPage({
     if (mangaInfoIndex !== -1) {
       const updatedMangaInfo = mangaInfos[mangaInfoIndex];
       updatedMangaInfo.totalVolumes = totalVolumes;
+      updatedMangaInfo.dateWatched = Date.now();
       mangaInfos = mangaInfos.filter(
         (_: any, index: number) => index !== mangaInfoIndex
       );
@@ -60,10 +61,11 @@ export default function CheckPage({
         volume: volume,
         page: initialPageNumber,
         totalVolumes: totalVolumes,
+        dateWatched: Date.now(),
       });
     }
 
-    mangaInfos = mangaInfos.reverse(); // Reverse the order of the array
+    mangaInfos = mangaInfos.reverse();
 
     localStorage.setItem("mangaInfo", JSON.stringify(mangaInfos));
   }, [initialPageNumber, slug, volume, volumes]);

@@ -14,7 +14,6 @@ export default function Bookmark() {
       localStorage.getItem("bookmarks") || "[]"
     );
     setBookmarks(storedBookmarks);
-    console.log(storedBookmarks);
   }, []);
 
   const deleteManga = (index: number) => {
@@ -25,7 +24,7 @@ export default function Bookmark() {
   };
 
   if (!bookmarks.length) {
-    return null;
+    return <p className="mx-2 text-center italic">{data.bookmark.empty}</p>;
   }
 
   return (

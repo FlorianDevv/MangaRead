@@ -7,7 +7,7 @@ export default function MangaCardClient({ mangaName }: { mangaName: string }) {
       <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 shine">
         <Link href={`/manga/${mangaName}`}>
           <Image
-            src={`/${mangaName}/Tome 01/01-001.webp`}
+            src={`/${mangaName}/manga/Tome 01/01-001.webp`}
             alt={mangaName}
             style={{ objectFit: "cover" }}
             quality={1}

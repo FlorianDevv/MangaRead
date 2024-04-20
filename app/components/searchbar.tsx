@@ -58,7 +58,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
                 >
                   <div className="transition-all duration-200 transform group-hover:opacity-50 group-hover:scale-110">
                     <Image
-                      src={`/${result}/Tome 01/01-001.webp`}
+                      src={`/${result}/manga/Tome 01/01-001.webp`}
                       alt={result}
                       width={60}
                       height={60}

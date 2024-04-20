@@ -7,6 +7,7 @@ import ResumeReading from "../components/resumereading";
 import { Quality, Read } from "../components/settings";
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
+
 export default function Profile() {
   return (
     <MobileNavbarComponent activePage="Profil">

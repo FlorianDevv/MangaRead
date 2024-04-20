@@ -6,7 +6,14 @@ import { Suspense } from "react";
 import MangaCard from "./components/mangaCard";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
-
+interface MangaCardProps {
+  mangaDetail: {
+    name: string;
+    synopsis: string | undefined;
+    volume: number;
+    type: "manga" | "anime" | "both";
+  };
+}
 // ...
 
 // Load the Carousel component asynchronously
@@ -31,7 +38,19 @@ export default function Home() {
       return fs.lstatSync(volumePath).isDirectory();
     }).length;
 
-    return { name, synopsis, volume };
+    // Check if it's a manga, an anime or both
+    const isManga = fs.existsSync(path.join(itemPath, "manga"));
+    const isAnime = fs.existsSync(path.join(itemPath, "anime"));
+    let type: "manga" | "anime" | "both";
+    if (isManga && isAnime) {
+      type = "both";
+    } else if (isManga) {
+      type = "manga";
+    } else {
+      type = "anime";
+    }
+
+    return { name, synopsis, volume, type };
   });
 
   // Write the mangaNames array to a JSON file
@@ -48,16 +67,21 @@ export default function Home() {
   }
   shuffleArray(mangaNames);
 
-  // Shuffle mangaDetails array
   const shuffledMangaDetails = [...mangaDetails].sort(
     () => Math.random() - 0.5
   );
 
-  // Get the first 5 elements or less if there are less than 5
-  const selectedMangaDetails = shuffledMangaDetails.slice(
-    0,
-    Math.min(shuffledMangaDetails.length, 5)
+  // Filter mangaDetails to only include manga, not anime
+  const mangaOnlyDetails = shuffledMangaDetails.filter(
+    (detail) => detail.type !== "anime"
   );
+
+  // Get the first 5 elements or less if there are less than 5
+  const selectedMangaDetails = mangaOnlyDetails.slice(
+    0,
+    Math.min(mangaOnlyDetails.length, 5)
+  );
+
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`../locales/${language}.json`);
   return (
@@ -79,8 +103,12 @@ export default function Home() {
           </div>
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-2 lg:mx-4">
-          {mangaNames.map((mangaName) => (
-            <MangaCard key={mangaName} mangaName={mangaName} />
+          {mangaDetails.map((mangaDetail) => (
+            <MangaCard
+              key={mangaDetail.name}
+              mangaName={mangaDetail.name}
+              type={mangaDetail.type}
+            />
           ))}
         </div>
       </div>

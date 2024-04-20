@@ -127,13 +127,6 @@ export default function MangaPage({
   }, [nextPageExists, previousPage, nextPage, isVertical]);
   const totalVolumes = volumes.length;
   useEffect(() => {
-    const mangaInfo = {
-      manga: slug,
-      volume: volume,
-      page: pageNumber,
-      totalVolumes: totalVolumes,
-    };
-
     let existingMangaInfo = JSON.parse(
       localStorage.getItem("mangaInfo") || "[]"
     );
@@ -146,13 +139,21 @@ export default function MangaPage({
       (info: { manga: string }) => info.manga === slug
     );
 
+    const mangaInfo = {
+      manga: slug,
+      volume: volume,
+      page: pageNumber,
+      totalVolumes: totalVolumes,
+      dateWatched:
+        existingMangaInfo[existingMangaIndex]?.dateWatched || Date.now(),
+    };
+
     if (existingMangaIndex !== -1) {
       existingMangaInfo[existingMangaIndex] = mangaInfo;
     } else {
       existingMangaInfo.push(mangaInfo);
     }
 
-    // Stocker le tableau à nouveau
     localStorage.setItem("mangaInfo", JSON.stringify(existingMangaInfo));
   }, [slug, volume, pageNumber, totalVolumes]);
 
@@ -233,7 +234,7 @@ export default function MangaPage({
           <div className="relative min-h-screen w-screen mt-2">
             {!isVertical && (
               <Image
-                src={`/${slug}/${volume}/${imageName}.webp`}
+                src={`/${slug}/manga/${volume}/${imageName}.webp`}
                 alt={`${slug} Page ${pageNumber}`}
                 style={{ objectFit: "contain" }}
                 sizes="125vw"
@@ -251,7 +252,7 @@ export default function MangaPage({
             {nextPageExists && !isVertical && (
               <>
                 <Image
-                  src={`/${slug}/${volume}/${nextImageName}.webp`}
+                  src={`/${slug}/manga/${volume}/${nextImageName}.webp`}
                   alt={`${slug} Page ${pageNumber + 1}`}
                   style={{ objectFit: "contain" }}
                   sizes="125vw"
@@ -276,7 +277,7 @@ export default function MangaPage({
                     >
                       <Image
                         id={`image-${index}`}
-                        src={`/${slug}/${volume}/${imageName}.webp`}
+                        src={`/${slug}/manga/${volume}/${imageName}.webp`}
                         alt={`${slug} Page ${index + 1}`}
                         width={3840}
                         height={2160}
