@@ -44,7 +44,12 @@ export default function Page({ params }: { params: { slug: string } }) {
   );
 
   let synopsis: string | undefined;
-  const synopsisPath = path.join(mangaDirectory, "resume.json");
+  const synopsisPath = path.join(
+    process.cwd(),
+    "public",
+    decodedSlug,
+    "resume.json"
+  );
   if (fs.existsSync(synopsisPath)) {
     synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
   }
