@@ -28,7 +28,8 @@
   "episodeSelect": {
     "episode": "Episode",
     "next": "Next episode",
-    "previous": "Previous episode"
+    "previous": "Previous episode",
+    "start": "Start watching"
   },
   "seasonSelect": {
     "season": "Season",
