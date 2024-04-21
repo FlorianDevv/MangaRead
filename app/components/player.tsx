@@ -112,8 +112,8 @@ export default function Player(anime: Anime) {
     lastAnimeRef.current = anime;
   }, [anime, initializePlayer]);
 
-  const seasonNumber = anime.season.split("season")[1].padStart(2, "0");
-  const episodeNumber = anime.episode.split("episode")[1].padStart(3, "0");
+  const seasonNumber = anime.season.match(/\d+/)?.[0].padStart(2, "0");
+  const episodeNumber = anime.episode.match(/\d+/)?.[0].padStart(3, "0");
   const videoSrc = `/${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`;
 
   return <video ref={playerRef} src={videoSrc} controls />;
