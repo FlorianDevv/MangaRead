@@ -6,9 +6,14 @@ import path from "path";
 import { MobileNavbarComponent } from "./mobilenavbar";
 import SearchBar from "./searchbar";
 const mangaDirectory = path.join(process.cwd(), "public");
-const mangaNames: string[] = JSON.parse(
-  fs.readFileSync(path.join(mangaDirectory, "manga.json"), "utf-8")
-);
+let mangaNames: string[] = [];
+try {
+  mangaNames = JSON.parse(
+    fs.readFileSync(path.join(mangaDirectory, "manga.json"), "utf-8")
+  );
+} catch (error) {
+  console.error(`Failed to load manga.json: ${error}`);
+}
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 export default function Navbar() {
