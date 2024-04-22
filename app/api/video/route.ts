@@ -13,10 +13,17 @@ function getVideoStream(req: Request) {
       statusText: "Bad Request",
     });
   }
+  const url = new URL(req.url);
+  const videoId = url.searchParams.get("videoId");
 
-  const videoId = req;
+  if (!videoId) {
+    return new Response("No videoId query param", {
+      status: 400,
+      statusText: "Bad Request",
+    });
+  }
 
-  const videoPath = `./videos/${videoId}.mp4`;
+  const videoPath = `public/${videoId}.mp4`;
 
   const videoSizeInBytes = fs.statSync(videoPath).size;
 
