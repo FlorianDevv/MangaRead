@@ -57,8 +57,9 @@ export default function Player(anime: Anime) {
   const initializePlayer = useCallback(() => {
     import("plyr").then((Plyr) => {
       if (playerRef.current) {
-        const player = new Plyr.default(playerRef.current);
-
+        const player = new Plyr.default(playerRef.current, {
+          fullscreen: { iosNative: true },
+        });
         player.on("loadedmetadata", () => {
           const duration = new Date(player.duration * 1000)
             .toISOString()
@@ -115,5 +116,5 @@ export default function Player(anime: Anime) {
   const seasonNumber = anime.season.match(/\d+/)?.[0].padStart(2, "0");
   const episodeNumber = anime.episode.match(/\d+/)?.[0].padStart(3, "0");
   const videoSrc = `/api/video?videoId=${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}`;
-  return <video ref={playerRef} src={videoSrc} controls />;
+  return <video ref={playerRef} src={videoSrc} controls={true} />;
 }
