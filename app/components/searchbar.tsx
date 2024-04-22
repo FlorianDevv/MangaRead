@@ -4,21 +4,23 @@ import Link from "next/link";
 
 import { useEffect, useState } from "react";
 interface SearchBarProps {
-  mangaNames: string[];
+  mangaData: { name: string; imagePath: string }[];
 }
 
-export default function SearchBar({ mangaNames }: SearchBarProps) {
+export default function SearchBar({ mangaData }: SearchBarProps) {
   const [search, setSearch] = useState("");
-  const [results, setResults] = useState<string[]>([]);
+  const [results, setResults] = useState<{ name: string; imagePath: string }[]>(
+    []
+  );
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
 
   // Update search results when search changes
   useEffect(() => {
     if (search !== "") {
-      const searchResults = mangaNames
-        .filter((name: string) =>
-          name.toLowerCase().includes(search.toLowerCase())
+      const searchResults = mangaData
+        .filter((manga) =>
+          manga.name.toLowerCase().includes(search.toLowerCase())
         )
         .slice(0, 4);
 
@@ -26,7 +28,7 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
     } else {
       setResults([]);
     }
-  }, [search, mangaNames]);
+  }, [search, mangaData]);
 
   const resetSearch = () => {
     setSearch("");
@@ -50,22 +52,22 @@ export default function SearchBar({ mangaNames }: SearchBarProps) {
       >
         {search !== "" &&
           results.map((result) => (
-            <div key={result}>
-              <Link href={`/manga/${result}`}>
+            <div key={result.name}>
+              <Link href={`/manga/${result.name}`}>
                 <div
                   className="group flex items-center rounded border-t-2 border-sky-600 hover:bg-gray-700 text-white hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
                   onClick={resetSearch}
                 >
                   <div className="transition-all duration-200 transform group-hover:opacity-50 group-hover:scale-110">
                     <Image
-                      src={`/${result}/manga/Tome 01/01-001.webp`}
-                      alt={result}
+                      src={result.imagePath}
+                      alt={result.name}
                       width={60}
                       height={60}
                       quality={1}
                     />
                   </div>
-                  <p className="ml-2">{result}</p>
+                  <p className="ml-2">{result.name}</p>
                 </div>
               </Link>
             </div>
