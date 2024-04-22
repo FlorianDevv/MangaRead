@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef } from "react";
-
+import "../css/plyr.scss";
 interface Anime {
   title: string;
   episode: string;
