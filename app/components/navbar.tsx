@@ -5,15 +5,28 @@ import Link from "next/link";
 import path from "path";
 import { MobileNavbarComponent } from "./mobilenavbar";
 import SearchBar from "./searchbar";
-const mangaDirectory = path.join(process.cwd(), "public");
-let mangaNames: string[] = [];
+
+const publicDirectory = path.join(process.cwd(), "public");
+
+let mangaData: { name: string; imagePath: string }[] = [];
 try {
-  mangaNames = JSON.parse(
-    fs.readFileSync(path.join(mangaDirectory, "manga.json"), "utf-8")
-  );
+  const directoryItems = fs.readdirSync(publicDirectory, {
+    withFileTypes: true,
+  });
+  mangaData = directoryItems
+    .filter((item) => item.isDirectory() && item.name !== "icons") // keep only directories and remove 'icons'
+    .map((item) => {
+      const mangaPath = `/${item.name}/manga/Tome 01/01-001.webp`;
+      const animePath = `/${item.name}/anime/Season01/01-001.webp`;
+      const imagePath = fs.existsSync(path.join(publicDirectory, mangaPath))
+        ? mangaPath
+        : animePath;
+      return { name: item.name, imagePath };
+    });
 } catch (error) {
-  console.error(`Failed to load manga.json: ${error}`);
+  console.error(`Failed to read public directory: ${error}`);
 }
+
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 export default function Navbar() {
@@ -37,7 +50,7 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="flex items-center space-x-4">
-          <SearchBar mangaNames={mangaNames} />
+          <SearchBar mangaData={mangaData} />
           <a
             href="https://github.com/FlorianDevv/MangaRead"
             target="_blank"
