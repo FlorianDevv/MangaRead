@@ -35,6 +35,15 @@ export default function Page({
     )
     .filter((seasonName: string) => !seasonName.startsWith("."))
     .map((seasonName: string) => ({ name: seasonName }));
+
+  if (episodes.length === 0 || seasons.length === 0) {
+    return (
+      <div>
+        <h1>Error 404</h1>
+      </div>
+    );
+  }
+
   return (
     <MobileNavbarComponent>
       <div className="flex flex-col items-center ">
