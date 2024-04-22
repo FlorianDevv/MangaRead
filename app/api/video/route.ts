@@ -25,27 +25,33 @@ function getVideoStream(req: Request) {
 
   const videoPath = `public/${videoId}.mp4`;
 
+  if (!fs.existsSync(videoPath)) {
+    return new Response("Video not found", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+
   const videoSizeInBytes = fs.statSync(videoPath).size;
 
-  const chunkStart = Number(range.replace(/\D/g, ""));
+  const parts = range.replace(/bytes=/, "").split("-");
+  const start = parseInt(parts[0], 10);
+  const end = parts[1]
+    ? parseInt(parts[1], 10)
+    : Math.min(start + CHUNK_SIZE_IN_BYTES, videoSizeInBytes - 1);
 
-  const chunkEnd = Math.min(
-    chunkStart + CHUNK_SIZE_IN_BYTES,
-    videoSizeInBytes - 1
-  );
-
-  const contentLength = chunkEnd - chunkStart + 1;
+  const contentLength = end - start + 1;
 
   const headers = {
-    "Content-Range": `bytes ${chunkStart}-${chunkEnd}/${videoSizeInBytes}`,
+    "Content-Range": `bytes ${start}-${end}/${videoSizeInBytes}`,
     "Accept-Ranges": "bytes",
     "Content-Length": contentLength.toString(),
     "Content-Type": "video/mp4",
   } as { [key: string]: string };
 
   const videoStream = fs.createReadStream(videoPath, {
-    start: chunkStart,
-    end: chunkEnd,
+    start: start,
+    end: end,
   });
 
   return new Response(videoStream as any, { status: 206, headers });

@@ -21,6 +21,7 @@ export default function Page({
         params.season
       )
     )
+    .filter((episodeName: string) => !episodeName.startsWith("."))
     .map((episodeName: string) => ({ name: episodeName }));
 
   const seasons = fs
@@ -32,8 +33,8 @@ export default function Page({
         "anime"
       )
     )
+    .filter((seasonName: string) => !seasonName.startsWith("."))
     .map((seasonName: string) => ({ name: seasonName }));
-
   return (
     <MobileNavbarComponent>
       <div className="flex flex-col items-center ">
