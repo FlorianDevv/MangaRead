@@ -253,6 +253,11 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                         style={{ objectFit: "cover" }}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
                         className="transition-all duration-500 ease-in-out transform"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null;
+                          target.src = `/${animeInfo.anime}/manga/Tome 01/01-001.webp`;
+                        }}
                       />
                       <div className="absolute bottom-2 left-2 bg-red-900 text-white text-xs px-2 py-1 rounded">
                         Anime
