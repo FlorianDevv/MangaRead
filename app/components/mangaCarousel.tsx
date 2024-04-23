@@ -24,7 +24,7 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
   return (
-    <section className="mx-auto">
+    <>
       <div className="overflow-hidden" ref={emblaRef}>
         <div
           className="flex"
@@ -83,6 +83,6 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
           ))}
         </div>
       </div>
-    </section>
+    </>
   );
 }

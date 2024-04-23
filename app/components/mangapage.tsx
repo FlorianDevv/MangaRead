@@ -218,7 +218,7 @@ export default function MangaPage({
   return (
     <NavbarContext.Provider value={{ isVisible, setIsVisible }}>
       <MobileNavbarComponent>
-        <div>
+        <>
           <div className="flex justify-center text-white">
             {SelectPageNumber(pageNumber, setPageNumber, totalPages)}
             <Fullscreen
@@ -341,7 +341,7 @@ export default function MangaPage({
               />
             )}
           </div>
-        </div>
+        </>
       </MobileNavbarComponent>
     </NavbarContext.Provider>
   );

@@ -118,7 +118,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
 
   if (isLoading) {
     return (
-      <div>
+      <>
         <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
           {data.resume.title}
           <div className="ml-2">
@@ -140,7 +140,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
               </div>
             ))}
         </div>
-      </div>
+      </>
     );
   }
 
@@ -149,7 +149,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   }
 
   return (
-    <div>
+    <>
       <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
         {data.resume.title}
         <div className="ml-2">
@@ -253,11 +253,6 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                         style={{ objectFit: "cover" }}
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
                         className="transition-all duration-500 ease-in-out transform"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null;
-                          target.src = `/${animeInfo.anime}/manga/Tome 01/01-001.webp`;
-                        }}
                       />
                       <div className="absolute bottom-2 left-2 bg-red-900 text-white text-xs px-2 py-1 rounded">
                         Anime
@@ -318,6 +313,6 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
           }
         })}
       </div>
-    </div>
+    </>
   );
 }

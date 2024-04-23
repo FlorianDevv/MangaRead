@@ -73,7 +73,7 @@ export default function Home() {
   return (
     <MobileNavbarComponent activePage="Home">
       <div className="md:bg-[#0c0c0c] md:mx-24 lg:mx-48 2xl:mx-64">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<>Loading...</>}>
           <div className="mx-1 md:mx-8 mt-2">
             <Carousel mangaDetails={selectedMangaDetails} />
           </div>

@@ -30,10 +30,10 @@ const data = require(`@/locales/${language}.json`);
 export default function Page() {
   return (
     <MobileNavbarComponent activePage="Search">
-      <div>
+      <>
         <h1 className="text-center text-3xl mb-4 mt-6">{data.search.title}</h1>
         <SearchBar mangaData={mangaData} />
-      </div>
+      </>
     </MobileNavbarComponent>
   );
 }
