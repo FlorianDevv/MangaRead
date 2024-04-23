@@ -4,7 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { Clock3, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface MangaInfo {
   manga: string;
@@ -70,35 +70,42 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
     setIsLoading(false);
   }, [mangaName]);
 
-  const sortedMangaState = [...state].sort(
-    (a, b) =>
-      new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
-  );
-  const sortedAnimeState = [...animeState].sort(
-    (a, b) =>
-      new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
-  );
+  const sortedMangaState = useMemo(() => {
+    return [...state].sort(
+      (a, b) =>
+        new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
+    );
+  }, [state]);
 
-  const combinedState = [...sortedMangaState, ...sortedAnimeState].sort(
-    (a, b) =>
-      new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
-  );
+  const sortedAnimeState = useMemo(() => {
+    return [...animeState].sort(
+      (a, b) =>
+        new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
+    );
+  }, [animeState]);
 
-  const deleteManga = (mangaName: string) => {
+  const combinedState = useMemo(() => {
+    return [...sortedMangaState, ...sortedAnimeState].sort(
+      (a, b) =>
+        new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
+    );
+  }, [sortedMangaState, sortedAnimeState]);
+
+  const deleteManga = useCallback((mangaName: string) => {
     setState((prevState) => {
       const newState = prevState.filter((manga) => manga.manga !== mangaName);
       localStorage.setItem("mangaInfo", JSON.stringify(newState));
       return newState;
     });
-  };
+  }, []);
 
-  const deleteAnime = (animeName: string) => {
+  const deleteAnime = useCallback((animeName: string) => {
     setAnimeState((prevState) => {
       const newState = prevState.filter((anime) => anime.anime !== animeName);
       localStorage.setItem("animeInfo", JSON.stringify(newState));
       return newState;
     });
-  };
+  }, []);
   const calculateProgress = useMemo(() => {
     return (mangaInfo: MangaInfo) => {
       const currentVolumeNumber = parseInt(
@@ -109,12 +116,14 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
     };
   }, []);
 
-  const calculateAnimeProgress = (animeInfo: any) => {
-    const totalSeconds = animeInfo.duration
-      .split(":")
-      .reduce((acc: number, time: string | number) => 60 * acc + +time);
-    return (animeInfo.savedTime / totalSeconds) * 100;
-  };
+  const calculateAnimeProgress = useMemo(() => {
+    return (animeInfo: any) => {
+      const totalSeconds = animeInfo.duration
+        .split(":")
+        .reduce((acc: number, time: string | number) => 60 * acc + +time);
+      return (animeInfo.savedTime / totalSeconds) * 100;
+    };
+  }, []);
 
   if (isLoading) {
     return (

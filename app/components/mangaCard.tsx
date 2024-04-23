@@ -16,7 +16,7 @@ export default function MangaCard({ mangaName, type }: MangaCardProps) {
   return (
     <div className="relative flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform group hover:scale-105 transition-transform duration-300 w-full">
       <Link key={mangaName} href={`/manga/${mangaName}`}>
-        <div className="relative flex flex-col items-stretch">
+        <div className="relative flex flex-col items-stretch shine">
           <DynamicBlur
             src={imagePath}
             alt={mangaName}

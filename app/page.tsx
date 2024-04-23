@@ -1,13 +1,10 @@
 import fs from "fs";
 import { BookImage } from "lucide-react";
-import dynamic from "next/dynamic";
 import path from "path";
-import { Suspense } from "react";
 import MangaCard from "./components/mangaCard";
+import Carousel from "./components/mangaCarousel";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
-// Load the Carousel component asynchronously
-const Carousel = dynamic(() => import("./components/mangaCarousel"));
 
 export default function Home() {
   const mangaDirectory = path.join(process.cwd(), "public");
@@ -73,11 +70,9 @@ export default function Home() {
   return (
     <MobileNavbarComponent activePage="Home">
       <div className="md:bg-[#0c0c0c] md:mx-24 lg:mx-48 2xl:mx-64">
-        <Suspense fallback={<>Loading...</>}>
-          <div className="mx-1 md:mx-8 mt-2">
-            <Carousel mangaDetails={selectedMangaDetails} />
-          </div>
-        </Suspense>
+        <div className="mx-1 md:mx-8 mt-2">
+          <Carousel mangaDetails={selectedMangaDetails} />
+        </div>
         <div className=" p-4 mt-6 ">
           <ResumeReading />
         </div>
