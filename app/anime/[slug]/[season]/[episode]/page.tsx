@@ -52,7 +52,7 @@ export default function Page({
             {decodeURIComponent(params.slug)}
           </Link>
         </h1>
-        <div className="flex flex-wrap items-center w-auto">
+        <div className="flex flex-wrap items-center">
           <EpisodeSelect
             episodes={episodes}
             slug={params.slug}
@@ -66,7 +66,7 @@ export default function Page({
             currentSeason={params.season}
           />
         </div>
-        <div className="w-3/4 border-2 border-gray-800 rounded-lg my-4">
+        <div className="w-96 md:w-3/4 border-2 border-gray-800 rounded-lg my-4">
           <Player
             title={params.slug}
             season={params.season}

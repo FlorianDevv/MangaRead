@@ -118,11 +118,11 @@ export function ButtonAddBookmark({ mangaName }: ButtonAddBookmarkProps) {
   };
 
   return (
-    <div>
+    <>
       <Button variant="secondary" onClick={handleClick}>
         <BookmarkIcon className="mr-1" />
         {isBookmarked ? data.bookmark.remove : data.bookmark.add}
       </Button>
-    </div>
+    </>
   );
 }

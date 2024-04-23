@@ -82,11 +82,12 @@ export default function Page({ params }: { params: { slug: string } }) {
     ? fs.readdirSync(animeDirectory).map((season) => ({ name: season }))
     : [];
 
-  const episodes: Episode[] = isAnimeDirectoryExists
-    ? fs
-        .readdirSync(path.join(animeDirectory, seasons[0].name))
-        .map((episode) => ({ name: episode }))
-    : [];
+  const episodes: Episode[] =
+    isAnimeDirectoryExists && seasons.length > 0
+      ? fs
+          .readdirSync(path.join(animeDirectory, seasons[0].name))
+          .map((episode) => ({ name: episode }))
+      : [];
 
   //if no manga and no anime return error page
   if (!isMangaDirectoryExists && !isAnimeDirectoryExists) {

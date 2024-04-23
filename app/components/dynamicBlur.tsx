@@ -9,7 +9,7 @@ const DynamicBlur: React.FC<{
   alt: string;
   className: string;
 }> = async ({ src, alt, className }) => {
-  const imagePath = path.join(process.cwd(), "public", src); // Assurez-vous que le chemin est correct
+  const imagePath = path.join(process.cwd(), "public", src);
 
   let file;
   try {
