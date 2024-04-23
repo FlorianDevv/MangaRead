@@ -32,7 +32,7 @@ export default function CategorySelector({
   const [searchValue, setSearchValue] = useState("");
 
   const handleCategoryClick = (category: string) => {
-    let newSelectedCategories;
+    let newSelectedCategories: string[];
     if (selectedCategories.includes(category)) {
       newSelectedCategories = selectedCategories.filter((c) => c !== category);
     } else {
