@@ -72,7 +72,6 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                     alt={"cover image"}
                     className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125"
                     quality={1}
-                    layout="responsive"
                     width={500}
                     height={300}
                     sizes="(max-width: 640px) 70vw, (max-width: 1024px) 50vw, 30vw"
