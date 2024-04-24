@@ -6,7 +6,7 @@
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/FlorianDevv/MangaRead)
 ![GitHub License](https://img.shields.io/github/license/FlorianDevv/MangaRead)
 
-A self-hosted website for reading local manga.
+A self-hosted website for reading local manga and watching anime videos.
 
 ## Table of Contents
 
@@ -16,6 +16,8 @@ A self-hosted website for reading local manga.
   - [Features ✨](#features-)
   - [Upcoming Features 📅](#upcoming-features-)
   - [Usage 🚀](#usage-)
+    - [Manga](#manga)
+    - [Anime](#anime)
   - [Self-Hosting 🖥️](#self-hosting-️)
   - [Contributing 🤝](#contributing-)
   - [Contributors ✨](#contributors-)
@@ -27,34 +29,54 @@ A self-hosted website for reading local manga.
 
 🚧 WORK IN PROGRESS 🚧
 
+_Please note that this project is currently under active development. The project's architecture and other aspects may undergo changes, which could potentially break some functionalities, particularly those related to files in the `/public` directory._
+
 ## Features ✨
 
 - Read manga from /public folder 📖
-- Minimalistic UI 🎨
-- Resume reading with the last read page (local storage) 📌
+- Watching anime videos 📺
+- Automatically bookmark your last read page or the second where you paused watching, allowing you to resume seamlessly (utilizing local storage). 📌
 - Image preloading & optimization for faster navigation 🚀
 - Keyboard navigation (left/right arrow keys) ⌨️
 - Mobile App PWA 📱
-- Dark mode for OLED screens 🌑
 - Full screen mode using all available space for the images 🖼️
-- Search Bar 🔎
+- Advanced search bar 🔎
 - English, french and custom language support 🌐
 - .env file for preselected settings ⚙️
 
 ## Upcoming Features 📅
 
-- Watching anime videos 📺
 - Docker for self-hosting 🐳
 
 ## Usage 🚀
 
-1. Rename your manga folder to the name of the manga. Inside this folder, create subfolders for each volume, named like "Tome 01", "Tome 02", etc.
-2. Inside each volume folder, add the images of the pages. These should be named like "1-001.webp", "1-002.webp", etc (the first number is the chapter and the second is the page number).
-3. Place the manga folder in the public folder of the project.
-4. Run `npm run build` and `npm run start` to start the server.
-5. Access your manga at localhost:3000.
+> Note: For a practical example of a manga and anime folder structure, refer to the public folder of this project. You can have a folder who have a manga and anime folder inside it.
 
-> Note: You can use AI like ChatGPT to create a python script to rename the images for you and convert them to webp format if needed.
+### Manga
+
+Follow these steps to set up your manga:
+
+1. Rename your main manga folder to match the name of the manga. Inside this main folder, create another folder named "manga". Within this "manga" folder, create subfolders for each volume, following the naming convention "Volume 01", "Volume 02", and so on.
+2. Within each volume folder, add the images for each page. The images should be named in the format "01-001.webp", "01-002.webp", etc. The first number represents the chapter, while the second number represents the page number.
+
+### Anime
+
+Follow these steps to set up your anime:
+
+1. Rename your main anime folder to match the name of the anime. Inside this main folder, create another folder named "anime". Within this "anime" folder, create subfolders for each season, following the naming convention "Season 01", "Season 02", and so on.
+2. Within each season folder, add the video files for each episode. The video files should be named in the format "01-001.mp4", "01-002.mp4", etc. The first number represents the season, while the second number represents the episode number.
+
+After setting up your manga and anime folders, you can run the following commands to install dependencies, build the project, and start the server:
+
+```bash
+npm install
+npm run build
+npm run start
+```
+
+> Note: You have to rebuild the project every time you add a new manga but for anime videos you don't have to rebuild the project since the videos are loaded dynamically via api.
+
+> Tips: You can use AI like ChatGPT to create a python script to rename the images for you and convert them to webp format if needed.
 
 ## Self-Hosting 🖥️
 
@@ -102,3 +124,7 @@ Performance is the main focus of this project to ensure a smooth reading experie
 ## License 📝
 
 This project is licensed under the terms of the [MIT license](LICENSE).
+
+```
+
+```
