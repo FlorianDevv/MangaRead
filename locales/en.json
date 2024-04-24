@@ -5,7 +5,8 @@
   "navbar": {
     "home": "Home",
     "search": "Search",
-    "profil": "Profil"
+    "profil": "Profil",
+    "catalog": "Catalog"
   },
   "carousel": {
     "read": "Read",

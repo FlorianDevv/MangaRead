@@ -5,7 +5,8 @@
   "navbar": {
     "home": "Accueil",
     "search": "Recherche",
-    "profil": "Profil"
+    "profil": "Profil",
+    "catalog": "Catalogue"
   },
   "carousel": {
     "read": "Lire",
