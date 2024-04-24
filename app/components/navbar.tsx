@@ -1,6 +1,6 @@
 // components/Navbar.tsx
 import fs from "fs";
-import { CircleUser, Github, Home } from "lucide-react";
+import { CircleUser, Github, Home, LibraryBig } from "lucide-react";
 import Link from "next/link";
 import path from "path";
 import { MobileNavbarComponent } from "./mobilenavbar";
@@ -36,29 +36,35 @@ export default function Navbar() {
         <div className="flex items-center">
           <Link
             href="/"
-            className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity mr-4 lg:mr-8"
+            className="flex hover:opacity-75 duration-200 ease-in-out transition-opacity mr-4 lg:mr-8"
           >
             <Home />
             <span className="ml-2">{data.navbar.home}</span>
           </Link>
           <Link
             href="/profil"
-            className="flex items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity"
+            className="flex hover:opacity-75 duration-200 ease-in-out transition-opacity"
           >
             <CircleUser />
             <span className="ml-2">{data.navbar.profil}</span>
           </Link>
         </div>
         <div className="flex items-center space-x-4">
+          <Link
+            href="/search"
+            className="hover:opacity-75 duration-200 ease-in-out transition-opacity flex"
+          >
+            <LibraryBig />
+            <span className="ml-2"> {data.navbar.catalog}</span>
+          </Link>
           <SearchBar mangaData={mangaData} />
           <a
             href="https://github.com/FlorianDevv/MangaRead"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="View source on GitHub"
-            className="md:block hidden"
           >
-            <p className="text-white hover:opacity-75 duration-200 ease-in-out transition-opacity md:block hidden ">
+            <p className="hover:opacity-75 duration-200 ease-in-out transition-opacity">
               <Github />
             </p>
           </a>
