@@ -120,7 +120,6 @@ export default function Page({ params }: { params: { slug: string } }) {
                 quality={1}
                 width={500}
                 height={300}
-                layout="responsive"
                 priority={true}
                 sizes="70vw"
               />
@@ -133,7 +132,6 @@ export default function Page({ params }: { params: { slug: string } }) {
               quality={1}
               width={500}
               height={300}
-              layout="responsive"
               priority={true}
               sizes="70vw"
             />
