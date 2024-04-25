@@ -64,7 +64,7 @@ export default function SearchBar({ mangaData }: SearchBarProps) {
                       alt={result.name}
                       width={60}
                       height={60}
-                      quality={1}
+                      quality={10}
                     />
                   </div>
                   <p className="ml-2">{result.name}</p>

@@ -25,7 +25,7 @@ export default function MangaCardClient({
           <Image
             src={imagePath}
             alt={mangaName}
-            quality={1}
+            quality={10}
             width={200}
             height={800}
             sizes="70vw"

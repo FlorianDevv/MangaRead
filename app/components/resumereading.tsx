@@ -128,12 +128,6 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   if (isLoading) {
     return (
       <>
-        <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
-          {data.resume.title}
-          <div className="ml-2">
-            <Clock3 />
-          </div>
-        </h2>
         <div className="flex overflow-x-scroll overflow-y-hidden">
           {Array(4)
             .fill(0)
@@ -172,41 +166,42 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
             return (
               <div
                 key={index}
-                className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
+                className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300 "
               >
                 <div className="flex flex-col   overflow-hidden ">
                   <Link
                     key={index}
                     href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
-                    className="hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
+                    className="ease-in-out transform  hover:scale-105 transition-transform duration-300"
                   >
-                    <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
+                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 flex-shrink-0 shine">
                       <Image
                         src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
                         alt={mangaInfo.manga}
-                        quality={1}
+                        quality={10}
                         fill
                         style={{ objectFit: "cover" }}
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
+                        sizes="70vw"
                         className="transition-all duration-500 ease-in-out transform"
                       />
-                      <div className="absolute bottom-2 left-2 bg-blue-900 text-white text-xs px-2 py-1 rounded">
+
+                      <div className="absolute bottom-2 left-2 bg-blue-900 text-xs px-2 py-1 rounded">
                         Manga
                       </div>
                     </div>
                     <div className="flex-grow p-2">
-                      <p className="text-sm text-white overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
+                      <p className="text-sm overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
                         {decodeURIComponent(mangaInfo.manga)}
                       </p>
-                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
-                        <p className="sm:px-2">
+                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row">
+                        <p>
                           {data.resume.volume + " "}
                           {decodeURIComponent(mangaInfo.volume).split(" ")[1]}
                         </p>
-                        <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">
+                        <p className="md:mx-4 md:my-0 my-2 hidden md:block">
                           -
                         </p>
-                        <p className="sm:px-2">
+                        <p>
                           {data.resume.page + " "} {mangaInfo.page}
                         </p>
                       </div>
@@ -218,7 +213,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                             value={calculateProgress(mangaInfo)}
                             aria-label="Reading progress"
                           />
-                          <p className="my-2 text-gray-200 text-sm sm:px-2">
+                          <p className="my-2 text-gray-200 text-sm ">
                             {`${
                               decodeURIComponent(mangaInfo.volume).split(" ")[1]
                             } / ${mangaInfo.totalVolumes}`}
@@ -232,8 +227,8 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                       e.stopPropagation();
                       deleteManga(item.manga);
                     }}
-                    className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
-                    title="Supprimer de la liste de lecture"
+                    className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
+                    title="🗑️"
                   >
                     <X />
                   </button>
@@ -247,40 +242,40 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                 key={index}
                 className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
               >
-                <div className="flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform  transition-transform duration-300">
+                <div className="flex flex-col items-stretch rounded-lg overflow-hidden  ease-in-out transform  transition-transform duration-300">
                   <Link
                     key={index}
                     href={`/anime/${animeInfo.anime}/${animeInfo.season}/${animeInfo.episode}`}
-                    className="hover:shadow-2xl ease-in-out transform  hover:scale-105 transition-transform duration-300"
+                    className="ease-in-out transform  hover:scale-105 transition-transform duration-300"
                   >
-                    <div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 shine">
+                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 flex-shrink-0 shine">
                       <Image
                         src={`/${animeInfo.anime}/anime/Season01/01-001.webp`}
                         alt={animeInfo.anime}
-                        quality={1}
+                        quality={10}
                         fill
                         style={{ objectFit: "cover" }}
-                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 30vw, 20vw"
+                        sizes="70vw"
                         className="transition-all duration-500 ease-in-out transform"
                       />
-                      <div className="absolute bottom-2 left-2 bg-red-900 text-white text-xs px-2 py-1 rounded">
+                      <div className="absolute bottom-2 left-2 bg-red-900 text-xs px-2 py-1 rounded">
                         Anime
                       </div>
                     </div>
                     <div className="flex-grow p-2">
-                      <p className="text-sm text-white overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
+                      <p className="text-sm overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
                         {decodeURIComponent(animeInfo.anime)}
                       </p>
-                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col sm:flex-row">
-                        <p className="sm:px-2">
+                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row">
+                        <p>
                           {data.episodeSelect.episode +
                             " " +
                             animeInfo.season.split("season")[1]}
                         </p>
-                        <p className="sm:mx-4 sm:my-0 my-2 hidden sm:block">
+                        <p className="md:mx-4 md:my-0 my-2 hidden md:block">
                           -
                         </p>
-                        <p className="sm:px-2">
+                        <p>
                           {data.seasonSelect.season +
                             " " +
                             animeInfo.episode.split("episode")[1]}
@@ -292,7 +287,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                         value={calculateAnimeProgress(animeInfo)}
                         aria-label="Watching progress"
                       />
-                      <p className="my-2 text-gray-200 text-sm sm:px-2">
+                      <p className="my-2 text-gray-200 text-sm ">
                         {`-${new Date(
                           (animeInfo.duration
                             .split(":")
@@ -311,8 +306,8 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                       e.stopPropagation();
                       deleteAnime(item.anime);
                     }}
-                    className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
-                    title="Supprimer de la liste de lecture"
+                    className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
+                    title="🗑️"
                   >
                     <X />
                   </button>

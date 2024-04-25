@@ -117,7 +117,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               <Image
                 src={`/${params.slug}/manga/Tome 01/01-001.webp`}
                 alt={`${params.slug}`}
-                quality={1}
+                quality={10}
                 width={500}
                 height={300}
                 priority={true}
@@ -129,7 +129,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             <Image
               src={`/${params.slug}/anime/Season01/01-001.webp`}
               alt={`${params.slug}`}
-              quality={1}
+              quality={10}
               width={500}
               height={300}
               priority={true}
