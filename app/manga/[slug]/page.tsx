@@ -110,18 +110,18 @@ export default function Page({ params }: { params: { slug: string } }) {
       <h1 className="text-center items-center justify-center text-2xl lg:text-4xl mt-5 mb:mb-3">
         {decodeURIComponent(params.slug)}
       </h1>
-      <div className="flex flex-wrap lg:flex-nowrap justify-center text-white ">
+      <div className="flex flex-wrap lg:flex-nowrap justify-center  ">
         <div className="w-80  my-8 items-center justify-center flex flex-col space-y-4">
           {isMangaDirectoryExists ? (
             <>
               <Image
                 src={`/${params.slug}/manga/Tome 01/01-001.webp`}
                 alt={`${params.slug}`}
-                quality={1}
+                quality={10}
                 width={500}
                 height={300}
                 priority={true}
-                sizes="70vw"
+                sizes="30vw"
               />
               <ButtonAddBookmark mangaName={params.slug} />
             </>
@@ -129,11 +129,11 @@ export default function Page({ params }: { params: { slug: string } }) {
             <Image
               src={`/${params.slug}/anime/Season01/01-001.webp`}
               alt={`${params.slug}`}
-              quality={1}
+              quality={10}
               width={500}
               height={300}
               priority={true}
-              sizes="70vw"
+              sizes="30vw"
             />
           )}
         </div>
@@ -179,7 +179,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       </div>
 
       <div className="flex items-center ml-4 md:mr-28 md:ml-56">
-        <ResumeReading mangaName={params.slug} />
+        <ResumeReading Name={params.slug} />
       </div>
     </MobileNavbarComponent>
   );

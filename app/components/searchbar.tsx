@@ -42,7 +42,7 @@ export default function SearchBar({ mangaData }: SearchBarProps) {
           name={data.search.title}
           type="search"
           placeholder={data.search.title}
-          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600 "
+          className="p-2 mx-2 rounded-md  bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600 "
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -55,7 +55,7 @@ export default function SearchBar({ mangaData }: SearchBarProps) {
             <div key={result.name}>
               <Link href={`/manga/${result.name}`}>
                 <div
-                  className="group flex items-center rounded border-t-2 border-sky-600 hover:bg-gray-700 text-white hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
+                  className="group flex items-center rounded border-t-2 border-sky-600 hover:bg-gray-700  hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
                   onClick={resetSearch}
                 >
                   <div className="transition-all duration-200 transform group-hover:opacity-50 group-hover:scale-110">
@@ -64,7 +64,7 @@ export default function SearchBar({ mangaData }: SearchBarProps) {
                       alt={result.name}
                       width={60}
                       height={60}
-                      quality={1}
+                      quality={10}
                     />
                   </div>
                   <p className="ml-2">{result.name}</p>

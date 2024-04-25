@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
-import MangaCardClient from "./mangaCardClient";
+import CardClient from "./CardClient";
 
 interface Manga {
-  imagePath: string;
   category: string[];
   name: string;
   type: "manga" | "anime" | "both";
@@ -114,13 +113,13 @@ export default function CategorySelector({
           placeholder="Search"
           value={searchValue}
           onChange={handleSearchChange}
-          className="p-2 mx-2 rounded-md text-white bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600"
+          className="p-2 mx-2 rounded-md  bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600"
         />
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mx-2">
           {displayedMangaData.map((manga) => (
-            <MangaCardClient
+            <CardClient
               key={manga.name}
-              mangaName={manga.name}
+              Name={manga.name}
               categories={manga.category}
               type={manga.type}
             />

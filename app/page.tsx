@@ -1,46 +1,13 @@
-import fs from "fs";
 import { BookImage } from "lucide-react";
-import path from "path";
-import MangaCard from "./components/mangaCard";
+import Card from "./components/Card";
 import Carousel from "./components/mangaCarousel";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import ResumeReading from "./components/resumereading";
+import { getDetails } from "./types/getDetails";
 
 export default function Home() {
-  const mangaDirectory = path.join(process.cwd(), "public");
-  const mangaNames = fs.readdirSync(mangaDirectory).filter((name) => {
-    const itemPath = path.join(mangaDirectory, name);
-    return fs.lstatSync(itemPath).isDirectory() && name !== "icons";
-  });
-
-  const mangaDetails = mangaNames.map((name) => {
-    const itemPath = path.join(mangaDirectory, name);
-    // Check if it's a manga, an anime or both
-    const isManga = fs.existsSync(path.join(itemPath, "manga"));
-    const isAnime = fs.existsSync(path.join(itemPath, "anime"));
-    let type: "manga" | "anime" | "both";
-
-    let synopsis: string | undefined;
-    const synopsisPath = path.join(itemPath, "resume.json");
-    if (fs.existsSync(synopsisPath)) {
-      synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
-    }
-    const volume = isManga
-      ? fs.readdirSync(path.join(itemPath, "manga")).filter((volume) => {
-          const volumePath = path.join(itemPath, "manga", volume);
-          return fs.lstatSync(volumePath).isDirectory();
-        }).length
-      : 0;
-    if (isManga && isAnime) {
-      type = "both";
-    } else if (isManga) {
-      type = "manga";
-    } else {
-      type = "anime";
-    }
-
-    return { name, synopsis, volume, type };
-  });
+  const Details = getDetails();
+  const itemNames = Details.map((detail) => detail.name);
 
   function shuffleArray<T>(array: T[]): void {
     for (let i = array.length - 1; i > 0; i--) {
@@ -48,11 +15,9 @@ export default function Home() {
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  shuffleArray(mangaNames);
+  shuffleArray(itemNames);
 
-  const shuffledMangaDetails = [...mangaDetails].sort(
-    () => Math.random() - 0.5
-  );
+  const shuffledMangaDetails = [...Details].sort(() => Math.random() - 0.5);
 
   // Filter mangaDetails to only include manga, not anime
   const mangaOnlyDetails = shuffledMangaDetails.filter(
@@ -84,12 +49,8 @@ export default function Home() {
           </div>
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-2 lg:mx-4">
-          {mangaDetails.map((mangaDetail) => (
-            <MangaCard
-              key={mangaDetail.name}
-              mangaName={mangaDetail.name}
-              type={mangaDetail.type}
-            />
+          {Details.map((Detail) => (
+            <Card key={Detail.name} Name={Detail.name} type={Detail.type} />
           ))}
         </div>
       </div>

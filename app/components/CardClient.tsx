@@ -1,25 +1,34 @@
-// MangaCard.tsx
+"use client";
+import Image from "next/image";
 import Link from "next/link";
-import DynamicBlur from "./dynamicBlur";
 
-interface MangaCardProps {
-  mangaName: string;
-  type: "manga" | "anime" | "both";
+interface CardClientProps {
+  Name: string;
+  categories?: string[];
+  type?: "manga" | "anime" | "both";
 }
 
-export default function MangaCard({ mangaName, type }: MangaCardProps) {
+export default function CardClient({
+  Name,
+  categories,
+  type,
+}: CardClientProps) {
   const imagePath =
     type === "anime"
-      ? `/${mangaName}/anime/Season01/01-001.webp`
-      : `/${mangaName}/manga/Tome 01/01-001.webp`;
+      ? `/${Name}/anime/Season01/01-001.webp`
+      : `/${Name}/manga/Tome 01/01-001.webp`;
 
   return (
     <div className="relative flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform group hover:scale-105 transition-transform duration-300 w-full">
-      <Link key={mangaName} href={`/manga/${mangaName}`}>
+      <Link href={`/manga/${Name}`}>
         <div className="relative flex flex-col items-stretch shine">
-          <DynamicBlur
+          <Image
             src={imagePath}
-            alt={mangaName}
+            alt={Name}
+            quality={10}
+            width={200}
+            height={800}
+            sizes="30vw"
             className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
           />
           {type === "manga" && (
@@ -43,9 +52,16 @@ export default function MangaCard({ mangaName, type }: MangaCardProps) {
             </>
           )}
         </div>
-        <h1 className="text-xs sm:text-sm md:text-base text-center text-white transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words p-2">
-          {mangaName}
-        </h1>
+        <div className="p-2">
+          <h4 className="text-sm text-center transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
+            {decodeURIComponent(Name)}
+          </h4>
+          {categories && (
+            <p className="text-xs text-center  transition-colors duration-300 ease-in-out group-hover:text-red-800 break-words text-gray-400">
+              {categories.join(", ")}
+            </p>
+          )}
+        </div>
       </Link>
     </div>
   );

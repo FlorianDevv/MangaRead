@@ -42,7 +42,7 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                   alt={"cover image"}
                   className="absolute w-full h-full object-cover opacity-25 z-0"
                   fill
-                  sizes="(max-width: 640px) 70vw, (max-width: 1024px) 50vw, 30vw"
+                  sizes="(max-width: 640px) 30vw, (max-width: 1024px) 30vw, 30vw"
                   quality={1}
                   style={{ filter: "blur(12px)", objectFit: "cover" }}
                 />
@@ -71,10 +71,10 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                     src={`/${mangaDetail.name}/manga/Tome 01/01-001.webp`}
                     alt={"cover image"}
                     className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125"
-                    quality={1}
+                    quality={10}
                     width={500}
                     height={300}
-                    sizes="(max-width: 640px) 70vw, (max-width: 1024px) 50vw, 30vw"
+                    sizes="30vw"
                   />
                 </div>
               </div>
