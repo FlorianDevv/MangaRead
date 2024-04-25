@@ -23,10 +23,10 @@ interface AnimeInfo {
   dateWatched: number;
 }
 interface ResumeReadingProps {
-  mangaName?: string;
+  Name?: string;
 }
 
-export default function ResumeReading({ mangaName }: ResumeReadingProps) {
+export default function ResumeReading({ Name }: ResumeReadingProps) {
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
   const [state, setState] = useState<MangaInfo[]>([]);
@@ -40,9 +40,9 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
         ...item,
         dateWatched: new Date(item.dateWatched),
       }));
-      if (mangaName) {
+      if (Name) {
         const filteredState = parsedState.filter(
-          (manga: MangaInfo) => manga.manga === mangaName
+          (manga: MangaInfo) => manga.manga === Name
         );
         setState(filteredState);
       } else {
@@ -57,9 +57,9 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
           dateWatched: new Date(item.dateWatched),
         })
       );
-      if (mangaName) {
+      if (Name) {
         const filteredAnimeState = parsedAnimeState.filter(
-          (anime: AnimeInfo) => anime.anime === mangaName
+          (anime: AnimeInfo) => anime.anime === Name
         );
         setAnimeState(filteredAnimeState);
       } else {
@@ -68,7 +68,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
     }
 
     setIsLoading(false);
-  }, [mangaName]);
+  }, [Name]);
 
   const sortedMangaState = useMemo(() => {
     return [...state].sort(

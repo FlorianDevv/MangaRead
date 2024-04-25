@@ -16,7 +16,7 @@ export function MobileNavbarComponent({
   const linkClass = (page: string) => {
     return activePage === page
       ? "flex flex-col items-center text-blue-500 hover:opacity-75 duration-200 ease-in-out transition-opacity "
-      : "flex flex-col items-center text-white hover:opacity-75 duration-200 ease-in-out transition-opacity";
+      : "flex flex-col items-center  hover:opacity-75 duration-200 ease-in-out transition-opacity";
   };
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);

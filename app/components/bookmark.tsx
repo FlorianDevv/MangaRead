@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { BookmarkIcon, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import MangaCardClient from "./mangaCardClient";
+import CardClient from "./CardClient";
 export default function Bookmark() {
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
@@ -38,13 +38,13 @@ export default function Bookmark() {
       <div className="space-x-4 md:mx-8 flex overflow-x-scroll hover:cursor-default overflow-y-hidden">
         {bookmarks.map((mangaName, index) => (
           <div key={mangaName} className="flex-shrink-0 relative">
-            <MangaCardClient mangaName={mangaName} />
+            <CardClient Name={mangaName} />
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 deleteManga(index);
               }}
-              className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 text-white hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
+              className="absolute top-0 right-0 flex items-center justify-center w-6 h-6  hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
               title={data.bookmark.remove}
             >
               <X />
