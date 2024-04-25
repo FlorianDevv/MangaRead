@@ -152,7 +152,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
   }
 
   return (
-    <div>
+    <>
       <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
         {data.resume.title}
         <div className="ml-2">
@@ -181,7 +181,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                         quality={10}
                         fill
                         style={{ objectFit: "cover" }}
-                        sizes="70vw"
+                        sizes="30vw"
                         className="transition-all duration-500 ease-in-out transform"
                       />
 
@@ -255,7 +255,7 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
                         quality={10}
                         fill
                         style={{ objectFit: "cover" }}
-                        sizes="70vw"
+                        sizes="30vw"
                         className="transition-all duration-500 ease-in-out transform"
                       />
                       <div className="absolute bottom-2 left-2 bg-red-900 text-xs px-2 py-1 rounded">
@@ -317,6 +317,6 @@ export default function ResumeReading({ mangaName }: ResumeReadingProps) {
           }
         })}
       </div>
-    </div>
+    </>
   );
 }

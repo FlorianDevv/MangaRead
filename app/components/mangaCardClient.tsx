@@ -28,7 +28,7 @@ export default function MangaCardClient({
             quality={10}
             width={200}
             height={800}
-            sizes="70vw"
+            sizes="30vw"
             className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
           />
           {type === "manga" && (

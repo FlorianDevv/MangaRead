@@ -121,7 +121,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 width={500}
                 height={300}
                 priority={true}
-                sizes="70vw"
+                sizes="30vw"
               />
               <ButtonAddBookmark mangaName={params.slug} />
             </>
@@ -133,7 +133,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               width={500}
               height={300}
               priority={true}
-              sizes="70vw"
+              sizes="30vw"
             />
           )}
         </div>
