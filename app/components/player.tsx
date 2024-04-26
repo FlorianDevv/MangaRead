@@ -1,6 +1,18 @@
 "use client";
-import { useCallback, useEffect, useRef } from "react";
-import "../css/plyr.scss";
+import {
+  MediaPlayer,
+  MediaProvider,
+  MediaProviderAdapter,
+  isHTMLVideoElement,
+  isVideoProvider,
+} from "@vidstack/react";
+import {
+  PlyrLayout,
+  plyrLayoutIcons,
+} from "@vidstack/react/player/layouts/plyr";
+import "@vidstack/react/player/styles/base.css";
+import "@vidstack/react/player/styles/plyr/theme.css";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 interface Anime {
   title: string;
   episode: string;
@@ -8,9 +20,27 @@ interface Anime {
 }
 
 export default function Player(anime: Anime) {
-  const playerRef = useRef<HTMLVideoElement | null>(null);
   const lastAnimeRef = useRef(anime);
 
+  const getAnimeListAndIndex = useCallback(() => {
+    let animeList = JSON.parse(localStorage.getItem("animeInfo") || "[]");
+    if (animeList.length === 0) {
+      const animeInfo = {
+        anime: anime.title,
+        season: anime.season,
+        episode: anime.episode,
+        savedTime: 0,
+        duration: "00:00:00",
+        dateWatched: Date.now(),
+      };
+      animeList = [animeInfo];
+      localStorage.setItem("animeInfo", JSON.stringify(animeList));
+    }
+    const animeIndex = animeList.findIndex(
+      (a: { anime: string }) => a.anime === anime.title
+    );
+    return { animeList, animeIndex };
+  }, [anime.title, anime.season, anime.episode]);
   const updateAnimeInfo = useCallback(
     (
       animeList: any[],
@@ -46,75 +76,105 @@ export default function Player(anime: Anime) {
               duration: currentDuration,
               dateWatched: Date.now(),
             };
+
       if (animeIndex === -1) animeList.push(animeInfo);
       else animeList[animeIndex] = animeInfo;
       localStorage.setItem("animeInfo", JSON.stringify(animeList));
+
       return animeInfo;
     },
     [anime]
   );
 
-  const initializePlayer = useCallback(() => {
-    import("plyr").then((Plyr) => {
-      if (playerRef.current) {
-        const player = new Plyr.default(playerRef.current, {
-          fullscreen: { iosNative: true },
-        });
-        player.on("loadedmetadata", () => {
+  const onProviderSetup = useCallback(
+    (provider: MediaProviderAdapter) => {
+      if (isVideoProvider(provider) && isHTMLVideoElement(provider.video)) {
+        const player = provider.video;
+
+        player.oncanplaythrough = () => {
+          const { animeList, animeIndex } = getAnimeListAndIndex();
+          if (
+            animeIndex !== -1 &&
+            player.currentTime !== animeList[animeIndex].savedTime
+          ) {
+            player.currentTime = animeList[animeIndex].savedTime;
+
+            const currentSecond = Math.round(player.currentTime);
+            if (currentSecond !== animeList[animeIndex].savedTime) {
+              updateAnimeInfo(animeList, animeIndex, currentSecond);
+            }
+          }
+
+          // Update the duration of the anime
           const duration = new Date(player.duration * 1000)
             .toISOString()
             .substr(11, 8);
-          const animeList = JSON.parse(
-            localStorage.getItem("animeInfo") || "[]"
-          );
-          const animeIndex = animeList.findIndex(
-            (a: { anime: string }) => a.anime === anime.title
-          );
-          const animeInfo = updateAnimeInfo(
-            animeList,
-            animeIndex,
-            undefined,
-            duration
-          );
-          if (animeIndex !== -1) {
-            player.currentTime = animeInfo.savedTime;
-          }
-        });
+          updateAnimeInfo(animeList, animeIndex, undefined, duration);
+        };
 
-        player.on("timeupdate", () => {
+        player.ontimeupdate = () => {
           const currentSecond = Math.round(player.currentTime);
-          const animeList = JSON.parse(
-            localStorage.getItem("animeInfo") || "[]"
-          );
-          const animeIndex = animeList.findIndex(
-            (a: { anime: string }) => a.anime === anime.title
-          );
-          if (animeIndex !== -1) {
+          const { animeList, animeIndex } = getAnimeListAndIndex();
+          if (
+            animeIndex !== -1 &&
+            currentSecond !== animeList[animeIndex].savedTime &&
+            currentSecond > 0
+          ) {
             updateAnimeInfo(animeList, animeIndex, currentSecond);
           }
-        });
+        };
       }
-    });
-  }, [anime.title, updateAnimeInfo]);
+    },
+    [updateAnimeInfo, getAnimeListAndIndex]
+  );
 
   useEffect(() => {
-    const animeList = JSON.parse(localStorage.getItem("animeInfo") || "[]");
-    const animeIndex = animeList.findIndex(
-      (a: { anime: string }) => a.anime === anime.title
-    );
+    const { animeList, animeIndex } = getAnimeListAndIndex();
     if (animeIndex !== -1) {
       const savedTime = animeList[animeIndex].savedTime;
       updateAnimeInfo(animeList, animeIndex, savedTime);
     }
-  }, [anime.episode, anime.season, anime.title, updateAnimeInfo]);
+  }, [
+    anime.episode,
+    anime.season,
+    anime.title,
+    updateAnimeInfo,
+    getAnimeListAndIndex,
+  ]);
 
   useEffect(() => {
-    initializePlayer();
     lastAnimeRef.current = anime;
-  }, [anime, initializePlayer]);
+  }, [anime, onProviderSetup]);
 
-  const seasonNumber = anime.season.match(/\d+/)?.[0].padStart(2, "0");
-  const episodeNumber = anime.episode.match(/\d+/)?.[0].padStart(3, "0");
-  const videoSrc = `/api/video?videoId=${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}`;
-  return <video ref={playerRef} src={videoSrc} controls={true} />;
+  const seasonNumber = useMemo(
+    () => anime.season.match(/\d+/)?.[0].padStart(2, "0"),
+    [anime.season]
+  );
+  const episodeNumber = useMemo(
+    () => anime.episode.match(/\d+/)?.[0].padStart(3, "0"),
+    [anime.episode]
+  );
+  const videoSrc = useMemo(
+    () =>
+      `/api/video?videoId=${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`,
+    [anime.title, seasonNumber, episodeNumber]
+  );
+
+  return (
+    <MediaPlayer
+      title={
+        decodeURIComponent(anime.title) +
+        "/" +
+        anime.episode +
+        "/" +
+        anime.season
+      }
+      src={videoSrc}
+      playsInline
+      onProviderSetup={onProviderSetup}
+    >
+      <MediaProvider />
+      <PlyrLayout icons={plyrLayoutIcons} />
+    </MediaPlayer>
+  );
 }

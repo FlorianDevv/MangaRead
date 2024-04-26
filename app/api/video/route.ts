@@ -23,7 +23,7 @@ function getVideoStream(req: Request) {
     });
   }
 
-  const videoPath = `public/${videoId}.mp4`;
+  const videoPath = `public/${videoId}`;
 
   if (!fs.existsSync(videoPath)) {
     return new Response("Video not found", {
@@ -49,12 +49,23 @@ function getVideoStream(req: Request) {
     "Content-Type": "video/mp4",
   } as { [key: string]: string };
 
-  const videoStream = fs.createReadStream(videoPath, {
-    start: start,
-    end: end,
-  });
+  try {
+    const videoStream = fs.createReadStream(videoPath, {
+      start: start,
+      end: end,
+    });
 
-  return new Response(videoStream as any, { status: 206, headers });
+    return new Response(videoStream as any, { status: 206, headers });
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === "ERR_INVALID_STATE") {
+      console.error("Stream was closed before it could be read");
+      // Handle the error here, e.g. by retrying the operation or showing an error message
+    } else {
+      throw err;
+    }
+  }
+
+  return new Response(getVideoStream as any, { status: 206, headers });
 }
 
 export async function GET(req: Request) {
