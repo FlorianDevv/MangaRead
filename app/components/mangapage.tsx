@@ -236,12 +236,14 @@ export default function MangaPage({
               <Image
                 src={`/${slug}/manga/${volume}/${imageName}.webp`}
                 alt={`${slug} Page ${pageNumber}`}
-                style={{ objectFit: "contain" }}
-                sizes="125vw"
+                className="object-contain"
+                sizes="(min-width: 1080px) 1024px, 95.26vw"
                 quality={quality}
                 fill
                 priority
                 onLoad={() => setIsLoading(false)}
+                placeholder="blur"
+                blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
               />
             )}
             {isLoading && !isVertical && (
@@ -254,12 +256,13 @@ export default function MangaPage({
                 <Image
                   src={`/${slug}/manga/${volume}/${nextImageName}.webp`}
                   alt={`${slug} Page ${pageNumber + 1}`}
-                  style={{ objectFit: "contain" }}
-                  sizes="125vw"
+                  sizes="(min-width: 1080px) 1024px, 95.26vw"
                   quality={quality}
                   fill
                   priority
-                  className="hidden"
+                  className="hidden object-contain"
+                  placeholder="blur"
+                  blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                 />
               </>
             )}
@@ -281,10 +284,11 @@ export default function MangaPage({
                         alt={`${slug} Page ${index + 1}`}
                         width={3840}
                         height={2160}
-                        style={{ objectFit: "contain" }}
-                        sizes="125vw"
+                        sizes="(min-width: 1080px) 1024px, 95.26vw"
                         quality={quality}
                         loading="lazy"
+                        placeholder="blur"
+                        blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                         onLoad={() => {
                           if (index + 1 === pageNumber && isLoading) {
                             imageRefs.current[index]?.scrollIntoView();
@@ -300,7 +304,9 @@ export default function MangaPage({
                           setTimeout(() => setIsVisible(true), 10);
                         }}
                         className={
-                          isFullscreen ? "" : "mx-auto lg:max-w-screen-lg"
+                          isFullscreen
+                            ? "object-contain"
+                            : "mx-auto lg:max-w-screen-lg object-contain"
                         }
                       />
                     </div>

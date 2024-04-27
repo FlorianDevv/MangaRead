@@ -25,11 +25,13 @@ export default function CardClient({
           <Image
             src={imagePath}
             alt={Name}
-            quality={10}
+            quality={50}
             width={200}
             height={800}
-            sizes="30vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
+            placeholder="blur"
+            blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
           />
           {type === "manga" && (
             <div className="absolute bottom-2 left-2 bg-blue-900  text-xs px-2 py-1 rounded">

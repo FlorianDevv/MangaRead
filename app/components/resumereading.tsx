@@ -152,7 +152,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
   }
 
   return (
-    <>
+    <div>
       <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
         {data.resume.title}
         <div className="ml-2">
@@ -177,12 +177,13 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                     <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 flex-shrink-0 shine">
                       <Image
                         src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
-                        alt={mangaInfo.manga}
-                        quality={10}
+                        alt={mangaInfo.manga + " resume"}
+                        quality={50}
                         fill
-                        style={{ objectFit: "cover" }}
-                        sizes="30vw"
-                        className="transition-all duration-500 ease-in-out transform"
+                        sizes="(min-width: 780px) 224px, (min-width: 640px) 192px, 128px"
+                        className="transition-all duration-500 ease-in-out transform object-cover"
+                        placeholder="blur"
+                        blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
 
                       <div className="absolute bottom-2 left-2 bg-blue-900 text-xs px-2 py-1 rounded">
@@ -251,12 +252,13 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                     <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 flex-shrink-0 shine">
                       <Image
                         src={`/${animeInfo.anime}/anime/Season01/01-001.webp`}
-                        alt={animeInfo.anime}
-                        quality={10}
+                        alt={animeInfo.anime + " resume"}
+                        quality={50}
                         fill
-                        style={{ objectFit: "cover" }}
-                        sizes="30vw"
-                        className="transition-all duration-500 ease-in-out transform"
+                        sizes="(min-width: 780px) 224px, (min-width: 640px) 192px, 128px"
+                        className="transition-all duration-500 ease-in-out transform object-cover"
+                        placeholder="blur"
+                        blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
                       <div className="absolute bottom-2 left-2 bg-red-900 text-xs px-2 py-1 rounded">
                         Anime
@@ -317,6 +319,6 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
           }
         })}
       </div>
-    </>
+    </div>
   );
 }

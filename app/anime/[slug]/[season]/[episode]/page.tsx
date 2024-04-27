@@ -64,6 +64,7 @@ export default function Page({
             seasons={seasons}
             slug={params.slug}
             currentSeason={params.season}
+            isPage={true}
           />
         </div>
         <div className="w-96 md:w-3/4 border-2 border-gray-800 rounded-lg my-4">

@@ -2,7 +2,6 @@
 import { ButtonAddBookmark } from "@/app/components/bookmark";
 import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
 import ResumeReading from "@/app/components/resumereading";
-import EpisodeSelect from "@/app/components/select/episodeselect";
 import { SeasonSelect } from "@/app/components/select/seasonselect";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import fs from "fs";
@@ -111,17 +110,19 @@ export default function Page({ params }: { params: { slug: string } }) {
         {decodeURIComponent(params.slug)}
       </h1>
       <div className="flex flex-wrap lg:flex-nowrap justify-center  ">
-        <div className="w-80  my-8 items-center justify-center flex flex-col space-y-4">
+        <div className="md:w-80 w-60  my-4 items-center justify-center flex flex-col space-y-4">
           {isMangaDirectoryExists ? (
             <>
               <Image
                 src={`/${params.slug}/manga/Tome 01/01-001.webp`}
                 alt={`${params.slug}`}
-                quality={10}
+                quality={50}
                 width={500}
                 height={300}
                 priority={true}
-                sizes="30vw"
+                sizes="(min-width: 400px) 320px, calc(25vw + 225px)"
+                placeholder="blur"
+                blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
               />
               <ButtonAddBookmark mangaName={params.slug} />
             </>
@@ -129,51 +130,52 @@ export default function Page({ params }: { params: { slug: string } }) {
             <Image
               src={`/${params.slug}/anime/Season01/01-001.webp`}
               alt={`${params.slug}`}
-              quality={10}
+              quality={50}
               width={500}
               height={300}
               priority={true}
-              sizes="30vw"
+              sizes="(min-width: 400px) 320px, calc(25vw + 225px)"
+              placeholder="blur"
+              blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
             />
           )}
         </div>
 
-        <div className="w-full lg:w-1/2 lg:flex lg:flex-row justify-center items-center text-center lg:ml-8 space-y-6 lg:space-y-0 mx-4">
-          <div className="flex flex-col items-center justify-center md:items-start md:justify-start">
+        <div className="w-full lg:w-1/2 lg:flex lg:flex-row justify-center items-center text-center lg:ml-8 space-y-6 lg:space-y-0 mx-4 ">
+          <div className="flex flex-col items-center justify-center md:items-start md:justify-start ">
             {manga.synopsis && ( // Check if synopsis exists before rendering
-              <p className="text-xs sm:text-sm overflow-wrap-break break-words text-left lg:text-justify lg:mr-4 mb-4">
+              <p className="text-xs sm:text-sm overflow-wrap-break break-words text-left lg:text-justify lg:mr-4 mb-2">
                 {manga.synopsis}
               </p>
             )}
-            {isMangaDirectoryExists && (
-              <>
-                <h1 className="text-2xl my-4">
-                  Total: {volumes.length} volumes
-                </h1>
-                <VolumeSelect
-                  volumes={volumes}
-                  slug={params.slug}
-                  currentVolume=""
-                  isPage={false}
-                />
-              </>
-            )}
-            {isAnimeDirectoryExists && (
-              <div className="flex flex-wrap mt-2">
-                <SeasonSelect
-                  seasons={seasons}
-                  slug={params.slug}
-                  currentSeason={"season01"}
-                />
-                <EpisodeSelect
-                  episodes={episodes}
-                  slug={params.slug}
-                  currentEpisode={"episode01"}
-                  season={""}
-                  isPage={false}
-                />
-              </div>
-            )}
+            <div className="flex flex-col md:flex-row">
+              {isMangaDirectoryExists && (
+                <div className="p-4  rounded-md">
+                  <h1 className=" bg-blue-900 text-lg px-2 py-1 rounded">
+                    Manga
+                  </h1>
+                  <VolumeSelect
+                    volumes={volumes}
+                    slug={params.slug}
+                    currentVolume=""
+                    isPage={false}
+                  />
+                </div>
+              )}
+              {isAnimeDirectoryExists && (
+                <div className="p-4 rounded-md">
+                  <h1 className="bg-red-900 text-lg px-2 py-1 rounded mb-2">
+                    Anime
+                  </h1>
+                  <SeasonSelect
+                    seasons={seasons}
+                    slug={params.slug}
+                    currentSeason={"season01"}
+                    isPage={false}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
