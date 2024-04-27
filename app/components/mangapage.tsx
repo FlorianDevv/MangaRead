@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 // components/MangaPage.tsx
 
-import { Maximize2, Minimize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FloatingButton } from "./floatingButtons";
@@ -354,34 +354,6 @@ export default function MangaPage({
 }
 //---------------------------------------------
 
-function SelectPageNumber(
-  pageNumber: number,
-  setPageNumber: (arg0: number) => void,
-  totalPages: number
-) {
-  return (
-    <Select
-      onValueChange={(value: string) =>
-        setPageNumber(Number(value.split(" / ")[0]))
-      }
-    >
-      <SelectTrigger
-        className="m-2 overflow-hidden max-w-sm p-2 hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
-        aria-label={`Changer de page. Page actuelle: ${pageNumber} page sur ${totalPages} pages`}
-      >
-        {`${pageNumber} / ${totalPages}`}
-      </SelectTrigger>
-      <SelectContent>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-          <SelectItem key={num} value={`${num} / ${totalPages}`}>
-            {`${num} / ${totalPages}`}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
-}
-
 interface FullscreenProps {
   isFullscreen: boolean;
   setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -419,6 +391,41 @@ export function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
     </button>
   );
 }
+function SelectPageNumber(
+  pageNumber: number,
+  setPageNumber: (arg0: number) => void,
+  totalPages: number
+) {
+  const [selectValue, setSelectValue] = useState(pageNumber.toString());
+
+  useEffect(() => {
+    setSelectValue(pageNumber.toString());
+  }, [pageNumber]);
+
+  return (
+    <Select
+      value={selectValue}
+      onValueChange={(value: string) => {
+        setPageNumber(Number(value));
+        setSelectValue(value);
+      }}
+    >
+      <SelectTrigger
+        className="m-2 overflow-hidden max-w-sm p-2 hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
+        aria-label={`Changer de page. Page actuelle: ${pageNumber} page sur ${totalPages} pages`}
+      >
+        {`${pageNumber} / ${totalPages}`}
+      </SelectTrigger>
+      <SelectContent>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+          <SelectItem key={num} value={num.toString()}>
+            {`${num} / ${totalPages}`}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 interface PreviousPageButtonProps {
   previousPage: () => void;
@@ -426,24 +433,14 @@ interface PreviousPageButtonProps {
 function PreviousPageButton({ previousPage }: PreviousPageButtonProps) {
   return (
     <button
-      className="absolute top-1/2 left-0 transform -translate-y-1/2 w-1/5 h-full opacity-0 hover:opacity-70 flex items-center justify-start ml-4"
+      className="absolute top-1/2 left-0 transform -translate-y-1/2 w-5/12 h-full opacity-0 hover:opacity-70 flex items-center justify-start ml-4"
       onClick={previousPage}
-      title="Page précédente"
+      style={{
+        cursor:
+          "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjgwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LWJpZy1sZWZ0Ij48cGF0aCBkPSJNMTggMTVoLTZ2NGwtNy03IDctN3Y0aDZ2NnoiLz48L3N2Zz4='), auto",
+      }}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="blue"
-        className="h-16 w-16"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M15 19l-7-7 7-7"
-        />
-      </svg>
+      <ChevronLeft className="w-40 h-40 md:hidden block" />
     </button>
   );
 }
@@ -457,29 +454,20 @@ function NextPageButton({
   nextPage,
   disabled,
 }: NextPageButtonProps) {
+  const cursorImage = !nextPageExists
+    ? "default"
+    : "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjgwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LWJpZy1yaWdodCI+PHBhdGggZD0iTTYgOWg2VjVsNyA3LTcgN3YtNEg2Vjl6Ii8+PC9zdmc+'), auto";
+
   return (
     <button
-      className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-1/5 h-full opacity-0 hover:opacity-70 flex items-center justify-end mr-4 ${
-        nextPageExists ? "" : "cursor-not-allowed"
-      }`}
+      className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-5/12 h-full opacity-0 hover:opacity-70 flex items-center justify-end mr-4`}
       onClick={nextPageExists ? nextPage : undefined}
-      title="Page suivante"
       disabled={disabled}
+      style={{
+        cursor: cursorImage,
+      }}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="blue"
-        className="h-16 w-16"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 5l7 7-7 7"
-        />
-      </svg>
+      <ChevronRight className="w-40 h-40 md:hidden block" />
     </button>
   );
 }
