@@ -8,6 +8,8 @@
 
 A self-hosted website for reading local manga and watching anime videos.
 
+![Manga Reader](readme/image/pres.webp)
+
 ## Table of Contents
 
 - [Manga Reader 📚](#manga-reader-)
@@ -124,7 +126,3 @@ Performance is the main focus of this project to ensure a smooth reading experie
 ## License 📝
 
 This project is licensed under the terms of the [MIT license](LICENSE).
-
-```
-
-```
