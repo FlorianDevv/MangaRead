@@ -7,11 +7,13 @@ import {
   isVideoProvider,
 } from "@vidstack/react";
 import {
-  PlyrLayout,
-  plyrLayoutIcons,
-} from "@vidstack/react/player/layouts/plyr";
-import "@vidstack/react/player/styles/base.css";
-import "@vidstack/react/player/styles/plyr/theme.css";
+  DefaultAudioLayout,
+  DefaultVideoLayout,
+  defaultLayoutIcons,
+} from "@vidstack/react/player/layouts/default";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import "@vidstack/react/player/styles/default/theme.css";
+
 import { useCallback, useEffect, useMemo, useRef } from "react";
 interface Anime {
   title: string;
@@ -174,7 +176,8 @@ export default function Player(anime: Anime) {
       onProviderSetup={onProviderSetup}
     >
       <MediaProvider />
-      <PlyrLayout icons={plyrLayoutIcons} />
+      <DefaultVideoLayout icons={defaultLayoutIcons} />
+      <DefaultAudioLayout icons={defaultLayoutIcons} />
     </MediaPlayer>
   );
 }

@@ -26,29 +26,24 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
   return (
     <>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div
-          className="flex"
-          style={{ backfaceVisibility: "hidden", touchAction: "pan-y" }}
-        >
-          {mangaDetails.map((mangaDetail) => (
-            <div
-              className="flex-none pl-4 min-w-0"
-              key={mangaDetail.name}
-              style={{ flex: "0 0 100%", minWidth: "0" }}
-            >
-              <div className="relative w-full h-[19rem] overflow-hidden flex">
+        <div className="flex">
+          {mangaDetails.map((mangaDetail, index) => (
+            <div className="flex-shrink-0 w-full" key={mangaDetail.name}>
+              <div className="relative w-full h-80 flex">
                 <Image
                   src={`/${mangaDetail.name}/manga/Tome 01/01-001.webp`}
-                  alt={"cover image"}
-                  className="absolute w-full h-full object-cover opacity-25 z-0"
+                  alt={"cover image back"}
+                  className="object-cover opacity-25 blur-md"
                   fill
-                  sizes="(max-width: 640px) 30vw, (max-width: 1024px) 30vw, 30vw"
+                  sizes="25vw"
                   quality={1}
-                  style={{ filter: "blur(12px)", objectFit: "cover" }}
+                  placeholder="blur"
+                  blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+                  priority={index === 0}
                 />
                 <div className="w-1/2 text-left mt-2 ml-2 sm:ml-24 space-y-4 flex flex-col justify-center  z-10">
                   <h1 className="text-3xl">{mangaDetail.name}</h1>
-                  <p className="text-sm pr-2 line-clamp-4  lg:line-clamp-5 text-gray-100 font-normal">
+                  <p className="text-sm pr-2 line-clamp-4  lg:line-clamp-5 text-gray-100">
                     {mangaDetail.synopsis}
                   </p>
                   <p className="text-lg text-gray-100 font-normal">
@@ -69,12 +64,15 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                 <div className="relative w-56 flex justify-end items-end xl:ml-20">
                   <Image
                     src={`/${mangaDetail.name}/manga/Tome 01/01-001.webp`}
-                    alt={"cover image"}
+                    alt={"cover image front"}
                     className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125"
-                    quality={10}
-                    width={500}
-                    height={300}
-                    sizes="30vw"
+                    quality={50}
+                    width={600}
+                    height={900}
+                    sizes="(min-width: 1080px) 216px, (min-width: 1000px) calc(-15vw + 374px), (min-width: 780px) calc(15.5vw + 72px), (min-width: 560px) 224px, (min-width: 380px) calc(18.75vw + 123px), calc(75vw - 83px)"
+                    placeholder="blur"
+                    blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+                    priority={index === 0}
                   />
                 </div>
               </div>

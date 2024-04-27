@@ -160,13 +160,6 @@ export default function EpisodeSelect({
             ))}
         </SelectContent>
       </Select>
-      {!isPage && (
-        <Link href={`/anime/${slug}/season01/episode01`}>
-          <Button variant="secondary" className="uppercase">
-            {data.episodeSelect.start}
-          </Button>
-        </Link>
-      )}
     </div>
   );
 }

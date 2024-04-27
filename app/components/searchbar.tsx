@@ -64,7 +64,9 @@ export default function SearchBar({ mangaData }: SearchBarProps) {
                       alt={result.name}
                       width={60}
                       height={60}
-                      quality={10}
+                      quality={50}
+                      placeholder="blur"
+                      blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                     />
                   </div>
                   <p className="ml-2">{result.name}</p>

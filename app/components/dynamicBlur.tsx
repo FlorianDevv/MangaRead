@@ -29,8 +29,8 @@ const DynamicBlur: React.FC<{
     <Image
       src={src}
       alt={`Cover image de ${alt}`} // if the image conveys information
-      quality={10}
-      sizes="30vw"
+      quality={50}
+      sizes="(min-width: 1540px) calc(20vw - 122px), (min-width: 1280px) calc(20vw - 96px), (min-width: 1040px) calc(25vw - 116px), (min-width: 780px) calc(33.33vw - 80px), calc(50vw - 16px)"
       placeholder="blur"
       blurDataURL={base64.base64} // Convert base64 object to string
       width={200}
