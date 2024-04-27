@@ -153,7 +153,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 
   return (
     <div>
-      <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start ">
+      <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start">
         {data.resume.title}
         <div className="ml-2">
           <Clock3 />
@@ -166,22 +166,21 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
             return (
               <div
                 key={index}
-                className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300 "
+                className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
               >
-                <div className="flex flex-col   overflow-hidden ">
+                <div className="flex flex-col overflow-hidden rounded-lg">
                   <Link
                     key={index}
                     href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
-                    className="ease-in-out transform  hover:scale-105 transition-transform duration-300"
                   >
-                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 flex-shrink-0 shine">
+                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 shine">
                       <Image
                         src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
                         alt={mangaInfo.manga + " resume"}
                         quality={50}
                         fill
                         sizes="(min-width: 780px) 224px, (min-width: 640px) 192px, 128px"
-                        className="transition-all duration-500 ease-in-out transform object-cover"
+                        className="object-cover"
                         placeholder="blur"
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
@@ -243,20 +242,19 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                 key={index}
                 className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
               >
-                <div className="flex flex-col items-stretch rounded-lg overflow-hidden  ease-in-out transform  transition-transform duration-300">
+                <div className="flex flex-col overflow-hidden rounded-lg">
                   <Link
                     key={index}
                     href={`/anime/${animeInfo.anime}/${animeInfo.season}/${animeInfo.episode}`}
-                    className="ease-in-out transform  hover:scale-105 transition-transform duration-300"
                   >
-                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 flex-shrink-0 shine">
+                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 shine">
                       <Image
                         src={`/${animeInfo.anime}/anime/Season01/01-001.webp`}
                         alt={animeInfo.anime + " resume"}
                         quality={50}
                         fill
                         sizes="(min-width: 780px) 224px, (min-width: 640px) 192px, 128px"
-                        className="transition-all duration-500 ease-in-out transform object-cover"
+                        className="object-cover"
                         placeholder="blur"
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
