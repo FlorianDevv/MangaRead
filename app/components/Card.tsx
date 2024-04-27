@@ -23,21 +23,21 @@ export default function Card({ Name, type }: CardProps) {
             className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
           />
           {type === "manga" && (
-            <div className="absolute bottom-2 left-2 bg-blue-900 text-xs px-2 py-1 rounded">
+            <div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded">
               Manga
             </div>
           )}
           {type === "anime" && (
-            <div className="absolute bottom-2 left-2 bg-red-900 text-xs px-2 py-1 rounded">
+            <div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
               Anime
             </div>
           )}
           {type === "both" && (
             <>
-              <div className="absolute bottom-2 left-2 bg-blue-900 text-xs px-2 py-1 rounded">
+              <div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded">
                 Manga
               </div>
-              <div className="absolute bottom-10 left-2 bg-red-900 text-xs px-2 py-1 rounded">
+              <div className="absolute bottom-10 left-2 bg-red-900 text-sm px-2 py-1 rounded">
                 Anime
               </div>
             </>

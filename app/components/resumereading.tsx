@@ -186,7 +186,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
 
-                      <div className="absolute bottom-2 left-2 bg-blue-900 text-xs px-2 py-1 rounded">
+                      <div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded">
                         Manga
                       </div>
                     </div>
@@ -260,7 +260,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                         placeholder="blur"
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
-                      <div className="absolute bottom-2 left-2 bg-red-900 text-xs px-2 py-1 rounded">
+                      <div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
                         Anime
                       </div>
                     </div>
@@ -270,7 +270,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                       </p>
                       <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row">
                         <p>
-                          {data.episodeSelect.episode +
+                          {data.seasonSelect.season +
                             " " +
                             animeInfo.season.split("season")[1]}
                         </p>
@@ -278,7 +278,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                           -
                         </p>
                         <p>
-                          {data.seasonSelect.season +
+                          {data.episodeSelect.episode +
                             " " +
                             animeInfo.episode.split("episode")[1]}
                         </p>

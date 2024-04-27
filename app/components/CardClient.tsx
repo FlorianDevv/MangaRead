@@ -34,21 +34,21 @@ export default function CardClient({
             blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
           />
           {type === "manga" && (
-            <div className="absolute bottom-2 left-2 bg-blue-900  text-xs px-2 py-1 rounded">
+            <div className="absolute bottom-2 left-2 bg-blue-900  text-sm px-2 py-1 rounded">
               Manga
             </div>
           )}
           {type === "anime" && (
-            <div className="absolute bottom-2 left-2 bg-red-900  text-xs px-2 py-1 rounded">
+            <div className="absolute bottom-2 left-2 bg-red-900  text-sm px-2 py-1 rounded">
               Anime
             </div>
           )}
           {type === "both" && (
             <>
-              <div className="absolute bottom-2 left-2 bg-blue-900 text-xs px-2 py-1 rounded">
+              <div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded">
                 Manga
               </div>
-              <div className="absolute bottom-10 left-2 bg-red-900  text-xs px-2 py-1 rounded">
+              <div className="absolute bottom-10 left-2 bg-red-900  text-sm px-2 py-1 rounded">
                 Anime
               </div>
             </>

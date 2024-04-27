@@ -164,13 +164,7 @@ export default function Player(anime: Anime) {
 
   return (
     <MediaPlayer
-      title={
-        decodeURIComponent(anime.title) +
-        "/" +
-        anime.episode +
-        "/" +
-        anime.season
-      }
+      title={decodeURIComponent(anime.title)}
       src={videoSrc}
       playsInline
       onProviderSetup={onProviderSetup}
