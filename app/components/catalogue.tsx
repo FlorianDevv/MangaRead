@@ -79,7 +79,7 @@ export default function CategorySelector({
 
   return (
     <div>
-      <div className="flex flex-col justify-center mb-4">
+      <div className="flex flex-col justify-center mb-4 mb:mx-8">
         <div className="flex flex-row justify-center items-center">
           {types.map((type) => (
             <label key={type} className="inline-flex items-center m-1 text-lg">
