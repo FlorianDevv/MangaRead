@@ -27,19 +27,18 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
     <>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {mangaDetails.map((mangaDetail, index) => (
+          {mangaDetails.map((mangaDetail) => (
             <div className="flex-shrink-0 w-full" key={mangaDetail.name}>
               <div className="relative w-full h-80 flex">
                 <Image
                   src={`/${mangaDetail.name}/manga/Tome 01/01-001.webp`}
                   alt={"cover image back"}
-                  className="object-cover opacity-25 blur-md"
+                  className="object-cover opacity-25 blur-lg"
                   fill
-                  sizes="25vw"
+                  sizes="10vw"
                   quality={1}
                   placeholder="blur"
                   blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
-                  priority={index === 0}
                 />
                 <div className="w-1/2 text-left mt-2 ml-2 sm:ml-24 space-y-4 flex flex-col justify-center  z-10">
                   <h1 className="text-3xl">{mangaDetail.name}</h1>
@@ -72,7 +71,6 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                     sizes="(min-width: 1080px) 216px, (min-width: 1000px) calc(-15vw + 374px), (min-width: 780px) calc(15.5vw + 72px), (min-width: 560px) 224px, (min-width: 380px) calc(18.75vw + 123px), calc(75vw - 83px)"
                     placeholder="blur"
                     blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
-                    priority={index === 0}
                   />
                 </div>
               </div>
