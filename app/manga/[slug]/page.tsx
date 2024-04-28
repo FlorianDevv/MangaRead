@@ -23,10 +23,6 @@ type Season = {
   name: string;
 };
 
-type Episode = {
-  name: string;
-};
-
 export default function Page({ params }: { params: { slug: string } }) {
   const decodedSlug = decodeURIComponent(params.slug);
   const mangaDirectory = path.join(
@@ -51,6 +47,18 @@ export default function Page({ params }: { params: { slug: string } }) {
   );
   if (fs.existsSync(synopsisPath)) {
     synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
+  }
+  let categories: string[] = [];
+  const categoriesPath = path.join(
+    process.cwd(),
+    "public",
+    decodedSlug,
+    "resume.json"
+  );
+  if (fs.existsSync(categoriesPath)) {
+    categories = JSON.parse(
+      fs.readFileSync(categoriesPath, "utf-8")
+    ).categories;
   }
 
   let volumes: Volume[] = [];
@@ -80,13 +88,6 @@ export default function Page({ params }: { params: { slug: string } }) {
   const seasons: Season[] = isAnimeDirectoryExists
     ? fs.readdirSync(animeDirectory).map((season) => ({ name: season }))
     : [];
-
-  const episodes: Episode[] =
-    isAnimeDirectoryExists && seasons.length > 0
-      ? fs
-          .readdirSync(path.join(animeDirectory, seasons[0].name))
-          .map((episode) => ({ name: episode }))
-      : [];
 
   //if no manga and no anime return error page
   if (!isMangaDirectoryExists && !isAnimeDirectoryExists) {
@@ -143,17 +144,27 @@ export default function Page({ params }: { params: { slug: string } }) {
 
         <div className="w-full lg:w-1/2 lg:flex lg:flex-row justify-center items-center text-center lg:ml-8 space-y-6 lg:space-y-0 mx-4 ">
           <div className="flex flex-col items-center justify-center md:items-start md:justify-start ">
+            {categories.length > 0 && (
+              <div className="flex flex-wrap justify-center md:justify-start mb-4">
+                {categories.map((category, index) => (
+                  <span
+                    key={index}
+                    className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1"
+                  >
+                    {category}
+                  </span>
+                ))}
+              </div>
+            )}
             {manga.synopsis && ( // Check if synopsis exists before rendering
-              <p className="text-xs sm:text-sm overflow-wrap-break break-words text-left lg:text-justify lg:mr-4 mb-2">
+              <p className="text-xs sm:text-sm overflow-wrap-break break-words w-5/6 text-left lg:text-justify lg:mr-4 mb-2">
                 {manga.synopsis}
               </p>
             )}
             <div className="flex flex-col md:flex-row">
               {isMangaDirectoryExists && (
                 <div className="p-4  rounded-md">
-                  <h1 className=" bg-blue-900 text-lg px-2 py-1 rounded">
-                    Manga
-                  </h1>
+                  <h1 className=" bg-blue-900 text-lg py-1 rounded">Manga</h1>
                   <VolumeSelect
                     volumes={volumes}
                     slug={params.slug}
@@ -164,7 +175,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               )}
               {isAnimeDirectoryExists && (
                 <div className="p-4 rounded-md">
-                  <h1 className="bg-red-900 text-lg px-2 py-1 rounded mb-2">
+                  <h1 className="bg-red-900 text-lg py-1 rounded mb-2">
                     Anime
                   </h1>
                   <SeasonSelect
