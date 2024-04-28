@@ -1,4 +1,5 @@
 "use client";
+import { Switch } from "@/components/ui/switch";
 import {
   MediaPlayer,
   MediaProvider,
@@ -13,15 +14,38 @@ import {
 } from "@vidstack/react/player/layouts/default";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
+import { useRouter } from "next/navigation";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 interface Anime {
   title: string;
   episode: string;
   season: string;
+  episodes: Episode[];
+  seasons: Season[];
 }
 
+type Episode = {
+  name: string;
+};
+
+type Season = {
+  name: string;
+};
 export default function Player(anime: Anime) {
+  const [autoPlay, setAutoPlay] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedAutoPlay = localStorage.getItem("autoPlay");
+      return savedAutoPlay !== null ? JSON.parse(savedAutoPlay) : true;
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("autoPlay", JSON.stringify(autoPlay));
+    }
+  }, [autoPlay]);
   const lastAnimeRef = useRef(anime);
 
   const getAnimeListAndIndex = useCallback(() => {
@@ -52,7 +76,7 @@ export default function Player(anime: Anime) {
     ) => {
       const currentSavedTime =
         savedTime !== undefined
-          ? savedTime
+          ? savedTime - 1
           : animeList[animeIndex]?.savedTime || 0;
       const currentDuration =
         duration || animeList[animeIndex]?.duration || "00:00:00";
@@ -110,7 +134,7 @@ export default function Player(anime: Anime) {
           // Update the duration of the anime
           const duration = new Date(player.duration * 1000)
             .toISOString()
-            .substr(11, 8);
+            .substring(11, 19);
           updateAnimeInfo(animeList, animeIndex, undefined, duration);
         };
 
@@ -129,6 +153,93 @@ export default function Player(anime: Anime) {
     },
     [updateAnimeInfo, getAnimeListAndIndex]
   );
+
+  const formatEpisodeNameRoute = (filename: string) => {
+    const match = filename.match(/(\d+)-(\d+)\.mp4/);
+    if (match) {
+      const [, , episode] = match;
+      const episodeNumber = parseInt(episode);
+      const formattedEpisodeNumber =
+        episodeNumber < 10 ? `0${episodeNumber}` : `${episodeNumber}`;
+      return `episode${formattedEpisodeNumber}`;
+    }
+    return filename;
+  };
+
+  const router = useRouter();
+
+  const getNextEpisode = useCallback(() => {
+    if (!anime.episodes) {
+      return null;
+    }
+
+    const filteredEpisodes = anime.episodes.filter(
+      (episode) => !episode.name.endsWith(".webp")
+    );
+
+    const currentEpisodeIndex = filteredEpisodes.findIndex(
+      (episode: Episode) =>
+        formatEpisodeNameRoute(episode.name) === anime.episode
+    );
+
+    if (currentEpisodeIndex === -1) {
+      return formatEpisodeNameRoute(anime.episodes[0].name);
+    }
+
+    const nextEpisodeIndex = currentEpisodeIndex + 1;
+    if (nextEpisodeIndex < filteredEpisodes.length) {
+      return formatEpisodeNameRoute(filteredEpisodes[nextEpisodeIndex].name);
+    }
+    return null;
+  }, [anime.episodes, anime.episode]);
+
+  const getNextSeason = useCallback(() => {
+    if (!anime.seasons) {
+      return null;
+    }
+
+    const currentSeasonIndex = anime.seasons.findIndex(
+      (season: Season) =>
+        season.name.toLowerCase() === anime.season.toLowerCase()
+    );
+
+    if (currentSeasonIndex === -1) {
+      return anime.seasons[0].name;
+    }
+
+    const nextSeasonIndex = currentSeasonIndex + 1;
+
+    if (nextSeasonIndex < anime.seasons.length) {
+      const nextSeason = anime.seasons[nextSeasonIndex].name;
+      return nextSeason;
+    }
+    return null;
+  }, [anime.seasons, anime.season]);
+
+  const onVideoEnd = useCallback(() => {
+    if (!autoPlay) {
+      return;
+    }
+
+    const nextEpisode = getNextEpisode();
+
+    if (nextEpisode) {
+      router.push(`/anime/${anime.title}/${anime.season}/${nextEpisode}`);
+    } else {
+      const nextSeason = getNextSeason();
+
+      if (nextSeason) {
+        router.push(`/anime/${anime.title}/${nextSeason}/episode01`);
+      }
+    }
+  }, [
+    getNextEpisode,
+    getNextSeason,
+    router,
+    anime.title,
+    anime.season,
+    autoPlay,
+  ]);
 
   useEffect(() => {
     const { animeList, animeIndex } = getAnimeListAndIndex();
@@ -161,17 +272,31 @@ export default function Player(anime: Anime) {
       `/api/video?videoId=${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`,
     [anime.title, seasonNumber, episodeNumber]
   );
-
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`../../locales/${language}.json`);
   return (
-    <MediaPlayer
-      title={decodeURIComponent(anime.title)}
-      src={videoSrc}
-      playsInline
-      onProviderSetup={onProviderSetup}
-    >
-      <MediaProvider />
-      <DefaultVideoLayout icons={defaultLayoutIcons} />
-      <DefaultAudioLayout icons={defaultLayoutIcons} />
-    </MediaPlayer>
+    <div className="mt-4 flex flex-col items-center justify-center">
+      <Switch
+        checked={autoPlay}
+        onCheckedChange={(checked) => setAutoPlay(checked)}
+      />
+      <div className="mb-2">
+        {autoPlay ? data.player.autoPlayOn : data.player.autoPlayOff}
+      </div>
+      <div className="w-3/4 border-2 border-gray-800">
+        <MediaPlayer
+          title={decodeURIComponent(anime.title)}
+          src={videoSrc}
+          playsInline
+          onProviderSetup={onProviderSetup}
+          onEnded={onVideoEnd}
+          autoplay={autoPlay}
+        >
+          <MediaProvider />
+          <DefaultVideoLayout icons={defaultLayoutIcons} />
+          <DefaultAudioLayout icons={defaultLayoutIcons} />
+        </MediaPlayer>
+      </div>
+    </div>
   );
 }
