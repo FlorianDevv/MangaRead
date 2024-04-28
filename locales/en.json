@@ -37,6 +37,10 @@
     "next": "Next Season",
     "previous": "Previous Season"
   },
+  "player": {
+    "autoPlayOn": "Auto play",
+    "autoPlayOff": "Manual play"
+  },
   "bookmark": {
     "title": "Bookmark",
     "add": "Add to your reading list",

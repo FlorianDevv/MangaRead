@@ -37,6 +37,10 @@
     "next": "Saison Suivante",
     "previous": "Saison Précédente"
   },
+  "player": {
+    "autoPlayOn": "Lecture Automatique",
+    "autoPlayOff": "Lecture Manuelle"
+  },
   "bookmark": {
     "title": "Signet",
     "add": "Ajoutez à votre liste de lecture",
