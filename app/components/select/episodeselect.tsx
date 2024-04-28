@@ -31,7 +31,9 @@ export default function EpisodeSelect({
   const router = useRouter();
 
   const handleChange = (value: string) => {
-    const episode = episodes.find((episode) => episode.name === value);
+    const episode = episodes.find(
+      (episode) => formatEpisodeName(episode.name) === value
+    );
     if (!isPage) {
       season = "season01";
     }
@@ -154,7 +156,7 @@ export default function EpisodeSelect({
               return episodeANumber - episodeBNumber;
             })
             .map((episode, index) => (
-              <SelectItem key={index} value={episode.name}>
+              <SelectItem key={index} value={formatEpisodeName(episode.name)}>
                 {formatEpisodeName(episode.name)}
               </SelectItem>
             ))}

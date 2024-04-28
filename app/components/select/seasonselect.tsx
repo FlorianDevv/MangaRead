@@ -32,7 +32,7 @@ export function SeasonSelect({
   const handleChange = (value: string) => {
     setSelectedSeason(value);
     const season = seasons.find(
-      (season) => season.name.toLowerCase() === value.toLowerCase()
+      (season) => formatSeasonName(season.name) === value
     );
     if (season) {
       router.push(`/anime/${slug}/${season.name.toLowerCase()}/episode01`);
@@ -79,7 +79,7 @@ export function SeasonSelect({
               return seasonANumber - seasonBNumber;
             })
             .map((season, index) => (
-              <SelectItem key={index} value={season.name}>
+              <SelectItem key={index} value={formatSeasonName(season.name)}>
                 {formatSeasonName(season.name)}
               </SelectItem>
             ))}
