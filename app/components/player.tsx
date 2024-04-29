@@ -33,19 +33,6 @@ type Season = {
   name: string;
 };
 export default function Player(anime: Anime) {
-  const [autoPlay, setAutoPlay] = useState(() => {
-    if (typeof window !== "undefined") {
-      const savedAutoPlay = localStorage.getItem("autoPlay");
-      return savedAutoPlay !== null ? JSON.parse(savedAutoPlay) : true;
-    }
-    return true;
-  });
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("autoPlay", JSON.stringify(autoPlay));
-    }
-  }, [autoPlay]);
   const lastAnimeRef = useRef(anime);
 
   const getAnimeListAndIndex = useCallback(() => {
@@ -215,31 +202,36 @@ export default function Player(anime: Anime) {
     }
     return null;
   }, [anime.seasons, anime.season]);
+  const [autoPlay, setAutoPlay] = useState(undefined);
+
+  useEffect(() => {
+    const savedAutoPlay = localStorage.getItem("autoPlay");
+    const clientAutoPlay =
+      savedAutoPlay !== null ? JSON.parse(savedAutoPlay) : true;
+    setAutoPlay(clientAutoPlay);
+  }, []);
+
+  useEffect(() => {
+    if (autoPlay !== undefined) {
+      localStorage.setItem("autoPlay", JSON.stringify(autoPlay));
+    }
+  }, [autoPlay]);
+  const nextEpisode = getNextEpisode();
+  const nextSeason = getNextSeason();
 
   const onVideoEnd = useCallback(() => {
     if (!autoPlay) {
       return;
     }
 
-    const nextEpisode = getNextEpisode();
-
     if (nextEpisode) {
       router.push(`/anime/${anime.title}/${anime.season}/${nextEpisode}`);
     } else {
-      const nextSeason = getNextSeason();
-
       if (nextSeason) {
         router.push(`/anime/${anime.title}/${nextSeason}/episode01`);
       }
     }
-  }, [
-    getNextEpisode,
-    getNextSeason,
-    router,
-    anime.title,
-    anime.season,
-    autoPlay,
-  ]);
+  }, [nextEpisode, nextSeason, router, anime.title, anime.season, autoPlay]);
 
   useEffect(() => {
     const { animeList, animeIndex } = getAnimeListAndIndex();
@@ -278,7 +270,7 @@ export default function Player(anime: Anime) {
     <div className="mt-4 flex flex-col items-center justify-center">
       <Switch
         checked={autoPlay}
-        onCheckedChange={(checked) => setAutoPlay(checked)}
+        onCheckedChange={(checked: any) => setAutoPlay(checked)}
       />
       <div className="mb-2">
         {autoPlay ? data.player.autoPlayOn : data.player.autoPlayOff}
@@ -290,7 +282,7 @@ export default function Player(anime: Anime) {
           playsInline
           onProviderSetup={onProviderSetup}
           onEnded={onVideoEnd}
-          autoplay={autoPlay}
+          autoPlay={autoPlay}
         >
           <MediaProvider />
           <DefaultVideoLayout icons={defaultLayoutIcons} />
