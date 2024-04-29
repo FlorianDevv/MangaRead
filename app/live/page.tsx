@@ -1,7 +1,4 @@
-import fs from "fs";
 import Image from "next/image";
-import path from "path";
-
 // import { MediaPlayer, MediaProvider } from "@vidstack/react";
 // import {
 //   DefaultAudioLayout,
@@ -10,6 +7,7 @@ import path from "path";
 // } from "@vidstack/react/player/layouts/default";
 // import "@vidstack/react/player/styles/default/layouts/video.css";
 // import "@vidstack/react/player/styles/default/theme.css";
+import { GET } from "@/app/api/live/route";
 type ScheduleItem = {
   title: string;
   season: number;
@@ -20,10 +18,8 @@ type ScheduleItem = {
   duration: number;
 };
 
-export default function Page() {
-  const filePath = path.join(process.cwd(), "schedule.json");
-  const fileContents = fs.readFileSync(filePath, "utf-8");
-  const schedule: ScheduleItem[] = JSON.parse(fileContents);
+export default async function Page() {
+  const schedule: ScheduleItem[] = await GET();
 
   return (
     <div>

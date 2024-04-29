@@ -1,5 +1,4 @@
 import fs from "fs";
-import { NextResponse } from "next/server";
 import VideoLib from "node-video-lib";
 import path from "path";
 function shuffleArray(array) {
@@ -124,7 +123,5 @@ export async function GET() {
     schedule = await generateBroadcastSchedule("public");
   }
 
-  return NextResponse.json({
-    schedule,
-  });
+  return schedule;
 }
