@@ -296,8 +296,19 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                             1000
                         )
                           .toISOString()
-                          .substr(11, 8)
-                          .replace(/^00:/, "")}`}
+                          .slice(11, 19)
+                          .replace(/^00:/, "")}` === "-00:00"
+                          ? "✅"
+                          : `-${new Date(
+                              (animeInfo.duration
+                                .split(":")
+                                .reduce((acc, time) => 60 * acc + +time, 0) -
+                                animeInfo.savedTime) *
+                                1000
+                            )
+                              .toISOString()
+                              .slice(11, 19)
+                              .replace(/^00:/, "")}`}
                       </p>
                     </div>
                   </Link>

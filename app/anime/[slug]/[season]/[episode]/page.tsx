@@ -67,13 +67,13 @@ export default function Page({
             isPage={true}
           />
         </div>
-        <div className="w-96 md:w-3/4 border-2 border-gray-800 rounded-lg my-4">
-          <Player
-            title={params.slug}
-            season={params.season}
-            episode={params.episode}
-          />
-        </div>
+        <Player
+          title={params.slug}
+          season={params.season}
+          episode={params.episode}
+          episodes={episodes}
+          seasons={seasons}
+        />
       </div>
     </MobileNavbarComponent>
   );
