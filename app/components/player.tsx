@@ -207,7 +207,7 @@ export default function Player(anime: Anime) {
   useEffect(() => {
     const savedAutoPlay = localStorage.getItem("autoPlay");
     const clientAutoPlay =
-      savedAutoPlay !== null ? JSON.parse(savedAutoPlay) : true;
+      savedAutoPlay !== null ? JSON.parse(savedAutoPlay) : false;
     setAutoPlay(clientAutoPlay);
   }, []);
 
