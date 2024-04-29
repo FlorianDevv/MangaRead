@@ -1,5 +1,7 @@
-"use client";
+import fs from "fs";
 import Image from "next/image";
+import path from "path";
+
 // import { MediaPlayer, MediaProvider } from "@vidstack/react";
 // import {
 //   DefaultAudioLayout,
@@ -8,7 +10,6 @@ import Image from "next/image";
 // } from "@vidstack/react/player/layouts/default";
 // import "@vidstack/react/player/styles/default/layouts/video.css";
 // import "@vidstack/react/player/styles/default/theme.css";
-import { useEffect, useState } from "react";
 type ScheduleItem = {
   title: string;
   season: number;
@@ -18,37 +19,16 @@ type ScheduleItem = {
   realStartTime: number;
   duration: number;
 };
+
 export default function Page() {
-  const [liveData, setLiveData] = useState<{ schedule: ScheduleItem[] }>({
-    schedule: [],
-  });
-
-  useEffect(() => {
-    fetch("api/live")
-      .then((response) => response.json())
-      .then((data) => setLiveData(data));
-  }, []);
-
-  const [nextData, setnextLiveData] = useState("");
-
-  useEffect(() => {
-    fetch("api/live/next")
-      .then((response) => response.text())
-      .then((data) => setnextLiveData(data));
-  }, []);
-
-  const [currentData, setcurrentLiveData] = useState("");
-
-  useEffect(() => {
-    fetch("api/live/current")
-      .then((response) => response.text())
-      .then((data) => setcurrentLiveData(data));
-  }, []);
+  const filePath = path.join(process.cwd(), "schedule.json");
+  const fileContents = fs.readFileSync(filePath, "utf-8");
+  const schedule: ScheduleItem[] = JSON.parse(fileContents);
 
   return (
     <div>
       <div className="flex overflow-x-auto ">
-        {liveData.schedule
+        {schedule
           .filter((item) => Date.now() <= item.realStartTime)
           .map((item, index) => (
             <div

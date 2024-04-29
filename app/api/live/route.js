@@ -37,7 +37,7 @@ async function generateBroadcastSchedule(dir) {
 
   let videoIndex = 0;
 
-  while (totalDuration < 60 * 60) {
+  while (totalDuration < 8 * 60 * 60) {
     // 1 hours in seconds
     // 7 days in seconds
     // If we've reached the end of the videoFiles array, start over
@@ -97,7 +97,18 @@ async function generateBroadcastSchedule(dir) {
 
 // Generate the schedule when the module is loaded
 generateBroadcastSchedule("public");
+setInterval(async () => {
+  // Get the last item in the schedule
+  const lastItem = schedule[schedule.length - 1];
 
+  // Calculate the time difference between now and the last item's start time
+  const timeDifference = lastItem.realStartTime - Date.now();
+
+  // If the last item's start time is less than 8 hours in the future, generate a new schedule
+  if (timeDifference < 8 * 60 * 60 * 1000) {
+    await generateBroadcastSchedule("public");
+  }
+}, 60 * 1000);
 export async function GET() {
   // Read the schedule from the JSON file
   let schedule = JSON.parse(fs.readFileSync("schedule.json", "utf8"));
