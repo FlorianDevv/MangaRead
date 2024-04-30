@@ -1,6 +1,6 @@
-import fs from "fs";
-import VideoLib from "node-video-lib";
-import path from "path";
+const fs = require("fs");
+const VideoLib = require("node-video-lib");
+const path = require("path");
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -24,7 +24,7 @@ function* getVideoFiles(dir) {
   }
 }
 export let schedule = [];
-async function generateBroadcastSchedule(dir) {
+export async function generateBroadcastSchedule(dir) {
   fs.writeFileSync("launchTime.txt", Date.now().toString());
   let videoFiles = Array.from(getVideoFiles(dir));
 
@@ -104,24 +104,7 @@ setInterval(async () => {
   const timeDifference = lastItem.realStartTime - Date.now();
 
   // If the last item's start time is less than 8 hours in the future, generate a new schedule
-  if (timeDifference < 8 * 60 * 60 * 1000) {
+  if (timeDifference < 1 * 60 * 60 * 1000) {
     await generateBroadcastSchedule("public");
   }
 }, 60 * 1000);
-export async function GET() {
-  // Read the schedule from the JSON file
-  let schedule = JSON.parse(fs.readFileSync("schedule.json", "utf8"));
-
-  // Get the current time in seconds since the epoch
-  let now = Date.now();
-
-  // If the schedule is empty or the last video is past, regenerate the schedule
-  if (
-    schedule.length === 0 ||
-    schedule[schedule.length - 1].realStartTime < now
-  ) {
-    schedule = await generateBroadcastSchedule("public");
-  }
-
-  return schedule;
-}

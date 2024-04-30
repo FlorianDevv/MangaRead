@@ -1,9 +1,8 @@
 import fs from "fs";
-import { NextResponse } from "next/server";
-import { schedule } from "../route";
+import { schedule } from "../live";
 
+export const dynamic = "force-dynamic";
 const launchTime = Number(fs.readFileSync("launchTime.txt", "utf-8"));
-
 export async function GET() {
   const now = Math.floor((Date.now() - launchTime) / 1000) % (7 * 24 * 60 * 60);
   const currentVideo = schedule.find(
@@ -11,12 +10,12 @@ export async function GET() {
   );
 
   if (!currentVideo) {
-    return NextResponse.json({ error: "No current video found" });
+    return Response.json({ error: "No current video found" });
   }
 
   const elapsedTime = now - currentVideo.start;
 
-  return NextResponse.json({
+  return Response.json({
     ...currentVideo,
     elapsedTime,
   });

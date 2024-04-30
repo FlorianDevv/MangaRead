@@ -1,5 +1,5 @@
 "use client";
-import { CircleUser, Home, Search } from "lucide-react";
+import { CircleUser, Home, Search, Tv } from "lucide-react";
 import Link from "next/link";
 
 import { useContext } from "react";
@@ -33,6 +33,12 @@ export function MobileNavbarComponent({
           <div className={linkClass("Home")}>
             <Home />
             <span className="mt-1 text-xs">{data.navbar.home}</span>
+          </div>
+        </Link>
+        <Link href="/live">
+          <div className={linkClass("Live")}>
+            <Tv />
+            <span className="mt-1 text-xs">Live</span>
           </div>
         </Link>
         <Link href="/search">
