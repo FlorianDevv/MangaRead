@@ -177,7 +177,6 @@ export default function Player(anime: Anime) {
         <MediaPlayer
           title={decodeURIComponent(anime.title)}
           src={videoSrc}
-          playsInline
           onProviderSetup={onProviderSetup}
         >
           <MediaProvider />
