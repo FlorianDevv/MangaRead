@@ -1,5 +1,4 @@
 "use client";
-import { Switch } from "@/components/ui/switch";
 import {
   MediaPlayer,
   MediaProvider,
@@ -14,9 +13,8 @@ import {
 } from "@vidstack/react/player/layouts/default";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
-import { useRouter } from "next/navigation";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 interface Anime {
   title: string;
   episode: string;
@@ -141,98 +139,6 @@ export default function Player(anime: Anime) {
     [updateAnimeInfo, getAnimeListAndIndex]
   );
 
-  const formatEpisodeNameRoute = (filename: string) => {
-    const match = filename.match(/(\d+)-(\d+)\.mp4/);
-    if (match) {
-      const [, , episode] = match;
-      const episodeNumber = parseInt(episode);
-      const formattedEpisodeNumber =
-        episodeNumber < 10 ? `0${episodeNumber}` : `${episodeNumber}`;
-      return `episode${formattedEpisodeNumber}`;
-    }
-    return filename;
-  };
-
-  const router = useRouter();
-
-  const getNextEpisode = useCallback(() => {
-    if (!anime.episodes) {
-      return null;
-    }
-
-    const filteredEpisodes = anime.episodes.filter(
-      (episode) => !episode.name.endsWith(".webp")
-    );
-
-    const currentEpisodeIndex = filteredEpisodes.findIndex(
-      (episode: Episode) =>
-        formatEpisodeNameRoute(episode.name) === anime.episode
-    );
-
-    if (currentEpisodeIndex === -1) {
-      return formatEpisodeNameRoute(anime.episodes[0].name);
-    }
-
-    const nextEpisodeIndex = currentEpisodeIndex + 1;
-    if (nextEpisodeIndex < filteredEpisodes.length) {
-      return formatEpisodeNameRoute(filteredEpisodes[nextEpisodeIndex].name);
-    }
-    return null;
-  }, [anime.episodes, anime.episode]);
-
-  const getNextSeason = useCallback(() => {
-    if (!anime.seasons) {
-      return null;
-    }
-
-    const currentSeasonIndex = anime.seasons.findIndex(
-      (season: Season) =>
-        season.name.toLowerCase() === anime.season.toLowerCase()
-    );
-
-    if (currentSeasonIndex === -1) {
-      return anime.seasons[0].name;
-    }
-
-    const nextSeasonIndex = currentSeasonIndex + 1;
-
-    if (nextSeasonIndex < anime.seasons.length) {
-      const nextSeason = anime.seasons[nextSeasonIndex].name;
-      return nextSeason;
-    }
-    return null;
-  }, [anime.seasons, anime.season]);
-  const [autoPlay, setAutoPlay] = useState(undefined);
-
-  useEffect(() => {
-    const savedAutoPlay = localStorage.getItem("autoPlay");
-    const clientAutoPlay =
-      savedAutoPlay !== null ? JSON.parse(savedAutoPlay) : true;
-    setAutoPlay(clientAutoPlay);
-  }, []);
-
-  useEffect(() => {
-    if (autoPlay !== undefined) {
-      localStorage.setItem("autoPlay", JSON.stringify(autoPlay));
-    }
-  }, [autoPlay]);
-  const nextEpisode = getNextEpisode();
-  const nextSeason = getNextSeason();
-
-  const onVideoEnd = useCallback(() => {
-    if (!autoPlay) {
-      return;
-    }
-
-    if (nextEpisode) {
-      router.push(`/anime/${anime.title}/${anime.season}/${nextEpisode}`);
-    } else {
-      if (nextSeason) {
-        router.push(`/anime/${anime.title}/${nextSeason}/episode01`);
-      }
-    }
-  }, [nextEpisode, nextSeason, router, anime.title, anime.season, autoPlay]);
-
   useEffect(() => {
     const { animeList, animeIndex } = getAnimeListAndIndex();
     if (animeIndex !== -1) {
@@ -264,25 +170,15 @@ export default function Player(anime: Anime) {
       `/api/video?videoId=${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`,
     [anime.title, seasonNumber, episodeNumber]
   );
-  const language = process.env.DEFAULT_LANGUAGE;
-  const data = require(`../../locales/${language}.json`);
+
   return (
     <div className="mt-4 flex flex-col items-center justify-center">
-      <Switch
-        checked={autoPlay}
-        onCheckedChange={(checked: any) => setAutoPlay(checked)}
-      />
-      <div className="mb-2">
-        {autoPlay ? data.player.autoPlayOn : data.player.autoPlayOff}
-      </div>
       <div className="w-3/4 border-2 border-gray-800">
         <MediaPlayer
           title={decodeURIComponent(anime.title)}
           src={videoSrc}
           playsInline
           onProviderSetup={onProviderSetup}
-          onEnded={onVideoEnd}
-          autoPlay={autoPlay}
         >
           <MediaProvider />
           <DefaultVideoLayout icons={defaultLayoutIcons} />
