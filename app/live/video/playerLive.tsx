@@ -14,12 +14,14 @@ import {
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
 import { useCallback, useEffect, useState } from "react";
+import "./player.css";
 
 export default function PlayerLive() {
   const [src, setSrc] = useState("");
   const [prevSrc, setPrevSrc] = useState("");
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [title, setTitle] = useState("");
 
   const fetchVideoData = useCallback(async () => {
     const currentResponse = await fetch("/api/live/current");
@@ -32,6 +34,8 @@ export default function PlayerLive() {
     ).padStart(2, "0")}-${String(currentData.episode).padStart(3, "0")}.mp4`}`;
 
     setSrc(currentSrc);
+    setTitle(currentData.title); // Set the title here
+
     if (currentSrc !== prevSrc) {
       setElapsedTime(0);
       setPrevSrc(currentSrc);
@@ -78,18 +82,35 @@ export default function PlayerLive() {
     [elapsedTime]
   );
 
+  const handlePlay = async () => {
+    const { elapsedTime } = await fetchVideoData();
+    const videoElement = document.querySelector("video");
+    if (videoElement) {
+      videoElement.currentTime = elapsedTime;
+    }
+  };
+
   return (
     <div className="fixed top-0 left-0 h-screen w-screen z-50">
       <MediaPlayer
         key={src}
         src={{ src: src, type: "video/mp4" }}
-        playsInline
         onProviderSetup={onProviderSetup}
         onEnded={handleVideoEnd}
         autoPlay
+        keyDisabled
+        onPlay={handlePlay}
+        controls={false}
+        title={title}
       >
         <MediaProvider />
-        <DefaultVideoLayout icons={defaultLayoutIcons} />
+        <DefaultVideoLayout
+          disableTimeSlider={true}
+          noKeyboardAnimations={true}
+          noGestures={true}
+          noScrubGesture={true}
+          icons={defaultLayoutIcons}
+        />
         <DefaultAudioLayout icons={defaultLayoutIcons} />
       </MediaPlayer>
     </div>

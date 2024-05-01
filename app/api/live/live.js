@@ -36,7 +36,7 @@ export async function generateBroadcastSchedule(dir) {
 
   let videoIndex = 0;
 
-  while (totalDuration < 8 * 60 * 60) {
+  while (totalDuration < 7 * 24 * 60 * 60) {
     // 1 hours in seconds
     // 7 days in seconds
     // If we've reached the end of the videoFiles array, start over
@@ -81,8 +81,6 @@ export async function generateBroadcastSchedule(dir) {
         });
         previousTitle = title; // Update the previous title
       }
-
-      if (totalDuration >= 7 * 24 * 60 * 60) break; // 7 days in seconds
     } catch (ex) {
       console.error("Error:", ex);
     } finally {
