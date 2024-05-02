@@ -18,7 +18,6 @@ import { useCallback, useEffect, useState } from "react";
 
 export default function PlayerLive() {
   const [src, setSrc] = useState("");
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [prevSrc, setPrevSrc] = useState("");
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -42,7 +41,6 @@ export default function PlayerLive() {
       setPrevSrc(currentSrc);
     } else {
       setElapsedTime(currentData.elapsedTime);
-      setIsDataLoaded(true);
     }
 
     const videoElement = document.querySelector("video");
@@ -64,7 +62,6 @@ export default function PlayerLive() {
 
     fetchAndStartVideo();
     setIsFirstLoad(false);
-    setIsDataLoaded(false);
   }, [fetchVideoData]);
 
   const handleVideoEnd = async () => {
@@ -92,7 +89,7 @@ export default function PlayerLive() {
       videoElement.currentTime = elapsedTime;
     }
   };
-  return isDataLoaded ? (
+  return (
     <MediaPlayer
       key={src}
       src={{ src: src, type: "video/mp4" }}
@@ -117,5 +114,5 @@ export default function PlayerLive() {
       />
       <DefaultAudioLayout icons={defaultLayoutIcons} />
     </MediaPlayer>
-  ) : null;
+  );
 }
