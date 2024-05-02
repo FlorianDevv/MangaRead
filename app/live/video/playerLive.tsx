@@ -1,4 +1,5 @@
 "use client";
+import styles from "@/app/playerlive.module.css";
 import {
   MediaPlayer,
   MediaProvider,
@@ -14,7 +15,6 @@ import {
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
 import { useCallback, useEffect, useState } from "react";
-import "./player.css";
 
 export default function PlayerLive() {
   const [src, setSrc] = useState("");
@@ -89,30 +89,29 @@ export default function PlayerLive() {
       videoElement.currentTime = elapsedTime;
     }
   };
-
   return (
-    <div className="fixed top-0 left-0 h-screen w-screen z-50">
-      <MediaPlayer
-        key={src}
-        src={{ src: src, type: "video/mp4" }}
-        onProviderSetup={onProviderSetup}
-        onEnded={handleVideoEnd}
-        autoPlay
-        keyDisabled
-        onPlay={handlePlay}
-        controls={false}
-        title={title}
-      >
-        <MediaProvider />
-        <DefaultVideoLayout
-          disableTimeSlider={true}
-          noKeyboardAnimations={true}
-          noGestures={true}
-          noScrubGesture={true}
-          icons={defaultLayoutIcons}
-        />
-        <DefaultAudioLayout icons={defaultLayoutIcons} />
-      </MediaPlayer>
-    </div>
+    <MediaPlayer
+      key={src}
+      src={{ src: src, type: "video/mp4" }}
+      onProviderSetup={onProviderSetup}
+      onEnded={handleVideoEnd}
+      autoPlay
+      keyDisabled
+      onPlay={handlePlay}
+      controls={false}
+      title={title}
+      className={`${styles.player} ${styles["vds-video-layout"]}`}
+    >
+      <MediaProvider />
+      <DefaultVideoLayout
+        disableTimeSlider={true}
+        noKeyboardAnimations={true}
+        noGestures={true}
+        noScrubGesture={true}
+        icons={defaultLayoutIcons}
+        className={`${styles.player} ${styles["vds-video-layout"]}`}
+      />
+      <DefaultAudioLayout icons={defaultLayoutIcons} />
+    </MediaPlayer>
   );
 }
