@@ -17,13 +17,6 @@ db.run(`
   )
 `);
 
-function shuffleArray(array: any[]): void {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
 async function getVideoDuration(filename: string): Promise<number> {
   const metadata = await mm.parseFile(filename);
   return metadata.format.duration || 0;
@@ -31,7 +24,6 @@ async function getVideoDuration(filename: string): Promise<number> {
 
 async function getVideoFiles(dir: string): Promise<string[]> {
   let entries = await fs.readdir(dir, { withFileTypes: true });
-
   let files: string[] = [];
 
   for (const entry of entries) {
@@ -46,71 +38,84 @@ async function getVideoFiles(dir: string): Promise<string[]> {
   return files;
 }
 
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 export async function generateBroadcastSchedule(dir: string): Promise<void> {
   await fs.writeFile("launchTime.txt", Date.now().toString());
-  let videoFiles = await getVideoFiles(dir);
-
-  shuffleArray(videoFiles);
 
   let totalDuration = 0;
-  let previousTitle = "";
-
   let currentTime = new Date();
 
-  let videoIndex = 0;
+  let videoFiles = await getVideoFiles(dir);
+  shuffleArray(videoFiles);
 
-  while (totalDuration < 7 * 24 * 60 * 60) {
-    if (videoIndex >= videoFiles.length) {
-      videoIndex = 0;
-      shuffleArray(videoFiles);
-    }
+  db.serialize(async () => {
+    db.run("BEGIN TRANSACTION");
 
-    const videoPath = videoFiles[videoIndex];
-    if (!videoPath) {
-      continue;
-    }
-    videoIndex++;
+    for (const videoPath of videoFiles) {
+      console.log("Found video file:", videoPath);
+      try {
+        const duration = await getVideoDuration(videoPath);
+        totalDuration += duration;
 
-    try {
-      const duration = await getVideoDuration(videoPath);
-      totalDuration += duration;
+        let startTime = new Date(currentTime.getTime() + totalDuration * 1000);
 
-      let startTime = new Date(currentTime.getTime() + totalDuration * 1000);
+        // Stop adding videos if the start time is more than 7 days from now
+        if (startTime > new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) {
+          break;
+        }
 
-      const match = videoPath.match(
-        /.*\\(.*)\\anime\\Season(\d+)\\(\d+)-(\d+)\.mp4$/
-      );
-      if (match) {
-        const title = match[1];
-        const season = Number(match[2]);
-        const episode = Number(match[4].padStart(2, "0"));
+        const match = videoPath.match(
+          /.*\/(.*)\/anime\/Season(\d+)\/(\d+)-(\d+)\.mp4$/
+        );
+        if (match) {
+          const title = match[1];
+          const season = Number(match[2]);
+          const episode = Number(match[4].padStart(2, "0"));
 
-        db.run(
-          `
+          db.run(
+            `
           INSERT INTO schedule (title, season, episode, start, realStartTime, startTime, duration)
           VALUES (?, ?, ?, ?, ?, ?, ?)
         `,
-          [
-            title,
-            season,
-            episode,
-            totalDuration - duration,
-            currentTime.getTime() + totalDuration * 1000,
-            startTime.toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            }),
-            duration,
-          ]
-        );
-
-        previousTitle = title;
+            [
+              title,
+              season,
+              episode,
+              totalDuration - duration,
+              currentTime.getTime() + totalDuration * 1000,
+              startTime.toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+              }),
+              duration,
+            ],
+            (err) => {
+              if (err) {
+                console.error("Error:", err);
+              }
+            }
+          );
+        } else {
+          console.error("Error: Could not match video path:", videoPath);
+        }
+      } catch (ex) {
+        console.error("Error:", ex);
       }
-    } catch (ex) {
-      console.error("Error:", ex);
     }
-  }
+
+    db.run("COMMIT", (err) => {
+      if (err) {
+        console.error("Error committing transaction:", err);
+      }
+    });
+  });
 }
 
 generateBroadcastSchedule("public");

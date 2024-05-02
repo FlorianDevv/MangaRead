@@ -96,6 +96,7 @@ export default function PlayerLive() {
       onProviderSetup={onProviderSetup}
       onEnded={handleVideoEnd}
       autoPlay
+      playsInline
       keyDisabled
       onPlay={handlePlay}
       controls={false}
