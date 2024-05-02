@@ -1,14 +1,20 @@
-const fs = require("fs");
-const { MP4Parser } = require("node-video-lib");
-const path = require("path");
-function shuffleArray(array) {
+import * as fs from "fs";
+import * as mm from "music-metadata";
+import * as path from "path";
+
+function shuffleArray(array: any[]): void {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
 
-function* getVideoFiles(dir) {
+async function getVideoDuration(filename: string): Promise<number> {
+  const metadata = await mm.parseFile(filename);
+  return metadata.format.duration || 0;
+}
+
+function* getVideoFiles(dir: string): Generator<string> {
   let entries = fs.readdirSync(dir, { withFileTypes: true });
 
   // Shuffle the entries array to get a random order
@@ -23,8 +29,10 @@ function* getVideoFiles(dir) {
     }
   }
 }
-export let schedule = [];
-export async function generateBroadcastSchedule(dir) {
+
+export let schedule: any[] = [];
+
+export async function generateBroadcastSchedule(dir: string): Promise<any[]> {
   fs.writeFileSync("launchTime.txt", Date.now().toString());
   let videoFiles = Array.from(getVideoFiles(dir));
 
@@ -50,8 +58,7 @@ export async function generateBroadcastSchedule(dir) {
 
     let fd = fs.openSync(videoPath, "r");
     try {
-      let movie = MP4Parser.parse(fd);
-      const duration = movie.relativeDuration();
+      const duration = await getVideoDuration(videoPath);
       totalDuration += duration;
 
       // Calculate the start time of the episode
