@@ -58,26 +58,28 @@ export default async function Page() {
   const typedGroupedItems = groupedItems as Record<string, Item[]>;
 
   let synopsis: string | undefined;
-  const synopsisPath = path.join(
-    process.cwd(),
-    "public",
-    current.title,
-    "resume.json"
-  );
-  if (fs.existsSync(synopsisPath)) {
-    synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
-  }
   let categories: string[] = [];
-  const categoriesPath = path.join(
-    process.cwd(),
-    "public",
-    current.title,
-    "resume.json"
-  );
-  if (fs.existsSync(categoriesPath)) {
-    categories = JSON.parse(
-      fs.readFileSync(categoriesPath, "utf-8")
-    ).categories;
+  if (current && current.title) {
+    const synopsisPath = path.join(
+      process.cwd(),
+      "public",
+      current.title,
+      "resume.json"
+    );
+    if (fs.existsSync(synopsisPath)) {
+      synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
+    }
+    const categoriesPath = path.join(
+      process.cwd(),
+      "public",
+      current.title,
+      "resume.json"
+    );
+    if (fs.existsSync(categoriesPath)) {
+      categories = JSON.parse(
+        fs.readFileSync(categoriesPath, "utf-8")
+      ).categories;
+    }
   }
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
