@@ -1,6 +1,6 @@
 // components/Navbar.tsx
 import fs from "fs";
-import { CircleUser, Github, Home, LibraryBig } from "lucide-react";
+import { CircleUser, Github, Home, LibraryBig, Tv } from "lucide-react";
 import Link from "next/link";
 import path from "path";
 import { MobileNavbarComponent } from "./mobilenavbar";
@@ -43,10 +43,17 @@ export default function Navbar() {
           </Link>
           <Link
             href="/profil"
-            className="flex hover:opacity-75 duration-200 ease-in-out transition-opacity"
+            className="flex hover:opacity-75 duration-200 ease-in-out transition-opacity mr-4 lg:mr-8"
           >
             <CircleUser />
             <span className="ml-2">{data.navbar.profil}</span>
+          </Link>
+          <Link
+            href="/live"
+            className="flex hover:opacity-75 duration-200 ease-in-out transition-opacity"
+          >
+            <Tv />
+            <span className="ml-2">Live</span>
           </Link>
         </div>
         <div className="flex items-center space-x-4">

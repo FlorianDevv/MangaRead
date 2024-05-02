@@ -62,6 +62,10 @@
     "home": "Home",
     "fullScreen": "Full screen"
   },
+  "live": {
+    "title": "Live",
+    "schedule": "Schedule"
+  },
   "settings": {
     "read": {
       "title": "Reading",

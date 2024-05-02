@@ -2,7 +2,7 @@
 
 import * as fs from "fs";
 
-const CHUNK_SIZE_IN_BYTES = 1000000; // 1 mb
+const CHUNK_SIZE_IN_BYTES = 5000000; // 5 mb
 
 function getVideoStream(req: Request) {
   const range = req.headers.get("range");
