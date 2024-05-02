@@ -62,6 +62,10 @@
     "home": "Accueil",
     "fullScreen": "Plein écran"
   },
+  "live": {
+    "title": "En direct",
+    "schedule": "Planning"
+  },
   "settings": {
     "read": {
       "title": "Lecture",
