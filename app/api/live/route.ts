@@ -1,21 +1,28 @@
-import fs from "fs";
-import { NextResponse } from "next/server";
+import { open } from "sqlite";
+import * as sqlite3 from "sqlite3";
 import { generateBroadcastSchedule } from "./live";
-export const dynamic = "force-dynamic";
-export async function GET() {
-  // Read the schedule from the JSON file
-  let schedule = JSON.parse(fs.readFileSync("schedule.json", "utf8"));
 
-  // Get the current time in seconds since the epoch
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  const db = await open({ filename: "schedule.db", driver: sqlite3.Database });
+  let schedule: any[] = [];
+
+  schedule = await db.all(`
+    SELECT * FROM schedule
+  `);
+
   let now = Date.now();
 
-  // If the schedule is empty or the last video is past, regenerate the schedule
   if (
     schedule.length === 0 ||
     schedule[schedule.length - 1].realStartTime < now
   ) {
-    schedule = await generateBroadcastSchedule("public");
+    await generateBroadcastSchedule("public");
+    schedule = await db.all(`
+      SELECT * FROM schedule
+    `);
   }
 
-  return new NextResponse(JSON.stringify(schedule));
+  return Response.json(schedule);
 }
