@@ -55,6 +55,19 @@ export async function generateBroadcastSchedule(dir: string): Promise<void> {
   shuffleArray(videoFiles);
 
   db.serialize(async () => {
+    // Delete old schedule entries
+    db.run(
+      "DELETE FROM schedule WHERE realStartTime < ?",
+      Date.now(),
+      (err) => {
+        if (err) {
+          console.error("Error deleting old schedule entries:", err);
+        }
+      }
+    );
+
+    let lastRealStartTime = Date.now(); // Initialize with the current time
+
     db.run("BEGIN TRANSACTION");
 
     for (const videoPath of videoFiles) {
@@ -62,8 +75,8 @@ export async function generateBroadcastSchedule(dir: string): Promise<void> {
       try {
         const duration = await getVideoDuration(videoPath);
         totalDuration += duration;
-
-        let startTime = new Date(currentTime.getTime() + totalDuration * 1000);
+        let realStartTime = lastRealStartTime;
+        let startTime = new Date(realStartTime); // Update startTime here
 
         // Stop adding videos if the start time is more than 7 days from now
         if (startTime > new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) {
@@ -80,15 +93,15 @@ export async function generateBroadcastSchedule(dir: string): Promise<void> {
 
           db.run(
             `
-          INSERT INTO schedule (title, season, episode, start, realStartTime, startTime, duration)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
-        `,
+      INSERT INTO schedule (title, season, episode, start, realStartTime, startTime, duration)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `,
             [
               title,
               season,
               episode,
               totalDuration - duration,
-              currentTime.getTime() + totalDuration * 1000,
+              realStartTime,
               startTime.toLocaleTimeString("en-US", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -105,6 +118,7 @@ export async function generateBroadcastSchedule(dir: string): Promise<void> {
         } else {
           console.error("Error: Could not match video path:", videoPath);
         }
+        lastRealStartTime = realStartTime + duration * 1000; // Update lastRealStartTime after inserting the video
       } catch (ex) {
         console.error("Error:", ex);
       }

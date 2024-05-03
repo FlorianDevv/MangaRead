@@ -36,10 +36,15 @@ function getVideoStream(req: Request) {
 
   const parts = range.replace(/bytes=/, "").split("-");
   const start = parseInt(parts[0], 10);
+  if (start >= videoSizeInBytes) {
+    return new Response("Range not satisfiable", {
+      status: 416,
+      statusText: "Range Not Satisfiable",
+    });
+  }
   const end = parts[1]
     ? parseInt(parts[1], 10)
     : Math.min(start + CHUNK_SIZE_IN_BYTES, videoSizeInBytes - 1);
-
   const contentLength = end - start + 1;
 
   const headers = {
