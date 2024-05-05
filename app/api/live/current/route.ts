@@ -3,6 +3,7 @@ import { open } from "sqlite";
 import * as sqlite3 from "sqlite3";
 
 export const dynamic = "force-dynamic";
+fs.writeFile("launchTime.txt", Date.now().toString(), () => {});
 const launchTime = Number(fs.readFileSync("launchTime.txt", "utf-8"));
 
 export async function GET() {

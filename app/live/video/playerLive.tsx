@@ -96,7 +96,6 @@ export default function PlayerLive() {
       videoElement.currentTime = elapsedTime;
     }
   };
-
   return isDataLoaded ? (
     <MediaPlayer
       key={src}
@@ -113,7 +112,6 @@ export default function PlayerLive() {
     >
       <MediaProvider />
       <DefaultVideoLayout
-        noModal={true}
         disableTimeSlider={true}
         noKeyboardAnimations={true}
         noGestures={true}
