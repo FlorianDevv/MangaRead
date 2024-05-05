@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start -p 4000 ",
     "lint": "next lint"
@@ -28,7 +28,6 @@
     "music-metadata": "^7.14.0",
     "next": "^14.2.3",
     "next-themes": "^0.3.0",
-    "node-video-lib": "^2.3.0",
     "plaiceholder": "^3.0.0",
     "react": "^18",
     "react-dom": "^18",

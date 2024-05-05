@@ -23,6 +23,8 @@ export default function PlayerLive() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [title, setTitle] = useState("");
+  const [episode, setEpisode] = useState(0);
+  const [season, setSeason] = useState(0);
 
   const fetchVideoData = useCallback(async () => {
     const currentResponse = await fetch("/api/live/current");
@@ -35,7 +37,9 @@ export default function PlayerLive() {
     ).padStart(2, "0")}-${String(currentData.episode).padStart(3, "0")}.mp4`}`;
 
     setSrc(currentSrc);
-    setTitle(currentData.title); // Set the title here
+    setTitle(currentData.title);
+    setEpisode(currentData.episode);
+    setSeason(currentData.season);
 
     if (currentSrc !== prevSrc) {
       setElapsedTime(0);
@@ -92,6 +96,7 @@ export default function PlayerLive() {
       videoElement.currentTime = elapsedTime;
     }
   };
+
   return isDataLoaded ? (
     <MediaPlayer
       key={src}
@@ -103,11 +108,12 @@ export default function PlayerLive() {
       keyDisabled
       onPlay={handlePlay}
       controls={false}
-      title={title}
+      title={title + " - S" + episode + " E" + season}
       className={`${styles.player} ${styles["vds-video-layout"]}`}
     >
       <MediaProvider />
       <DefaultVideoLayout
+        noModal={true}
         disableTimeSlider={true}
         noKeyboardAnimations={true}
         noGestures={true}
