@@ -49,13 +49,41 @@ export async function generateBroadcastSchedule(
   dir: string,
   resetDB: boolean = false
 ): Promise<void> {
-  await fs.writeFile("launchTime.txt", Date.now().toString());
+  fs.writeFile("launchTime.txt", Date.now().toString());
 
   let totalDuration = 0;
   let currentTime = new Date();
 
   let videoFiles = await getVideoFiles(dir);
   shuffleArray(videoFiles);
+  let videoInfos = videoFiles
+    .map((videoPath) => {
+      const match = videoPath.match(
+        /.*[\/\\](.*)[\/\\]anime[\/\\]Season(\d+)[\/\\](\d+)-(\d+)\.mp4$/
+      );
+      if (match) {
+        const title = match[1];
+        const season = Number(match[2]);
+        const episode = Number(match[4].padStart(2, "0"));
+        return { videoPath, title, season, episode };
+      } else {
+        console.error("Error: Could not match video path:", videoPath);
+        return null;
+      }
+    })
+    .filter((info) => info !== null); // Remove null values
+
+  // Sort videos by title, season, and episode
+  videoInfos.sort((a, b) => {
+    if (a && b && a.title !== b.title) {
+      return a.title.localeCompare(b.title);
+    } else if (a && b && a.season !== b.season) {
+      return a.season - b.season;
+    } else {
+      return a && b ? a.episode - b.episode : 0;
+    }
+  });
+  shuffleArray(videoInfos);
 
   db.serialize(async () => {
     if (resetDB) {
@@ -90,24 +118,18 @@ export async function generateBroadcastSchedule(
 
     db.run("BEGIN TRANSACTION");
 
-    for (const videoPath of videoFiles) {
-      try {
-        const duration = await getVideoDuration(videoPath);
-        let realStartTime = lastRealStartTime;
-        let startTime = new Date(realStartTime); // Update startTime here
+    for (const info of videoInfos) {
+      if (info) {
+        const { videoPath, title, season, episode } = info;
+        try {
+          const duration = await getVideoDuration(videoPath);
+          let realStartTime = lastRealStartTime;
+          let startTime = new Date(realStartTime); // Update startTime here
 
-        // Stop adding videos if the start time is more than 7 days from now
-        if (startTime > new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) {
-          break;
-        }
-
-        const match = videoPath.match(
-          /.*[\/\\](.*)[\/\\]anime[\/\\]Season(\d+)[\/\\](\d+)-(\d+)\.mp4$/
-        );
-        if (match) {
-          const title = match[1];
-          const season = Number(match[2]);
-          const episode = Number(match[4].padStart(2, "0"));
+          // Stop adding videos if the start time is more than 7 days from now
+          if (startTime > new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) {
+            break;
+          }
 
           await new Promise<void>((resolve, reject) => {
             db.run(
@@ -142,11 +164,9 @@ export async function generateBroadcastSchedule(
 
           lastRealStartTime = realStartTime + duration * 1000; // Update lastRealStartTime after inserting the video
           totalDuration += duration; // Update totalDuration after inserting the video
-        } else {
-          console.error("Error: Could not match video path:", videoPath);
+        } catch (err) {
+          console.error("Error getting video duration:", err);
         }
-      } catch (ex) {
-        console.error("Error:", ex);
       }
     }
 
