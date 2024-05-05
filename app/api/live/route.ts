@@ -18,7 +18,7 @@ export async function GET() {
     schedule.length === 0 ||
     schedule[schedule.length - 1].realStartTime < now
   ) {
-    await generateBroadcastSchedule("public");
+    await generateBroadcastSchedule("public", true);
     schedule = await db.all(`
       SELECT * FROM schedule
     `);

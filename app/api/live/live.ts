@@ -45,7 +45,10 @@ function shuffleArray(array: any[]) {
   }
 }
 
-export async function generateBroadcastSchedule(dir: string): Promise<void> {
+export async function generateBroadcastSchedule(
+  dir: string,
+  resetDB: boolean = false
+): Promise<void> {
   await fs.writeFile("launchTime.txt", Date.now().toString());
 
   let totalDuration = 0;
@@ -55,26 +58,41 @@ export async function generateBroadcastSchedule(dir: string): Promise<void> {
   shuffleArray(videoFiles);
 
   db.serialize(async () => {
-    // Delete old schedule entries
-    db.run(
-      "DELETE FROM schedule WHERE realStartTime < ?",
-      Date.now(),
-      (err) => {
+    if (resetDB) {
+      // Drop the schedule table if it exists and create a new one
+      db.run("DROP TABLE IF EXISTS schedule", (err) => {
         if (err) {
-          console.error("Error deleting old schedule entries:", err);
+          console.error("Error dropping old schedule table:", err);
         }
-      }
-    );
+      });
+
+      db.run(
+        `
+        CREATE TABLE IF NOT EXISTS schedule (
+          title TEXT,
+          season INTEGER,
+          episode INTEGER,
+          start REAL,
+          realStartTime REAL,
+          startTime TEXT,
+          duration REAL
+        )
+      `,
+        (err) => {
+          if (err) {
+            console.error("Error creating new schedule table:", err);
+          }
+        }
+      );
+    }
 
     let lastRealStartTime = Date.now(); // Initialize with the current time
 
     db.run("BEGIN TRANSACTION");
 
     for (const videoPath of videoFiles) {
-      console.log("Found video file:", videoPath);
       try {
         const duration = await getVideoDuration(videoPath);
-        totalDuration += duration;
         let realStartTime = lastRealStartTime;
         let startTime = new Date(realStartTime); // Update startTime here
 
@@ -84,41 +102,49 @@ export async function generateBroadcastSchedule(dir: string): Promise<void> {
         }
 
         const match = videoPath.match(
-          /.*\/(.*)\/anime\/Season(\d+)\/(\d+)-(\d+)\.mp4$/
+          /.*[\/\\](.*)[\/\\]anime[\/\\]Season(\d+)[\/\\](\d+)-(\d+)\.mp4$/
         );
         if (match) {
           const title = match[1];
           const season = Number(match[2]);
           const episode = Number(match[4].padStart(2, "0"));
 
-          db.run(
-            `
-      INSERT INTO schedule (title, season, episode, start, realStartTime, startTime, duration)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `,
-            [
-              title,
-              season,
-              episode,
-              totalDuration - duration,
-              realStartTime,
-              startTime.toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false,
-              }),
-              duration,
-            ],
-            (err) => {
-              if (err) {
-                console.error("Error:", err);
+          await new Promise<void>((resolve, reject) => {
+            db.run(
+              `
+        INSERT INTO schedule (title, season, episode, start, realStartTime, startTime, duration)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `,
+              [
+                title,
+                season,
+                episode,
+                totalDuration,
+                realStartTime,
+                startTime.toLocaleTimeString("en-US", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: false,
+                }),
+                duration,
+              ],
+              (err) => {
+                if (err) {
+                  console.error("Error:", err);
+                  reject(err);
+                } else {
+                  resolve();
+                }
               }
-            }
-          );
+            );
+          });
+
+          lastRealStartTime = realStartTime + duration * 1000; // Update lastRealStartTime after inserting the video
+          totalDuration += duration; // Update totalDuration after inserting the video
         } else {
           console.error("Error: Could not match video path:", videoPath);
         }
-        lastRealStartTime = realStartTime + duration * 1000; // Update lastRealStartTime after inserting the video
       } catch (ex) {
         console.error("Error:", ex);
       }
@@ -132,5 +158,5 @@ export async function generateBroadcastSchedule(dir: string): Promise<void> {
   });
 }
 
-generateBroadcastSchedule("public");
+generateBroadcastSchedule("public", true);
 setInterval(() => generateBroadcastSchedule("public"), 60 * 60 * 1000);
