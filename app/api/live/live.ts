@@ -47,7 +47,7 @@ function shuffleArray(array: any[]) {
 
 export async function generateBroadcastSchedule(
   dir: string,
-  resetDB: boolean = false
+  addVideo: boolean = false
 ): Promise<void> {
   fs.writeFile("launchTime.txt", Date.now().toString());
 
@@ -86,97 +86,148 @@ export async function generateBroadcastSchedule(
   shuffleArray(videoInfos);
 
   db.serialize(async () => {
-    if (resetDB) {
-      // Drop the schedule table if it exists and create a new one
-      db.run("DROP TABLE IF EXISTS schedule", (err) => {
-        if (err) {
-          console.error("Error dropping old schedule table:", err);
-        }
-      });
-
-      db.run(
-        `
-        CREATE TABLE IF NOT EXISTS schedule (
-          title TEXT,
-          season INTEGER,
-          episode INTEGER,
-          start REAL,
-          realStartTime REAL,
-          startTime TEXT,
-          duration REAL
-        )
-      `,
-        (err) => {
+    let lastRealStartTime = await new Promise<number>((resolve, reject) => {
+      db.get(
+        "SELECT realStartTime, duration FROM schedule ORDER BY realStartTime DESC LIMIT 1",
+        (err, row: { realStartTime: number; duration: number }) => {
           if (err) {
-            console.error("Error creating new schedule table:", err);
+            reject(err);
+          } else {
+            resolve(row ? row.realStartTime + row.duration * 1000 : Date.now());
           }
         }
       );
+    });
+    db.run("BEGIN TRANSACTION");
+    // Calculate the total duration needed for 7 days in milliseconds
+    const totalDurationNeeded = 604800;
+    if (addVideo) {
+      totalDuration = await new Promise<number>((resolve, reject) => {
+        db.get(
+          `
+SELECT SUM(duration) as totalDuration
+FROM schedule
+WHERE realStartTime >= ?
+`,
+          [Date.now()],
+          (err, row: { totalDuration: number }) => {
+            if (err) {
+              console.error("Error:", err);
+              reject(err);
+            } else {
+              resolve(row.totalDuration);
+            }
+          }
+        );
+      });
     }
 
-    let lastRealStartTime = Date.now(); // Initialize with the current time
+    while (totalDuration < totalDurationNeeded) {
+      for (const info of videoInfos) {
+        if (info) {
+          const { videoPath, title, season, episode } = info;
+          try {
+            const duration = await getVideoDuration(videoPath);
+            if (duration === 0) {
+              console.error("Error: Video duration is 0 for file:", videoPath);
+              continue; // Skip this video and move on to the next one
+            }
+            let realStartTime = lastRealStartTime;
+            let startTime = new Date(realStartTime); // Update startTime here
 
-    db.run("BEGIN TRANSACTION");
-
-    for (const info of videoInfos) {
-      if (info) {
-        const { videoPath, title, season, episode } = info;
-        try {
-          const duration = await getVideoDuration(videoPath);
-          let realStartTime = lastRealStartTime;
-          let startTime = new Date(realStartTime); // Update startTime here
-
-          // Stop adding videos if the start time is more than 7 days from now
-          if (startTime > new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) {
-            break;
-          }
-
-          await new Promise<void>((resolve, reject) => {
-            db.run(
-              `
-        INSERT INTO schedule (title, season, episode, start, realStartTime, startTime, duration)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `,
-              [
-                title,
-                season,
-                episode,
-                totalDuration,
-                realStartTime,
-                startTime.toLocaleTimeString("en-US", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                  hour12: false,
-                }),
-                duration,
-              ],
-              (err) => {
-                if (err) {
-                  console.error("Error:", err);
-                  reject(err);
-                } else {
-                  resolve();
+            await new Promise<void>((resolve, reject) => {
+              db.run(
+                `
+INSERT INTO schedule (title, season, episode, start, realStartTime, startTime, duration)
+VALUES (?, ?, ?, ?, ?, ?, ?)
+`,
+                [
+                  title,
+                  season,
+                  episode,
+                  totalDuration,
+                  realStartTime,
+                  startTime.toLocaleTimeString("en-US", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                  }),
+                  duration,
+                ],
+                (err) => {
+                  if (err) {
+                    console.error("Error:", err);
+                    reject(err);
+                  } else {
+                    resolve();
+                  }
                 }
-              }
-            );
-          });
+              );
+            });
 
-          lastRealStartTime = realStartTime + duration * 1000; // Update lastRealStartTime after inserting the video
-          totalDuration += duration; // Update totalDuration after inserting the video
-        } catch (err) {
-          console.error("Error getting video duration:", err);
+            lastRealStartTime = realStartTime + duration * 1000;
+            totalDuration += duration; // Update totalDuration after inserting the video
+            // console.log("Total duration so far:", totalDuration);
+            // If the total duration has reached 7 days, break out of the loop
+            if (totalDuration >= totalDurationNeeded) {
+              break;
+            }
+          } catch (err) {
+            console.error("Error getting video duration:", err);
+          }
         }
       }
     }
-
     db.run("COMMIT", (err) => {
       if (err) {
         console.error("Error committing transaction:", err);
+      } else {
+        // Add this after the COMMIT statement
+        db.run(
+          "CREATE TEMPORARY TABLE schedule_temp AS SELECT * FROM schedule ORDER BY start",
+          (err) => {
+            if (err) {
+              console.error("Error creating temporary table:", err);
+            } else {
+              db.run("DELETE FROM schedule", (err) => {
+                if (err) {
+                  console.error("Error deleting from schedule table:", err);
+                } else {
+                  db.run(
+                    "INSERT INTO schedule SELECT * FROM schedule_temp",
+                    (err) => {
+                      if (err) {
+                        console.error(
+                          "Error inserting into schedule table:",
+                          err
+                        );
+                      } else {
+                        db.run("DROP TABLE schedule_temp", (err) => {
+                          if (err) {
+                            console.error(
+                              "Error dropping temporary table:",
+                              err
+                            );
+                          }
+                        });
+                      }
+                    }
+                  );
+                }
+              });
+            }
+          }
+        );
       }
     });
   });
 }
-
-generateBroadcastSchedule("public", true);
-setInterval(() => generateBroadcastSchedule("public"), 60 * 60 * 1000);
+export function startScheduledBroadcast() {
+  // Planifier l'exécution de la fonction toutes les 12 heures
+  setInterval(() => {
+    console.log("Regenerating broadcast schedule...");
+    generateBroadcastSchedule("public", true);
+  }, 12 * 60 * 60 * 1000);
+}
+startScheduledBroadcast();
