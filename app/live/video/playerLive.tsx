@@ -76,7 +76,7 @@ export default function PlayerLive() {
     await fetchVideoData();
   };
 
-  const onProviderSetup = useCallback(
+  const onProviderSetup: any = useCallback(
     (provider: MediaProviderAdapter) => {
       if (isVideoProvider(provider) && isHTMLVideoElement(provider.video)) {
         const player = provider.video;
@@ -107,7 +107,7 @@ export default function PlayerLive() {
       keyDisabled
       onPlay={handlePlay}
       controls={false}
-      title={title + " - S" + episode + " E" + season}
+      title={title + " - S" + season + " E" + episode}
       className={`${styles.player} ${styles["vds-video-layout"]}`}
     >
       <MediaProvider />
