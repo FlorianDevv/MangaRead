@@ -108,7 +108,7 @@ export default function PlayerLive() {
       onPlay={handlePlay}
       controls={false}
       title={title + " - S" + season + " E" + episode}
-      className={`${styles.player} ${styles["vds-video-layout"]}`}
+      className={`${styles.player} ${styles["vds-video-layout"]} max-w-full max-h-full object-contain`}
     >
       <MediaProvider />
       <DefaultVideoLayout
