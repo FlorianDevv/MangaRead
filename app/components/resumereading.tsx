@@ -1,10 +1,10 @@
 // ResumeReading.tsx
 "use client";
 import { Progress } from "@/components/ui/progress";
-import { Clock3, X } from "lucide-react";
+import { BookOpen, Clock3, Play, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 
 interface MangaInfo {
   manga: string;
@@ -26,63 +26,75 @@ interface ResumeReadingProps {
   Name?: string;
 }
 
+function reducer(
+  state: any,
+  action: { type: any; payload: any; name?: string }
+) {
+  switch (action.type) {
+    case "SET_MANGA":
+      return {
+        ...state,
+        manga: action.payload.filter(
+          (manga: { manga: string }) =>
+            !action.name || manga.manga === action.name
+        ),
+      };
+    case "SET_ANIME":
+      return {
+        ...state,
+        anime: action.payload.filter(
+          (anime: { anime: string }) =>
+            !action.name || anime.anime === action.name
+        ),
+      };
+    default:
+      throw new Error();
+  }
+}
+
 export default function ResumeReading({ Name }: ResumeReadingProps) {
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
-  const [state, setState] = useState<MangaInfo[]>([]);
+  const [state, dispatch] = useReducer(reducer, { manga: [], anime: [] });
   const [isLoading, setIsLoading] = useState(true);
-  const [animeState, setAnimeState] = useState<AnimeInfo[]>([]);
 
   useEffect(() => {
-    const storedState = localStorage.getItem("mangaInfo");
-    if (storedState) {
-      const parsedState = JSON.parse(storedState).map((item: MangaInfo) => ({
-        ...item,
-        dateWatched: new Date(item.dateWatched),
-      }));
-      if (Name) {
-        const filteredState = parsedState.filter(
-          (manga: MangaInfo) => manga.manga === Name
-        );
-        setState(filteredState);
-      } else {
-        setState(parsedState);
-      }
-    }
-    const storedAnimeState = localStorage.getItem("animeInfo");
-    if (storedAnimeState) {
-      const parsedAnimeState = JSON.parse(storedAnimeState).map(
-        (item: AnimeInfo) => ({
+    // Load data asynchronously
+    Promise.all([
+      localStorage.getItem("mangaInfo"),
+      localStorage.getItem("animeInfo"),
+    ]).then(([storedManga, storedAnime]) => {
+      if (storedManga) {
+        const parsedManga = JSON.parse(storedManga).map((item: MangaInfo) => ({
           ...item,
           dateWatched: new Date(item.dateWatched),
-        })
-      );
-      if (Name) {
-        const filteredAnimeState = parsedAnimeState.filter(
-          (anime: AnimeInfo) => anime.anime === Name
-        );
-        setAnimeState(filteredAnimeState);
-      } else {
-        setAnimeState(parsedAnimeState);
+        }));
+        dispatch({ type: "SET_MANGA", payload: parsedManga, name: Name });
       }
-    }
-
-    setIsLoading(false);
+      if (storedAnime) {
+        const parsedAnime = JSON.parse(storedAnime).map((item: AnimeInfo) => ({
+          ...item,
+          dateWatched: new Date(item.dateWatched),
+        }));
+        dispatch({ type: "SET_ANIME", payload: parsedAnime, name: Name });
+      }
+      setIsLoading(false);
+    });
   }, [Name]);
 
   const sortedMangaState = useMemo(() => {
-    return [...state].sort(
+    return [...state.manga].sort(
       (a, b) =>
         new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
     );
-  }, [state]);
+  }, [state.manga]);
 
   const sortedAnimeState = useMemo(() => {
-    return [...animeState].sort(
+    return [...state.anime].sort(
       (a, b) =>
         new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime()
     );
-  }, [animeState]);
+  }, [state.anime]);
 
   const combinedState = useMemo(() => {
     return [...sortedMangaState, ...sortedAnimeState].sort(
@@ -91,21 +103,29 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
     );
   }, [sortedMangaState, sortedAnimeState]);
 
-  const deleteManga = useCallback((mangaName: string) => {
-    setState((prevState) => {
-      const newState = prevState.filter((manga) => manga.manga !== mangaName);
-      localStorage.setItem("mangaInfo", JSON.stringify(newState));
-      return newState;
-    });
-  }, []);
+  const deleteManga = useCallback(
+    (mangaName: string) => {
+      dispatch({
+        type: "SET_MANGA",
+        payload: state.manga.filter(
+          (manga: { manga: string }) => manga.manga !== mangaName
+        ),
+      });
+    },
+    [state.manga]
+  );
 
-  const deleteAnime = useCallback((animeName: string) => {
-    setAnimeState((prevState) => {
-      const newState = prevState.filter((anime) => anime.anime !== animeName);
-      localStorage.setItem("animeInfo", JSON.stringify(newState));
-      return newState;
-    });
-  }, []);
+  const deleteAnime = useCallback(
+    (animeName: string) => {
+      dispatch({
+        type: "SET_ANIME",
+        payload: state.anime.filter(
+          (anime: { anime: string }) => anime.anime !== animeName
+        ),
+      });
+    },
+    [state.anime]
+  );
   const calculateProgress = useMemo(() => {
     return (mangaInfo: MangaInfo) => {
       const currentVolumeNumber = parseInt(
@@ -147,7 +167,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
     );
   }
 
-  if (!state.length && !animeState.length) {
+  if (!state.manga.length && !state.anime.length) {
     return null;
   }
 
@@ -168,23 +188,25 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                 key={index}
                 className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
               >
-                <div className="flex flex-col overflow-hidden rounded-lg">
+                <div className="flex flex-col overflow-hidden rounded-lg relative">
                   <Link
                     key={index}
                     href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
                   >
-                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 shine">
+                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
                       <Image
                         src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
                         alt={mangaInfo.manga + " resume"}
                         quality={50}
                         fill
                         sizes="(min-width: 780px) 224px, (min-width: 640px) 192px, 128px"
-                        className="object-cover"
+                        className="object-cover opacity-100 group-hover:opacity-50 transition-opacity duration-300"
                         placeholder="blur"
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
-
+                      <div className="absolute inset-0 flex items-center justify-center hover:scale-150 transition-transform duration-500">
+                        <BookOpen />
+                      </div>
                       <div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded">
                         Manga
                       </div>
@@ -242,12 +264,12 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                 key={index}
                 className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
               >
-                <div className="flex flex-col overflow-hidden rounded-lg">
+                <div className="flex flex-col overflow-hidden rounded-lg relative">
                   <Link
                     key={index}
                     href={`/anime/${animeInfo.anime}/${animeInfo.season}/${animeInfo.episode}`}
                   >
-                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56 shine">
+                    <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
                       <Image
                         src={`/${animeInfo.anime}/anime/Season01/01-001.webp`}
                         alt={animeInfo.anime + " resume"}
@@ -258,6 +280,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                         placeholder="blur"
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
+                      <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                      <div className="absolute inset-0 flex items-center justify-center hover:scale-150 transition-transform duration-500">
+                        <Play />
+                      </div>
                       <div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
                         Anime
                       </div>
