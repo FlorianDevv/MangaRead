@@ -1,8 +1,9 @@
+import dynamic from "next/dynamic";
 import Card from "./components/Card";
-import Carousel from "./components/mangaCarousel";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
-import ResumeReading from "./components/resumereading";
 import { getDetails } from "./types/getDetails";
+const Carousel = dynamic(() => import("./components/mangaCarousel"));
+const ResumeReading = dynamic(() => import("./components/resumereading"));
 
 export default function Home() {
   const Details = getDetails();

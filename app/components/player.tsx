@@ -102,7 +102,7 @@ export default function Player(anime: Anime) {
       if (isVideoProvider(provider) && isHTMLVideoElement(provider.video)) {
         const player = provider.video;
 
-        player.oncanplaythrough = () => {
+        player.onloadedmetadata = () => {
           const { animeList, animeIndex } = getAnimeListAndIndex();
           if (
             animeIndex !== -1 &&

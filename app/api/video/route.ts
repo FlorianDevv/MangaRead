@@ -7,14 +7,19 @@ const CHUNK_SIZE_IN_BYTES = 5000000; // 5 mb
 function getVideoStream(req: Request) {
   const range = req.headers.get("range");
 
-  if (!range) {
-    return new Response("No range header", {
-      status: 400,
-      statusText: "Bad Request",
-    });
-  }
   const url = new URL(req.url);
   const videoId = url.searchParams.get("videoId");
+  const videoPath = `public/${videoId}`;
+  const videoSizeInBytes = fs.statSync(videoPath).size;
+  if (!range) {
+    const headers = {
+      "Content-Length": videoSizeInBytes.toString(),
+      "Content-Type": "video/mp4",
+    } as { [key: string]: string };
+
+    const videoStream = fs.createReadStream(videoPath);
+    return new Response(videoStream as any, { status: 200, headers });
+  }
 
   if (!videoId) {
     return new Response("No videoId query param", {
@@ -23,16 +28,12 @@ function getVideoStream(req: Request) {
     });
   }
 
-  const videoPath = `public/${videoId}`;
-
   if (!fs.existsSync(videoPath)) {
     return new Response("Video not found", {
       status: 404,
       statusText: "Not Found",
     });
   }
-
-  const videoSizeInBytes = fs.statSync(videoPath).size;
 
   const parts = range.replace(/bytes=/, "").split("-");
   const start = parseInt(parts[0], 10);
@@ -44,7 +45,9 @@ function getVideoStream(req: Request) {
   }
   const end = parts[1]
     ? parseInt(parts[1], 10)
-    : Math.min(start + CHUNK_SIZE_IN_BYTES, videoSizeInBytes - 1);
+    : start === 0
+    ? 1
+    : Math.min(start + CHUNK_SIZE_IN_BYTES - 1, videoSizeInBytes - 1);
   const contentLength = end - start + 1;
 
   const headers = {
