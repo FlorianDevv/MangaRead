@@ -105,24 +105,28 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 
   const deleteManga = useCallback(
     (mangaName: string) => {
+      const newMangaState = state.manga.filter(
+        (manga: { manga: string }) => manga.manga !== mangaName
+      );
       dispatch({
         type: "SET_MANGA",
-        payload: state.manga.filter(
-          (manga: { manga: string }) => manga.manga !== mangaName
-        ),
+        payload: newMangaState,
       });
+      localStorage.setItem("mangaInfo", JSON.stringify(newMangaState));
     },
     [state.manga]
   );
 
   const deleteAnime = useCallback(
     (animeName: string) => {
+      const newAnimeState = state.anime.filter(
+        (anime: { anime: string }) => anime.anime !== animeName
+      );
       dispatch({
         type: "SET_ANIME",
-        payload: state.anime.filter(
-          (anime: { anime: string }) => anime.anime !== animeName
-        ),
+        payload: newAnimeState,
       });
+      localStorage.setItem("animeInfo", JSON.stringify(newAnimeState));
     },
     [state.anime]
   );
