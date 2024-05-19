@@ -2,7 +2,6 @@ import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
 import EpisodeSelect from "@/app/components/select/episodeselect";
 import { SeasonSelect } from "@/app/components/select/seasonselect";
 import fs from "fs";
-import Link from "next/link";
 import path from "path";
 import Player from "../../../../components/player";
 export default function Page({
@@ -48,9 +47,7 @@ export default function Page({
     <MobileNavbarComponent>
       <div className="flex flex-col items-center ">
         <h1 className="text-center text-3xl my-4 hover:text-red-500 ease-in-out transform transition-colors duration-300">
-          <Link href={`/manga/${decodeURIComponent(params.slug)}`}>
-            {decodeURIComponent(params.slug)}
-          </Link>
+          {decodeURIComponent(params.slug)}
         </h1>
         <div className="flex flex-wrap items-center">
           <EpisodeSelect

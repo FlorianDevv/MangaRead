@@ -1,7 +1,7 @@
 // ResumeReading.tsx
 "use client";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Clock3, Play, X } from "lucide-react";
+import { BookOpen, CirclePlay, Clock3, Play, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
@@ -209,7 +209,9 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
                       <div className="absolute inset-0 flex items-center justify-center hover:scale-150 transition-transform duration-500">
-                        <BookOpen />
+                        <div className="bg-black bg-opacity-50 rounded-full p-2">
+                          <BookOpen className="w-10 h-10" />
+                        </div>
                       </div>
                       <div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded">
                         Manga
@@ -286,7 +288,9 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                       />
                       <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                       <div className="absolute inset-0 flex items-center justify-center hover:scale-150 transition-transform duration-500">
-                        <Play />
+                        <div className="bg-black bg-opacity-50 rounded-full p-2">
+                          <Play className="w-10 h-10" />
+                        </div>
                       </div>
                       <div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
                         Anime
@@ -359,5 +363,84 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
         })}
       </div>
     </div>
+  );
+}
+
+export function AnimeProgress({ Name }: { Name: string }) {
+  const [animeInfo, setAnimeInfo] = useState<AnimeInfo | null>(null);
+
+  useEffect(() => {
+    const storedAnime = localStorage.getItem("animeInfo");
+    if (storedAnime) {
+      const parsedAnime = JSON.parse(storedAnime).find(
+        (item: AnimeInfo) => item.anime === Name
+      );
+      if (parsedAnime) {
+        setAnimeInfo({
+          ...parsedAnime,
+          dateWatched: new Date(parsedAnime.dateWatched),
+        });
+      }
+    }
+  }, [Name]);
+
+  if (!animeInfo) {
+    return (
+      <div className="relative">
+        <Link href={`/anime/${Name}/season01/episode01`}>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-60 flex items-center justify-center text-white text-center bg-black bg-opacity-50 rounded-full transition-all duration-200 ease-in-out hover:bg-opacity-75 hover:scale-110">
+            <CirclePlay className="w-14 h-14" />
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
+  const totalSeconds = animeInfo.duration
+    .split(":")
+    .reduce((acc: number, time: string | number) => 60 * acc + +time, 0);
+  const progress = (animeInfo.savedTime / totalSeconds) * 100;
+  const formattedSeason = parseInt(animeInfo.season.replace(/\D/g, ""));
+  const formattedEpisode = parseInt(animeInfo.episode.replace(/\D/g, ""));
+
+  const formatTime = (seconds: number, addMin: boolean = true) => {
+    const minutes = Math.round(seconds / 60);
+    return addMin ? `${minutes} min` : `${minutes}`;
+  };
+
+  const savedTime = formatTime(animeInfo.savedTime);
+  const totalDuration = formatTime(totalSeconds, false);
+  const episodeLink = `/anime/${animeInfo.anime}/${animeInfo.season}/${animeInfo.episode}`;
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
+  return (
+    <>
+      <div className="relative">
+        <Link href={episodeLink}>
+          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-60 flex items-center justify-center text-white text-center bg-black bg-opacity-50 rounded-full transition-all duration-200 ease-in-out hover:bg-opacity-75 hover:scale-110">
+            <CirclePlay className="w-14 h-14" />
+          </div>
+        </Link>
+      </div>
+      <div className="flex flex-col">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-lg font-bold">
+            {`S${formattedSeason} : E${formattedEpisode} `}
+            <span className="text-sm text-gray-300">
+              {data.episodeSelect.episode} {formattedEpisode}
+            </span>
+          </span>
+        </div>
+        <div className="relative flex items-center">
+          <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-[#333333] flex-grow mr-2">
+            <div
+              style={{ width: `${progress}%` }}
+              className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-600"
+            ></div>
+          </div>
+          <span className=" -translate-y-2 text-xs text-opacity-50 self-center">{`${savedTime} sur ${totalDuration}`}</span>
+        </div>
+      </div>
+    </>
   );
 }
