@@ -158,7 +158,7 @@ export default async function Page() {
               </div>
             )}
             <div className="flex space-x-2 flex-row">
-              <Link href="/manga/[slug]" as={`/manga/${current.title}`}>
+              <Link href="/detail/[slug]" as={`/detail/${current.title}`}>
                 <Button variant="secondary">VOD</Button>
               </Link>
             </div>
@@ -185,7 +185,7 @@ export default async function Page() {
                     })}
                   </h3>
                   {items.map((item: Item, index: number) => (
-                    <Link href={`/manga/${item.title}`} key={index}>
+                    <Link href={`/detail/${item.title}`} key={index}>
                       <Card
                         key={index}
                         className="flex flex-col rounded border border-gray-900 hover:scale-105 transform transition-transform duration-300 ease-in-out"

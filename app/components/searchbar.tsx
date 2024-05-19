@@ -53,7 +53,7 @@ export default function SearchBar({ mangaData }: SearchBarProps) {
         {search !== "" &&
           results.map((result) => (
             <div key={result.name}>
-              <Link href={`/manga/${result.name}`}>
+              <Link href={`/detail/${result.name}`}>
                 <div
                   className="group flex items-center rounded border-t-2 border-sky-600 hover:bg-gray-700  hover:text-sky-500 pt-1 pl-1 w-full transition-all duration-200 font-bold cursor-pointer"
                   onClick={resetSearch}

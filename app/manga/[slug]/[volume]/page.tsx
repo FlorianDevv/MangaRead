@@ -3,7 +3,6 @@ import CheckPage from "@/app/components/checkpage";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import "@/app/mangapage.css";
 import fs from "fs";
-import Link from "next/link";
 import path from "path";
 
 type Volume = {
@@ -59,10 +58,8 @@ export default function Page({
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
       <div className="flex flex-wrap justify-center ">
-        <h1 className="w-full text-center text-3xl my-4 hover:text-red-500 ease-in-out transform transition-colors duration-300">
-          <Link href={`/manga/${decodeURIComponent(params.slug)}`}>
-            {decodeURIComponent(params.slug)}
-          </Link>
+        <h1 className="w-full text-center text-3xl my-4">
+          {decodeURIComponent(params.slug)}
         </h1>
 
         <VolumeSelect

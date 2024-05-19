@@ -20,7 +20,7 @@ export default function CardClient({
 
   return (
     <div className="relative flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform group hover:scale-105 transition-transform duration-300 w-full">
-      <Link href={`/manga/${Name}`}>
+      <Link href={`/detail/${Name}`}>
         <div className="relative flex flex-col items-stretch shine">
           <Image
             src={imagePath}

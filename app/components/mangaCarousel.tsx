@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
-import { BookOpen } from "lucide-react";
+import { BookOpen, InfoIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 interface MangaDetailsProps {
@@ -49,13 +49,19 @@ export default function EmblaCarousel(props: MangaDetailsProps) {
                     {mangaDetail.volume} Volumes
                   </p>
                   <div>
-                    <Link href={`/manga/${mangaDetail.name}`}>
+                    <Link href={`/manga/${mangaDetail.name}/Tome%2001`}>
                       <Button>
                         <BookOpen className="mr-2" />
                         <span className="sm:hidden">{data.carousel.read}</span>
                         <span className="hidden sm:block">
                           {data.carousel.start}
                         </span>
+                      </Button>
+                    </Link>
+
+                    <Link href={`/detail/${mangaDetail.name}`}>
+                      <Button variant="ghost">
+                        <InfoIcon />
                       </Button>
                     </Link>
                   </div>
