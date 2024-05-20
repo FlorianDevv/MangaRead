@@ -90,7 +90,13 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
               className="relative rounded p-4 hover:opacity-75 hover:bg-[#2b2b2b] ease-in-out transition-opacity duration-300"
             >
               <Image
-                src={`/${slug}/anime/Season01/01-001.webp`}
+                src={`/${slug}/anime/Season${episode.seasonNumber.padStart(
+                  2,
+                  "0"
+                )}/${episode.seasonNumber.padStart(
+                  2,
+                  "0"
+                )}-${episode.episodeNumber.padStart(3, "0")}.webp`}
                 alt={episode.name}
                 width={300}
                 height={300}
@@ -98,8 +104,8 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full transition-transform duration-200 hover:scale-110">
                 <CirclePlay className="w-14 h-14 text-white " />
               </div>
-              <p className="text-xs">
-                {parseInt(episode.episodeNumber)}. Episode{" "}
+              <p className="text-xs mt-2">
+                {parseInt(episode.episodeNumber)}. {data.episodeSelect.episode}{" "}
                 {parseInt(episode.episodeNumber)}
               </p>
             </div>

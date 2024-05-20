@@ -208,7 +208,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                         placeholder="blur"
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
-                      <div className="absolute inset-0 flex items-center justify-center hover:scale-150 transition-transform duration-500">
+                      <div className="absolute inset-0 flex items-center justify-center hover:scale-110 transition-transform duration-500">
                         <div className="bg-black bg-opacity-50 rounded-full p-2">
                           <BookOpen className="w-10 h-10" />
                         </div>
@@ -287,7 +287,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
                       />
                       <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
-                      <div className="absolute inset-0 flex items-center justify-center hover:scale-150 transition-transform duration-500">
+                      <div className="absolute inset-0 flex items-center justify-center hover:scale-110 transition-transform duration-500">
                         <div className="bg-black bg-opacity-50 rounded-full p-2">
                           <Play className="w-10 h-10" />
                         </div>
