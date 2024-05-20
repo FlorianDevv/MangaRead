@@ -120,7 +120,7 @@ export default function Info({ params }: { params: { slug: string } }) {
             />
           ) : (
             <Image
-              src={`/${params.slug}/anime/Season01/01-001.webp`}
+              src={`/${params.slug}/anime/thumbnail.webp`}
               alt={`${params.slug}`}
               quality={50}
               fill

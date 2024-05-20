@@ -15,7 +15,7 @@ export default function CardClient({
 }: CardClientProps) {
   const imagePath =
     type === "anime"
-      ? `/${Name}/anime/Season01/01-001.webp`
+      ? `/${Name}/anime/thumbnail.webp`
       : `/${Name}/manga/Tome 01/01-001.webp`;
 
   return (

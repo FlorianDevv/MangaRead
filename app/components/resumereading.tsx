@@ -277,7 +277,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                   >
                     <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
                       <Image
-                        src={`/${animeInfo.anime}/anime/Season01/01-001.webp`}
+                        src={`/${animeInfo.anime}/anime/thumbnail.webp`}
                         alt={animeInfo.anime + " resume"}
                         quality={50}
                         fill
