@@ -2,7 +2,7 @@ import ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import path from "path";
 
-export const dynamic = "force-dynamic";
+export const dynamic = "force-static";
 
 export async function GET() {
   const rootDirectoryPath = path.join(process.cwd(), "public");
@@ -46,7 +46,6 @@ export async function GET() {
                     folder: seasonPath,
                     size: "1920x1080",
                   })
-                  .videoFilters("crop=1920:800:0:0") // Updated line
                   .on("error", (err) => {
                     console.error(
                       "Error generating screenshot: " + err.message
