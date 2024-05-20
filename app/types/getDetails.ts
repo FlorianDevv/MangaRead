@@ -21,10 +21,12 @@ export function getDetails() {
       synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
     }
     const volume = isManga
-      ? fs.readdirSync(path.join(itemPath, "manga")).filter((volume) => {
-          const volumePath = path.join(itemPath, "manga", volume);
-          return fs.lstatSync(volumePath).isDirectory();
-        }).length
+      ? fs.lstatSync(path.join(itemPath, "manga")).isDirectory() // Check if it's a directory
+        ? fs.readdirSync(path.join(itemPath, "manga")).filter((volume) => {
+            const volumePath = path.join(itemPath, "manga", volume);
+            return fs.lstatSync(volumePath).isDirectory();
+          }).length
+        : 0
       : 0;
     if (isManga && isAnime) {
       type = "both";

@@ -87,14 +87,17 @@ export default function Info({ params }: { params: { slug: string } }) {
   const isMangaDirectoryExists = fs.existsSync(mangaDirectory);
   const isAnimeDirectoryExists = fs.existsSync(animeDirectory);
 
-  const seasons: Season[] = isAnimeDirectoryExists
-    ? fs.readdirSync(animeDirectory).map((season) => ({ name: season }))
-    : [];
+  const seasons: Season[] =
+    isAnimeDirectoryExists && fs.lstatSync(animeDirectory).isDirectory()
+      ? fs.readdirSync(animeDirectory).map((season) => ({ name: season }))
+      : [];
 
   const episodes: Episode[] = isAnimeDirectoryExists
     ? seasons.flatMap((season) => {
         const seasonDirectory = path.join(animeDirectory, season.name);
-        const episodeFiles = fs.readdirSync(seasonDirectory);
+        const episodeFiles = fs.lstatSync(seasonDirectory).isDirectory()
+          ? fs.readdirSync(seasonDirectory)
+          : [];
         return episodeFiles
           .filter((episodeFile) => path.extname(episodeFile) === ".mp4")
           .map((episodeFile) => {
