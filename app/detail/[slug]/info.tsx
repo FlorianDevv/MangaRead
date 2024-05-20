@@ -89,7 +89,12 @@ export default function Info({ params }: { params: { slug: string } }) {
 
   const seasons: Season[] =
     isAnimeDirectoryExists && fs.lstatSync(animeDirectory).isDirectory()
-      ? fs.readdirSync(animeDirectory).map((season) => ({ name: season }))
+      ? fs
+          .readdirSync(animeDirectory)
+          .filter((season) =>
+            fs.lstatSync(path.join(animeDirectory, season)).isDirectory()
+          )
+          .map((season) => ({ name: season }))
       : [];
 
   const episodes: Episode[] = isAnimeDirectoryExists
