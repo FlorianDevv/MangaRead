@@ -9,32 +9,28 @@ export default function Page({
 }: {
   params: { slug: string; season: string; episode: string };
 }) {
+  const animePath = path.join(
+    process.cwd(),
+    "public",
+    decodeURIComponent(params.slug),
+    "anime"
+  );
+  const seasonPath = path.join(animePath, params.season);
+
   //use fs to get the list of episodes
-  const episodes = fs
-    .readdirSync(
-      path.join(
-        process.cwd(),
-        "public",
-        decodeURIComponent(params.slug),
-        "anime",
-        params.season
-      )
-    )
-    .filter((episodeName: string) => !episodeName.startsWith("."))
-    .map((episodeName: string) => ({ name: episodeName }));
+  const episodes = fs.lstatSync(seasonPath).isDirectory()
+    ? fs
+        .readdirSync(seasonPath)
+        .filter((episodeName: string) => !episodeName.startsWith("."))
+        .map((episodeName: string) => ({ name: episodeName }))
+    : [];
 
-  const seasons = fs
-    .readdirSync(
-      path.join(
-        process.cwd(),
-        "public",
-        decodeURIComponent(params.slug),
-        "anime"
-      )
-    )
-    .filter((seasonName: string) => !seasonName.startsWith("."))
-    .map((seasonName: string) => ({ name: seasonName }));
-
+  const seasons = fs.lstatSync(animePath).isDirectory()
+    ? fs
+        .readdirSync(animePath)
+        .filter((seasonName: string) => !seasonName.startsWith("."))
+        .map((seasonName: string) => ({ name: seasonName }))
+    : [];
   if (episodes.length === 0 || seasons.length === 0) {
     return (
       <div>
