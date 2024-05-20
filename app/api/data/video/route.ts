@@ -19,6 +19,7 @@ export async function GET() {
 
       fs.readdir(animeDirectoryPath, (err, seasons) => {
         if (err) {
+          console.error("Unable to scan directory: " + err);
           return;
         }
 
@@ -27,6 +28,7 @@ export async function GET() {
           const seasonPath = path.join(animeDirectoryPath, season);
           fs.readdir(seasonPath, (err, files) => {
             if (err) {
+              console.error("Unable to scan directory: " + err);
               return;
             }
 
@@ -44,7 +46,12 @@ export async function GET() {
                     folder: seasonPath,
                     size: "1920x1080",
                   })
-                  .on("error", (err) => {});
+                  .videoFilters("crop=1920:800:0:0") // Updated line
+                  .on("error", (err) => {
+                    console.error(
+                      "Error generating screenshot: " + err.message
+                    );
+                  });
               }
             });
           });

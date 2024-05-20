@@ -15,7 +15,7 @@ try {
   const itemDetails = getDetails();
   mangaData = itemDetails.map((item) => {
     const mangaPath = `/${item.name}/manga/Tome 01/01-001.webp`;
-    const animePath = `/${item.name}/anime/Season01/01-001.webp`;
+    const animePath = `/${item.name}/anime/thumbnail.webp`;
     const imagePath = fs.existsSync(path.join(publicDirectory, mangaPath))
       ? mangaPath
       : animePath;
