@@ -142,7 +142,7 @@ export default function Info({ params }: { params: { slug: string } }) {
           <h1 className="text-xl lg:text-3xl z-50 transform -translate-y-8">
             {decodeURIComponent(params.slug)}
           </h1>
-          <AnimeProgress Name={params.slug} />
+          {isAnimeDirectoryExists && <AnimeProgress Name={params.slug} />}
           <div className="flex flex-wrap lg:flex-nowrap justify-center">
             <div className="flex flex-col items-center justify-center md:items-start md:justify-start ">
               {categories.length > 0 && (

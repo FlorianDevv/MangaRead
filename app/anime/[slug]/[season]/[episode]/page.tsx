@@ -18,19 +18,21 @@ export default function Page({
   const seasonPath = path.join(animePath, params.season);
 
   //use fs to get the list of episodes
-  const episodes = fs.lstatSync(seasonPath).isDirectory()
-    ? fs
-        .readdirSync(seasonPath)
-        .filter((episodeName: string) => !episodeName.startsWith("."))
-        .map((episodeName: string) => ({ name: episodeName }))
-    : [];
+  const episodes =
+    fs.existsSync(seasonPath) && fs.lstatSync(seasonPath).isDirectory()
+      ? fs
+          .readdirSync(seasonPath)
+          .filter((episodeName: string) => !episodeName.startsWith("."))
+          .map((episodeName: string) => ({ name: episodeName }))
+      : [];
 
-  const seasons = fs.lstatSync(animePath).isDirectory()
-    ? fs
-        .readdirSync(animePath)
-        .filter((seasonName: string) => !seasonName.startsWith("."))
-        .map((seasonName: string) => ({ name: seasonName }))
-    : [];
+  const seasons =
+    fs.existsSync(animePath) && fs.lstatSync(animePath).isDirectory()
+      ? fs
+          .readdirSync(animePath)
+          .filter((seasonName: string) => !seasonName.startsWith("."))
+          .map((seasonName: string) => ({ name: seasonName }))
+      : [];
   if (episodes.length === 0 || seasons.length === 0) {
     return (
       <div>
