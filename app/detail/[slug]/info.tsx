@@ -49,7 +49,8 @@ export default function Info({ params }: { params: { slug: string } }) {
     "resume.json"
   );
   if (fs.existsSync(synopsisPath)) {
-    synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
+    const data = JSON.parse(fs.readFileSync(synopsisPath, "utf-8"));
+    synopsis = data.synopsis ?? null;
   }
   let categories: string[] = [];
   const categoriesPath = path.join(
@@ -59,9 +60,8 @@ export default function Info({ params }: { params: { slug: string } }) {
     "resume.json"
   );
   if (fs.existsSync(categoriesPath)) {
-    categories = JSON.parse(
-      fs.readFileSync(categoriesPath, "utf-8")
-    ).categories;
+    const data = JSON.parse(fs.readFileSync(categoriesPath, "utf-8"));
+    categories = data.categories ?? [];
   }
 
   let volumes: Volume[] = [];

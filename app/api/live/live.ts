@@ -4,7 +4,7 @@ import * as path from "path";
 import * as sqlite3 from "sqlite3";
 
 const db = new sqlite3.Database("schedule.db");
-
+fs.writeFile("launchTime.txt", Date.now().toString());
 db.run(`
   CREATE TABLE IF NOT EXISTS schedule (
     title TEXT,
