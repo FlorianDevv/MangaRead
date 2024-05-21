@@ -40,7 +40,6 @@ export default function CheckPage({
 
   const [initialPageNumber] = useState<number>(getInitialPageNumber());
   useEffect(() => {
-    const totalVolumes = volumes.length;
     let mangaInfos = JSON.parse(localStorage.getItem("mangaInfo") || "[]");
     const mangaInfoIndex = mangaInfos.findIndex(
       (info: { manga: string; volume: string }) =>
@@ -49,7 +48,7 @@ export default function CheckPage({
 
     if (mangaInfoIndex !== -1) {
       const updatedMangaInfo = mangaInfos[mangaInfoIndex];
-      updatedMangaInfo.totalVolumes = totalVolumes;
+      updatedMangaInfo.totalPages = totalPages;
       updatedMangaInfo.dateWatched = Date.now();
       mangaInfos = mangaInfos.filter(
         (_: any, index: number) => index !== mangaInfoIndex
@@ -60,7 +59,7 @@ export default function CheckPage({
         manga: slug,
         volume: volume,
         page: initialPageNumber,
-        totalVolumes: totalVolumes,
+        totalPages: totalPages,
         dateWatched: Date.now(),
       });
     }
@@ -68,7 +67,7 @@ export default function CheckPage({
     mangaInfos = mangaInfos.reverse();
 
     localStorage.setItem("mangaInfo", JSON.stringify(mangaInfos));
-  }, [initialPageNumber, slug, volume, volumes]);
+  }, [initialPageNumber, slug, totalPages, volume, volumes]);
 
   return (
     <MangaPage

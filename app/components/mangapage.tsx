@@ -125,7 +125,6 @@ export default function MangaPage({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [nextPageExists, previousPage, nextPage, isVertical]);
-  const totalVolumes = volumes.length;
   useEffect(() => {
     let existingMangaInfo = JSON.parse(
       localStorage.getItem("mangaInfo") || "[]"
@@ -143,7 +142,7 @@ export default function MangaPage({
       manga: slug,
       volume: volume,
       page: pageNumber,
-      totalVolumes: totalVolumes,
+      totalPages: totalPages,
       dateWatched:
         existingMangaInfo[existingMangaIndex]?.dateWatched || Date.now(),
     };
@@ -155,7 +154,7 @@ export default function MangaPage({
     }
 
     localStorage.setItem("mangaInfo", JSON.stringify(existingMangaInfo));
-  }, [slug, volume, pageNumber, totalVolumes]);
+  }, [slug, volume, pageNumber, totalPages]);
 
   const formattedPageNumber = String(pageNumber).padStart(3, "0");
   const [isFullscreen, setIsFullscreen] = useState(false);
