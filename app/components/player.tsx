@@ -175,7 +175,13 @@ export default function Player(anime: Anime) {
     <div className="mt-4 flex flex-col items-center justify-center">
       <div className="w-3/4 border-2 border-gray-800">
         <MediaPlayer
-          title={decodeURIComponent(anime.title)}
+          title={
+            decodeURIComponent(anime.title) +
+            " - S" +
+            anime.season +
+            " E" +
+            anime.episode
+          }
           src={videoSrc}
           playsInline
           onProviderSetup={onProviderSetup}

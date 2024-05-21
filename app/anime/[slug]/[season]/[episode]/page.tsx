@@ -42,7 +42,7 @@ export default function Page({
   return (
     <MobileNavbarComponent>
       <div className="flex flex-col items-center ">
-        <h1 className="text-center text-3xl my-4 hover:text-red-500 ease-in-out transform transition-colors duration-300">
+        <h1 className="text-center text-3xl my-4">
           {decodeURIComponent(params.slug)}
         </h1>
         <div className="flex flex-wrap items-center">
