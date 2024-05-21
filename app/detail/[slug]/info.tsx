@@ -1,7 +1,7 @@
 // app/manga/[slug]/page.server.tsx
 import AnimeEpisode from "@/app/components/animeEpisode";
 import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
-import { AnimeProgress } from "@/app/components/resumereading";
+import { AnimeProgress, MangaProgress } from "@/app/components/resumereading";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import fs from "fs";
 import Image from "next/image";
@@ -164,10 +164,11 @@ export default function Info({ params }: { params: { slug: string } }) {
               )}
               <div className="flex flex-col">
                 {isMangaDirectoryExists && (
-                  <div className="p-2 rounded-md flex  flex-col justify-start items-start">
+                  <div className="p-2 rounded-md flex flex-col justify-start items-start">
                     <h1 className="p-4 bg-blue-900 text-lg py-1 rounded inline-block m-2">
                       Manga
                     </h1>
+                    <MangaProgress Name={params.slug} />
                     <VolumeSelect
                       volumes={volumes}
                       slug={params.slug}
