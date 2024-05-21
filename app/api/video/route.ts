@@ -1,7 +1,7 @@
 /**@format */
 
+import * as crypto from "crypto";
 import * as fs from "fs";
-
 const CHUNK_SIZE_IN_BYTES = 5000000; // 5 mb
 
 function getVideoStream(req: Request) {
@@ -10,7 +10,25 @@ function getVideoStream(req: Request) {
   const url = new URL(req.url);
   const videoId = url.searchParams.get("videoId");
   const videoPath = `public/${videoId}`;
+  // Check if video file exists
+  if (!fs.existsSync(videoPath)) {
+    return new Response("Video not found", {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
   const videoSizeInBytes = fs.statSync(videoPath).size;
+  // Generate ETag
+  const eTag = crypto
+    .createHash("md5")
+    .update(fs.readFileSync(videoPath))
+    .digest("hex");
+  if (req.headers.get("If-None-Match") === eTag) {
+    return new Response(null, {
+      status: 304,
+      statusText: "Not Modified",
+    });
+  }
   if (!range) {
     const headers = {
       "Content-Length": videoSizeInBytes.toString(),
@@ -55,6 +73,8 @@ function getVideoStream(req: Request) {
     "Accept-Ranges": "bytes",
     "Content-Length": contentLength.toString(),
     "Content-Type": "video/mp4",
+    "Cache-Control": "public, max-age=3600", // Cache for 1 hour
+    ETag: eTag,
   } as { [key: string]: string };
 
   try {
@@ -67,7 +87,6 @@ function getVideoStream(req: Request) {
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === "ERR_INVALID_STATE") {
       console.error("Stream was closed before it could be read");
-      // Handle the error here, e.g. by retrying the operation or showing an error message
     } else {
       throw err;
     }
