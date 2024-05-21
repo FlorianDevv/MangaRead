@@ -1,5 +1,6 @@
 // ResumeReading.tsx
 "use client";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { BookOpen, CirclePlay, Clock3, Play, X } from "lucide-react";
 import Image from "next/image";
@@ -439,6 +440,57 @@ export function AnimeProgress({ Name }: { Name: string }) {
             ></div>
           </div>
           <span className=" -translate-y-2 text-xs text-opacity-50 self-center">{`${savedTime} sur ${totalDuration}`}</span>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function MangaProgress({ Name }: { Name: string }) {
+  const [mangaInfo, setMangaInfo] = useState<MangaInfo | null>(null);
+
+  useEffect(() => {
+    const storedManga = localStorage.getItem("mangaInfo");
+    if (storedManga) {
+      const parsedManga = JSON.parse(storedManga).find(
+        (item: MangaInfo) => item.manga === Name
+      );
+      if (parsedManga) {
+        setMangaInfo({
+          ...parsedManga,
+          dateWatched: new Date(parsedManga.dateWatched),
+        });
+      }
+    }
+  }, [Name]);
+
+  if (!mangaInfo) {
+    return null;
+  }
+
+  const currentVolumeNumber = parseInt(
+    decodeURIComponent(mangaInfo.volume).split(" ")[1]
+  );
+  const currentPageNumber = mangaInfo.page;
+  const volumeLink = `/manga/${mangaInfo.manga}/${mangaInfo.volume}`;
+  const language = process.env.DEFAULT_LANGUAGE;
+  const data = require(`@/locales/${language}.json`);
+
+  return (
+    <>
+      <div className="flex flex-col p-4 rounded-lg">
+        <Link href={volumeLink}>
+          <Button className="px-4 py-2 mb-2" variant="secondary">
+            <i className="mr-2 uppercase"> {data.resume.title} </i>
+          </Button>
+        </Link>
+        <div className="text-sm text-gray-300">
+          <i className="mr-2"></i>
+          {data.resume.volume} {currentVolumeNumber}
+        </div>
+        <div className="text-sm text-gray-300">
+          <i className="mr-2"></i>
+          {data.resume.page} {currentPageNumber}
         </div>
       </div>
     </>

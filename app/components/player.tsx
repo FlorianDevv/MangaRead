@@ -3,6 +3,7 @@ import {
   MediaPlayer,
   MediaProvider,
   MediaProviderAdapter,
+  Poster,
   isHTMLVideoElement,
   isVideoProvider,
 } from "@vidstack/react";
@@ -170,6 +171,11 @@ export default function Player(anime: Anime) {
       `/api/video?videoId=${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`,
     [anime.title, seasonNumber, episodeNumber]
   );
+  const thumbnailSrc = useMemo(
+    () =>
+      `/${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.webp`,
+    [anime.title, seasonNumber, episodeNumber]
+  );
 
   return (
     <div className="mt-4 flex flex-col items-center justify-center">
@@ -178,15 +184,18 @@ export default function Player(anime: Anime) {
           title={
             decodeURIComponent(anime.title) +
             " - S" +
-            anime.season +
+            anime.season.replace(/\D/g, "") +
             " E" +
-            anime.episode
+            anime.episode.replace(/\D/g, "")
           }
           src={videoSrc}
           playsInline
           onProviderSetup={onProviderSetup}
+          poster={thumbnailSrc}
         >
-          <MediaProvider />
+          <MediaProvider>
+            <Poster className="vds-poster" />
+          </MediaProvider>
           <DefaultVideoLayout icons={defaultLayoutIcons} />
           <DefaultAudioLayout icons={defaultLayoutIcons} />
         </MediaPlayer>
