@@ -2,33 +2,13 @@ import dynamic from "next/dynamic";
 import Card from "./components/Card";
 import { MobileNavbarComponent } from "./components/mobilenavbar";
 import { getDetails } from "./types/getDetails";
-const Carousel = dynamic(() => import("./components/mangaCarousel"));
+const PreviewVideo = dynamic(
+  () => import("./components/carousel/previewVideo")
+);
 const ResumeReading = dynamic(() => import("./components/resumereading"));
 
 export default function Home() {
   const Details = getDetails();
-  const itemNames = Details.map((detail) => detail.name);
-
-  function shuffleArray<T>(array: T[]): void {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-  shuffleArray(itemNames);
-
-  const shuffledMangaDetails = [...Details].sort(() => Math.random() - 0.5);
-
-  // Filter mangaDetails to only include manga, not anime
-  const mangaOnlyDetails = shuffledMangaDetails.filter(
-    (detail) => detail.type !== "anime"
-  );
-
-  // Get the first 5 elements or less if there are less than 5
-  const selectedMangaDetails = mangaOnlyDetails.slice(
-    0,
-    Math.min(mangaOnlyDetails.length, 5)
-  );
 
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`../locales/${language}.json`);
@@ -36,7 +16,7 @@ export default function Home() {
     <MobileNavbarComponent activePage="Home">
       <div className="md:bg-[#0c0c0c] md:mx-24 lg:mx-48 2xl:mx-64">
         <div className="md:mx-8 mt-2">
-          <Carousel mangaDetails={selectedMangaDetails} />
+          <PreviewVideo />
         </div>
         <div className=" p-4 mt-6 ">
           <ResumeReading />
