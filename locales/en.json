@@ -92,6 +92,12 @@
       "button": "Settings",
       "settings": "Settings",
       "modify": "Modify your settings"
+    },
+    "save": {
+      "title": "Save data",
+      "export": "Export",
+      "import": "Import",
+      "alert": "All existing data will be overwritten. Continue?"
     }
   }
 }

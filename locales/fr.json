@@ -92,6 +92,12 @@
       "button": "Paramètres",
       "settings": "Paramètres",
       "modify": "Modifier vos paramètres"
+    },
+    "save": {
+      "title": "Sauvegarder vos données",
+      "export": "Exporter",
+      "import": "Importer",
+      "alert": "Attention, cette action écrasera vos données actuelles, êtes-vous sûr de vouloir continuer ?"
     }
   }
 }
