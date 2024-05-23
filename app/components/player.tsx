@@ -178,8 +178,8 @@ export default function Player(anime: Anime) {
   );
 
   return (
-    <div className="mt-4 flex flex-col items-center justify-center">
-      <div className="w-3/4 border-2 border-gray-800">
+    <div className="mt-4 flex flex-col items-center justify-center h-screen w-full">
+      <div className="w-full h-full border-2 border-gray-800">
         <MediaPlayer
           title={
             decodeURIComponent(anime.title) +

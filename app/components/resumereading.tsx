@@ -11,7 +11,7 @@ interface MangaInfo {
   manga: string;
   volume: string;
   page: number;
-  totalVolumes: number;
+  totalPages: number;
   dateWatched: number;
 }
 
@@ -133,11 +133,9 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
   );
   const calculateProgress = useMemo(() => {
     return (mangaInfo: MangaInfo) => {
-      const currentVolumeNumber = parseInt(
-        decodeURIComponent(mangaInfo.volume).split(" ")[1]
-      );
-      const totalVolumes = mangaInfo.totalVolumes;
-      return (currentVolumeNumber / totalVolumes) * 100;
+      const currentPage = mangaInfo.page;
+      const totalPages = mangaInfo.totalPages;
+      return (currentPage / totalPages) * 100;
     };
   }, []);
 
@@ -236,16 +234,14 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                       </div>
                     </div>
                     <div className=" flex flex-col items-center mx-4">
-                      {mangaInfo.totalVolumes !== undefined && (
+                      {mangaInfo.totalPages !== undefined && (
                         <>
                           <Progress
                             value={calculateProgress(mangaInfo)}
                             aria-label="Reading progress"
                           />
                           <p className="my-2 text-gray-200 text-sm ">
-                            {`${
-                              decodeURIComponent(mangaInfo.volume).split(" ")[1]
-                            } / ${mangaInfo.totalVolumes}`}
+                            {`${mangaInfo.page} / ${mangaInfo.totalPages}`}
                           </p>
                         </>
                       )}
