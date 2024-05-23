@@ -114,81 +114,79 @@ export default function Info({ params }: { params: { slug: string } }) {
     : [];
 
   return (
-    <MobileNavbarComponent>
-      <div className="overflow-auto h-screen relative">
-        <div className="relative top-0 w-full h-96 ">
-          {!isAnimeDirectoryExists ? (
-            <Image
-              src={`/${params.slug}/manga/Tome 01/01-001.webp`}
-              alt={`${params.slug}`}
-              quality={50}
-              fill
-              priority={true}
-              className="object-cover"
-            />
-          ) : (
-            <Image
-              src={`/${params.slug}/anime/thumbnail.webp`}
-              alt={`${params.slug}`}
-              quality={50}
-              fill
-              priority={true}
-              className="object-cover"
-            />
-          )}
-        </div>
-        <div className="w-full h-24 bg-gradient-to-t from-black to-transparent absolute top-56"></div>
-        <div className="relative bg-black transform -translate-y-16 px-8">
-          <h1 className="text-xl lg:text-3xl z-50 transform -translate-y-8">
-            {decodeURIComponent(params.slug)}
-          </h1>
-          {isAnimeDirectoryExists && <AnimeProgress Name={params.slug} />}
-          <div className="flex flex-wrap lg:flex-nowrap justify-center">
-            <div className="flex flex-col items-center justify-center md:items-start md:justify-start ">
-              {categories.length > 0 && (
-                <div className="flex flex-wrap justify-center md:justify-start mb-4">
-                  {categories.map((category, index) => (
-                    <span
-                      key={index}
-                      className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1"
-                    >
-                      {category}
-                    </span>
-                  ))}
+    <div className="overflow-auto h-screen relative">
+      <div className="relative top-0 w-full h-96 ">
+        {!isAnimeDirectoryExists ? (
+          <Image
+            src={`/${params.slug}/manga/Tome 01/01-001.webp`}
+            alt={`${params.slug}`}
+            quality={50}
+            fill
+            priority={true}
+            className="object-cover"
+          />
+        ) : (
+          <Image
+            src={`/${params.slug}/anime/thumbnail.webp`}
+            alt={`${params.slug}`}
+            quality={50}
+            fill
+            priority={true}
+            className="object-cover"
+          />
+        )}
+      </div>
+      <div className="w-full h-24 bg-gradient-to-t from-black to-transparent absolute top-56"></div>
+      <div className="relative bg-black transform -translate-y-16 px-8">
+        <h1 className="text-xl lg:text-3xl z-50 transform -translate-y-8">
+          {decodeURIComponent(params.slug)}
+        </h1>
+        {isAnimeDirectoryExists && <AnimeProgress Name={params.slug} />}
+        <div className="flex flex-wrap lg:flex-nowrap justify-center">
+          <div className="flex flex-col items-center justify-center md:items-start md:justify-start ">
+            {categories.length > 0 && (
+              <div className="flex flex-wrap justify-center md:justify-start mb-4">
+                {categories.map((category, index) => (
+                  <span
+                    key={index}
+                    className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1"
+                  >
+                    {category}
+                  </span>
+                ))}
+              </div>
+            )}
+            {manga.synopsis && (
+              <p className="text-xs sm:text-sm overflow-wrap-break break-words w-5/6 text-left lg:text-justify lg:mr-4 mb-2">
+                {manga.synopsis}
+              </p>
+            )}
+            <div className="flex flex-col">
+              {isMangaDirectoryExists && (
+                <div className="p-2 rounded-md flex flex-col justify-start items-start">
+                  <h1 className="p-4 bg-blue-900 text-lg py-1 rounded inline-block m-2">
+                    Manga
+                  </h1>
+                  <MangaProgress Name={params.slug} />
+                  <VolumeSelect
+                    volumes={volumes}
+                    slug={params.slug}
+                    currentVolume=""
+                    isPage={false}
+                  />
                 </div>
               )}
-              {manga.synopsis && (
-                <p className="text-xs sm:text-sm overflow-wrap-break break-words w-5/6 text-left lg:text-justify lg:mr-4 mb-2">
-                  {manga.synopsis}
-                </p>
+              {isAnimeDirectoryExists && (
+                <AnimeEpisode
+                  seasons={seasons}
+                  episodes={episodes}
+                  slug={params.slug}
+                />
               )}
-              <div className="flex flex-col">
-                {isMangaDirectoryExists && (
-                  <div className="p-2 rounded-md flex flex-col justify-start items-start">
-                    <h1 className="p-4 bg-blue-900 text-lg py-1 rounded inline-block m-2">
-                      Manga
-                    </h1>
-                    <MangaProgress Name={params.slug} />
-                    <VolumeSelect
-                      volumes={volumes}
-                      slug={params.slug}
-                      currentVolume=""
-                      isPage={false}
-                    />
-                  </div>
-                )}
-                {isAnimeDirectoryExists && (
-                  <AnimeEpisode
-                    seasons={seasons}
-                    episodes={episodes}
-                    slug={params.slug}
-                  />
-                )}
-              </div>
             </div>
           </div>
         </div>
       </div>
-    </MobileNavbarComponent>
+    </div>
   );
 }
