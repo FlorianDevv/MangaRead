@@ -30,7 +30,13 @@ export default function Page({
     fs.existsSync(animePath) && fs.lstatSync(animePath).isDirectory()
       ? fs
           .readdirSync(animePath)
-          .filter((seasonName: string) => !seasonName.startsWith("."))
+          .filter((seasonName: string) => {
+            const seasonPath = path.join(animePath, seasonName);
+            return (
+              !seasonName.startsWith(".") &&
+              fs.lstatSync(seasonPath).isDirectory()
+            );
+          })
           .map((seasonName: string) => ({ name: seasonName }))
       : [];
   if (episodes.length === 0 || seasons.length === 0) {
