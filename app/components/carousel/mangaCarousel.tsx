@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { EmblaCarouselType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { BookOpen, InfoIcon, PlayIcon, Volume2, VolumeX } from "lucide-react";
@@ -41,7 +42,7 @@ const data = require(`@/locales/${language}.json`);
 function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
   return (
     <div className="flex-shrink-0 w-full" key={detail.name}>
-      <div className="relative w-full h-96 flex">
+      <div className="relative w-full h-126 flex">
         <Image
           src={`/${detail.name}/manga/Tome 01/01-001.webp`}
           alt={"cover image back"}
@@ -100,9 +101,11 @@ function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
 function AnimeDetailComponent({
   detail,
   isActive,
+  emblaApi,
 }: {
   detail: AnimeDetails;
   isActive: boolean;
+  emblaApi: EmblaCarouselType | null;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -123,19 +126,23 @@ function AnimeDetailComponent({
     }
   };
 
+  const videoSrc = `/api/video?videoId=${detail.name}/anime/preview.mp4`;
+  const thumbnailSrc = `/${detail.name}/anime/thumbnail.webp`;
+
   return (
     <div className="relative flex-shrink-0 w-full" key={detail.name}>
       <video
         ref={videoRef}
-        src="https://files.vidstack.io/sprite-fight/720p.mp4"
+        src={videoSrc}
         muted={isMuted}
         className="absolute w-full h-full object-cover"
+        onEnded={() => emblaApi && emblaApi.scrollNext()}
       />
 
-      <div className="relative w-full h-96 flex items-end">
-        <div className="relative w-32">
+      <div className="relative w-full h-126 flex items-end">
+        <div className="relative w-32 m-2">
           <Image
-            src={`/${detail.name}/anime/thumbnail.webp`}
+            src={thumbnailSrc}
             alt={"cover image front"}
             className="object-contain"
             quality={50}
@@ -148,7 +155,7 @@ function AnimeDetailComponent({
         </div>
         <div className="w-1/2 text-left ml-4 space-y-2 flex flex-col justify-center">
           <h1 className="text-xl">{detail.name}</h1>
-          <p className="text-xs pr-2 line-clamp-2  lg:line-clamp-3 text-gray-100">
+          <p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3 text-gray-100 max-w-lg">
             {detail.synopsis}
           </p>
           <p className="text-sm text-gray-100 font-normal">
@@ -175,9 +182,13 @@ function AnimeDetailComponent({
             <Button
               variant="ghost"
               onClick={handleMute}
-              className="absolute right-2 m-4 bg-black bg-opacity-50 rounded-full p-2"
+              className="absolute right-2 bottom-1/4 transform translate-y-1/2 m-4 bg-black bg-opacity-50 rounded-full p-1"
             >
-              {isMuted ? <VolumeX /> : <Volume2 />}
+              {isMuted ? (
+                <VolumeX className="w-10 h-10" />
+              ) : (
+                <Volume2 className="w-10 h-10" />
+              )}
             </Button>
           </div>
         </div>
@@ -189,22 +200,36 @@ function AnimeDetailComponent({
 function DetailComponent({
   detail,
   isActive,
+  emblaApi,
 }: {
   detail: AnimeDetails | MangaDetails;
   isActive: boolean;
+  emblaApi: EmblaCarouselType | null;
 }) {
   if ("season" in detail && "volume" in detail) {
     const randomNumber = Math.random();
 
     if (randomNumber < 0.5) {
-      return <AnimeDetailComponent detail={detail} isActive={isActive} />;
+      return (
+        <AnimeDetailComponent
+          detail={detail}
+          isActive={isActive}
+          emblaApi={emblaApi}
+        />
+      );
     }
 
     return <MangaDetailComponent detail={detail as unknown as MangaDetails} />;
   }
 
   if ("season" in detail) {
-    return <AnimeDetailComponent detail={detail} isActive={isActive} />;
+    return (
+      <AnimeDetailComponent
+        detail={detail}
+        isActive={isActive}
+        emblaApi={emblaApi}
+      />
+    );
   }
 
   return <MangaDetailComponent detail={detail} />;
@@ -243,6 +268,7 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
               detail={Detail as AnimeDetails | MangaDetails}
               isActive={isActive}
               key={Detail.name}
+              emblaApi={emblaApi || null}
             />
           );
         })}
