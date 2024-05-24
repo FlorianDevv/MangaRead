@@ -10,7 +10,9 @@
   },
   "carousel": {
     "read": "Read",
-    "start": "Start reading"
+    "start": "Start reading",
+    "watch": "Watch",
+    "startW": "Start watching"
   },
   "resume": {
     "title": "Resume your viewing",

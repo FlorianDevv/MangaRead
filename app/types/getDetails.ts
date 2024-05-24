@@ -36,7 +36,25 @@ export function getDetails() {
       type = "anime";
     }
 
-    return { name, synopsis, volume, type };
+    let season = 0;
+    let episode = 0;
+    if (isAnime) {
+      const animePath = path.join(itemPath, "anime");
+      const seasons = fs.readdirSync(animePath).filter((season) => {
+        const seasonPath = path.join(animePath, season);
+        return fs.lstatSync(seasonPath).isDirectory();
+      });
+      season = seasons.length;
+      episode = seasons.reduce((total, season) => {
+        const seasonPath = path.join(animePath, season);
+        const episodes = fs.readdirSync(seasonPath).filter((episode) => {
+          return path.extname(episode) === ".mp4";
+        });
+        return total + episodes.length;
+      }, 0);
+    }
+
+    return { name, synopsis, volume, type, season, episode };
   });
 
   return itemDetails;

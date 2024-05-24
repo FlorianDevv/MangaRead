@@ -10,7 +10,9 @@
   },
   "carousel": {
     "read": "Lire",
-    "start": "Lecture"
+    "start": "Lecture",
+    "watch": "Regarder",
+    "startW": "Visionner"
   },
   "resume": {
     "title": "Reprenez votre visionnage",
