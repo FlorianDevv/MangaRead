@@ -1,7 +1,6 @@
 import { getDetails } from "../../types/getDetails";
 import EmblaCarousel from "./mangaCarousel";
 
-export const dynamic = "force-dynamic";
 //FIX BUG SHUFFLE DOESN'T WORK ON SERVER SIDE
 export default function previewVideo() {
   const Details = getDetails();
@@ -20,20 +19,15 @@ export default function previewVideo() {
 
   const shuffledDetails = shuffleArray(Details);
 
-  // Filter mangaDetails to only include manga, not anime
-  const mangaOnlyDetails = shuffledDetails.filter(
-    (detail) => detail.type !== "anime"
-  );
-
   // Get the first 5 elements or less if there are less than 5
-  const selectedMangaDetails = mangaOnlyDetails.slice(
+  const selectedMangaDetails = shuffledDetails.slice(
     0,
-    Math.min(mangaOnlyDetails.length, 5)
+    Math.min(shuffledDetails.length, 5)
   );
 
   return (
     <>
-      <EmblaCarousel mangaDetails={selectedMangaDetails} />
+      <EmblaCarousel Details={selectedMangaDetails} />
     </>
   );
 }
