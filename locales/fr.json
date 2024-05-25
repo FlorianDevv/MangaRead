@@ -12,7 +12,10 @@
     "read": "Lire",
     "start": "Lecture",
     "watch": "Regarder",
-    "startW": "Visionner"
+    "startW": "Visionner",
+    "episodes": "Épisodes",
+    "seasons": "Saisons",
+    "volumes": "Tomes"
   },
   "resume": {
     "title": "Reprenez votre visionnage",

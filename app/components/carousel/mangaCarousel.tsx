@@ -40,26 +40,72 @@ const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 
 function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
+  const imageSrc = `/${detail.name}/manga/Tome 01/01-001.webp`;
+
   return (
-    <div className="flex-shrink-0 w-full" key={detail.name}>
-      <div className="relative w-full h-126 flex">
-        <Image
-          src={`/${detail.name}/manga/Tome 01/01-001.webp`}
-          alt={"cover image back"}
-          className="object-cover opacity-25 blur-lg"
-          fill
-          sizes="10vw"
-          quality={1}
-          placeholder="blur"
-          blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
-        />
-        <div className="w-1/2 text-left mt-2 ml-2 sm:ml-24 space-y-4 flex flex-col justify-center  z-10">
-          <h1 className="text-3xl">{detail.name}</h1>
-          <p className="text-sm pr-2 line-clamp-4  lg:line-clamp-5 text-gray-100">
+    <div
+      className="relative flex-shrink-0 w-full h-126 flex flex-col items-center"
+      key={detail.name}
+    >
+      <Image
+        src={`/${detail.name}/manga/Tome 01/01-001.webp`}
+        alt={"cover image back"}
+        className="object-cover opacity-25 blur-lg"
+        fill
+        sizes="10vw"
+        quality={1}
+        placeholder="blur"
+        blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+      />
+      <div className="relative w-full flex justify-center mb-4">
+        <div className="relative w-full flex flex-row">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className={`relative w-full h-110 sm:w-1/2 md:w-1/4 lg:w-1/4 ${
+                i > 0 ? "hidden md:block" : ""
+              }`}
+            >
+              <Image
+                key={i}
+                src={`/${detail.name}/manga/Tome 01/01-${String(i + 7).padStart(
+                  3,
+                  "0"
+                )}.webp`}
+                alt={`manga page ${i + 7}`}
+                className="object-contain w-full h-full"
+                quality={50}
+                fill
+                placeholder="blur"
+                blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative w-full h-full flex items-end">
+        <div className="relative w-32 m-2 flex-col flex">
+          <Image
+            src={imageSrc}
+            alt={"cover image front"}
+            className="object-contain"
+            quality={50}
+            width={300}
+            height={450}
+            sizes="(min-width: 1080px) 216px, (min-width: 1000px) calc(-15vw + 374px), (min-width: 780px) calc(15.5vw + 72px), (min-width: 560px) 224px, (min-width: 380px) calc(18.75vw + 123px), calc(75vw - 83px)"
+            placeholder="blur"
+            blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+          />
+        </div>
+
+        <div className="w-1/2 text-left ml-4 space-y-2 flex flex-col justify-center">
+          <h1 className="text-xl">{detail.name}</h1>
+          <p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3 text-gray-100 max-w-lg">
             {detail.synopsis}
           </p>
-          <p className="text-lg text-gray-100 font-normal">
-            {detail.volume} Volumes
+          <p className="text-sm text-gray-100 font-normal">
+            {detail.volume} {data.carousel.volumes}
           </p>
           <div>
             <Link href={`/manga/${detail.name}/Tome%2001`}>
@@ -79,19 +125,6 @@ function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
               </Button>
             </Link>
           </div>
-        </div>
-        <div className="relative w-56 flex justify-end items-end xl:ml-20">
-          <Image
-            src={`/${detail.name}/manga/Tome 01/01-001.webp`}
-            alt={"cover image front"}
-            className="object-contain md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125"
-            quality={50}
-            width={600}
-            height={900}
-            sizes="(min-width: 1080px) 216px, (min-width: 1000px) calc(-15vw + 374px), (min-width: 780px) calc(15.5vw + 72px), (min-width: 560px) 224px, (min-width: 380px) calc(18.75vw + 123px), calc(75vw - 83px)"
-            placeholder="blur"
-            blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
-          />
         </div>
       </div>
     </div>
@@ -159,8 +192,8 @@ function AnimeDetailComponent({
             {detail.synopsis}
           </p>
           <p className="text-sm text-gray-100 font-normal">
-            {detail.season} {data.seasonSelect.season}, {detail.episode}{" "}
-            {data.episodeSelect.episode}
+            {detail.season} {data.carousel.seasons}, {detail.episode}{" "}
+            {data.carousel.episodes}
           </p>
           <div>
             <Link href={`/anime/${detail.name}/season01/episode01`}>
@@ -202,37 +235,39 @@ function DetailComponent({
   isActive,
   emblaApi,
 }: {
-  detail: AnimeDetails | MangaDetails;
+  detail: AnimeDetails | MangaDetails | BothDetails;
   isActive: boolean;
   emblaApi: EmblaCarouselType | null;
 }) {
-  if ("season" in detail && "volume" in detail) {
-    const randomNumber = Math.random();
-
-    if (randomNumber < 0.5) {
+  switch (detail.type) {
+    case "anime":
       return (
         <AnimeDetailComponent
-          detail={detail}
+          detail={detail as AnimeDetails}
           isActive={isActive}
           emblaApi={emblaApi}
         />
       );
-    }
-
-    return <MangaDetailComponent detail={detail as unknown as MangaDetails} />;
+    case "manga":
+      return <MangaDetailComponent detail={detail as MangaDetails} />;
+    case "both":
+      const randomNumber = Math.random();
+      if (randomNumber < 0.5) {
+        return (
+          <AnimeDetailComponent
+            detail={detail as unknown as AnimeDetails}
+            isActive={isActive}
+            emblaApi={emblaApi}
+          />
+        );
+      } else {
+        return (
+          <MangaDetailComponent detail={detail as unknown as MangaDetails} />
+        );
+      }
+    default:
+      return null;
   }
-
-  if ("season" in detail) {
-    return (
-      <AnimeDetailComponent
-        detail={detail}
-        isActive={isActive}
-        emblaApi={emblaApi}
-      />
-    );
-  }
-
-  return <MangaDetailComponent detail={detail} />;
 }
 
 export default function EmblaCarousel(props: EmblaCarouselProps) {
@@ -245,7 +280,7 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
       speed: 5,
       pauseOnHover: true,
       stopOnMouseEnter: true,
-      stopOnInteraction: false,
+      stopOnInteraction: true,
     }),
   ]);
 

@@ -17,12 +17,21 @@ export default function previewVideo() {
     return shuffledArray;
   }
 
-  const shuffledDetails = shuffleArray(Details);
+  // Separate anime and non-anime details
+  const animeDetails = Details.filter((detail) => detail.type === "anime");
+  const nonAnimeDetails = Details.filter((detail) => detail.type !== "anime");
 
-  // Get the first 5 elements or less if there are less than 5
+  // Shuffle them separately
+  const shuffledAnimeDetails = shuffleArray(animeDetails);
+  const shuffledNonAnimeDetails = shuffleArray(nonAnimeDetails);
+
+  // Combine them
+  const shuffledDetails = [...shuffledAnimeDetails, ...shuffledNonAnimeDetails];
+
+  // Get the first 10 elements or less if there are less than 10
   const selectedMangaDetails = shuffledDetails.slice(
     0,
-    Math.min(shuffledDetails.length, 5)
+    Math.min(shuffledDetails.length, 10)
   );
 
   return (
