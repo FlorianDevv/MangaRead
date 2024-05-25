@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { EmblaCarouselType } from "embla-carousel";
-import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { BookOpen, InfoIcon, PlayIcon, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
@@ -39,11 +38,27 @@ interface EmblaCarouselProps {
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 
-function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
+function MangaDetailComponent({
+  detail,
+  emblaApi,
+}: {
+  detail: MangaDetails;
+  emblaApi: EmblaCarouselType | null;
+}) {
   const imageSrc = useMemo(
     () => `/${detail.name}/manga/Tome 01/01-001.webp`,
     [detail.name]
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (emblaApi) {
+        emblaApi.scrollNext();
+      }
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, [emblaApi]);
 
   return (
     <div
@@ -77,7 +92,7 @@ function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
       </div>
 
       <div className="relative w-full h-full flex items-end">
-        <div className="relative w-32 m-2 flex-col flex">
+        <div className="relative w-32 m-2">
           <Image
             src={imageSrc}
             alt={"cover image front"}
@@ -161,7 +176,7 @@ function AnimeDetailComponent({
   );
 
   return (
-    <div className="relative flex-shrink-0 w-full" key={detail.name}>
+    <div className="relative flex-shrink-0 w-full h-126" key={detail.name}>
       <video
         ref={videoRef}
         src={videoSrc}
@@ -170,7 +185,7 @@ function AnimeDetailComponent({
         onEnded={() => emblaApi && emblaApi.scrollNext()}
       />
 
-      <div className="relative w-full h-126 flex items-end">
+      <div className="relative w-full h-full flex items-end">
         <div className="relative w-32 m-2">
           <Image
             src={thumbnailSrc}
@@ -247,7 +262,12 @@ function DetailComponent({
         />
       );
     case "manga":
-      return <MangaDetailComponent detail={detail as MangaDetails} />;
+      return (
+        <MangaDetailComponent
+          detail={detail as MangaDetails}
+          emblaApi={emblaApi}
+        />
+      );
     case "both":
       const randomNumber = Math.random();
       if (randomNumber < 0.5) {
@@ -260,7 +280,10 @@ function DetailComponent({
         );
       } else {
         return (
-          <MangaDetailComponent detail={detail as unknown as MangaDetails} />
+          <MangaDetailComponent
+            detail={detail as unknown as MangaDetails}
+            emblaApi={emblaApi}
+          />
         );
       }
     default:
@@ -271,16 +294,7 @@ function DetailComponent({
 export default function EmblaCarousel(props: EmblaCarouselProps) {
   const { Details } = props;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({
-      playOnInit: true,
-      delay: 18000,
-      speed: 5,
-      pauseOnHover: true,
-      stopOnMouseEnter: true,
-      stopOnInteraction: true,
-    }),
-  ]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
   useEffect(() => {
     if (!emblaApi) return;
