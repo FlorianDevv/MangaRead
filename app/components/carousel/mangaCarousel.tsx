@@ -2,10 +2,25 @@
 import { Button } from "@/components/ui/button";
 import { EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import { BookOpen, InfoIcon, PlayIcon, Volume2, VolumeX } from "lucide-react";
+import {
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  InfoIcon,
+  PlayIcon,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 interface MangaDetails {
   name: string;
   synopsis?: string;
@@ -49,16 +64,6 @@ function MangaDetailComponent({
     () => `/${detail.name}/manga/Tome 01/01-001.webp`,
     [detail.name]
   );
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (emblaApi) {
-        emblaApi.scrollNext();
-      }
-    }, 10000);
-
-    return () => clearTimeout(timer);
-  }, [emblaApi]);
 
   return (
     <div
@@ -138,6 +143,42 @@ function MangaDetailComponent({
   );
 }
 
+// MuteContext.tsx
+
+const MuteContext = createContext<
+  [boolean, React.Dispatch<React.SetStateAction<boolean>>] | undefined
+>(undefined);
+
+export const MuteProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [isMuted, setIsMuted] = useState(() => {
+    if (typeof localStorage !== "undefined") {
+      const savedMuteStatus = localStorage.getItem("isMuted");
+      return savedMuteStatus ? JSON.parse(savedMuteStatus) : true;
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("isMuted", JSON.stringify(isMuted));
+  }, [isMuted]);
+
+  return (
+    <MuteContext.Provider value={[isMuted, setIsMuted]}>
+      {children}
+    </MuteContext.Provider>
+  );
+};
+
+export const useMute = () => {
+  const context = useContext(MuteContext);
+  if (context === undefined) {
+    throw new Error("useMute must be used within a MuteProvider");
+  }
+  return context;
+};
+
 function AnimeDetailComponent({
   detail,
   isActive,
@@ -157,7 +198,8 @@ function AnimeDetailComponent({
       videoRef.current.currentTime = 0;
     }
   }, [isActive]);
-  const [isMuted, setIsMuted] = useState(true);
+
+  const [isMuted, setIsMuted] = useMute();
 
   const handleMute = () => {
     if (videoRef.current) {
@@ -174,7 +216,21 @@ function AnimeDetailComponent({
     () => `/${detail.name}/anime/thumbnail.webp`,
     [detail.name]
   );
+  const [progress, setProgress] = useState(0);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (videoRef.current) {
+        const progress =
+          (videoRef.current.currentTime / videoRef.current.duration) * 100;
+        setProgress(progress);
+      }
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
   return (
     <div className="relative flex-shrink-0 w-full h-126" key={detail.name}>
       <video
@@ -183,6 +239,7 @@ function AnimeDetailComponent({
         muted={isMuted}
         className="absolute w-full h-full object-cover"
         onEnded={() => emblaApi && emblaApi.scrollNext()}
+        playsInline
       />
 
       <div className="relative w-full h-full flex items-end">
@@ -228,7 +285,7 @@ function AnimeDetailComponent({
             <Button
               variant="ghost"
               onClick={handleMute}
-              className="absolute right-2 bottom-1/4 transform translate-y-1/2 m-4 bg-black bg-opacity-50 rounded-full p-1"
+              className="absolute right-1 bottom-8 md:bottom-1/4 transform translate-y-1/2 m-4 bg-black bg-opacity-50 rounded-full p-1"
             >
               {isMuted ? (
                 <VolumeX className="w-10 h-10" />
@@ -236,6 +293,12 @@ function AnimeDetailComponent({
                 <Volume2 className="w-10 h-10" />
               )}
             </Button>
+          </div>
+          <div className="h-1 bg-black relative">
+            <div
+              style={{ width: `${progress}%` }}
+              className="absolute h-1 bg-red-600"
+            />
           </div>
         </div>
       </div>
@@ -255,11 +318,13 @@ function DetailComponent({
   switch (detail.type) {
     case "anime":
       return (
-        <AnimeDetailComponent
-          detail={detail as AnimeDetails}
-          isActive={isActive}
-          emblaApi={emblaApi}
-        />
+        <MuteProvider>
+          <AnimeDetailComponent
+            detail={detail as AnimeDetails}
+            isActive={isActive}
+            emblaApi={emblaApi}
+          />
+        </MuteProvider>
       );
     case "manga":
       return (
@@ -272,11 +337,13 @@ function DetailComponent({
       const randomNumber = Math.random();
       if (randomNumber < 0.5) {
         return (
-          <AnimeDetailComponent
-            detail={detail as unknown as AnimeDetails}
-            isActive={isActive}
-            emblaApi={emblaApi}
-          />
+          <MuteProvider>
+            <AnimeDetailComponent
+              detail={detail as unknown as AnimeDetails}
+              isActive={isActive}
+              emblaApi={emblaApi}
+            />
+          </MuteProvider>
         );
       } else {
         return (
@@ -305,8 +372,20 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
     });
   }, [emblaApi]);
 
+  const scrollPrev = () => {
+    if (emblaApi) {
+      emblaApi.scrollPrev();
+    }
+  };
+
+  const scrollNext = () => {
+    if (emblaApi) {
+      emblaApi.scrollNext();
+    }
+  };
+
   return (
-    <div className="overflow-hidden" ref={emblaRef}>
+    <div className="relative overflow-hidden" ref={emblaRef}>
       <div className="flex">
         {Details.map((Detail, index) => {
           const isActive = index === activeIndex;
@@ -319,6 +398,30 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
             />
           );
         })}
+      </div>
+      <button
+        className="absolute top-1/2 left-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
+        onClick={scrollPrev}
+      >
+        <ChevronLeft className="w-10 h-10" />
+      </button>
+      <button
+        className="absolute top-1/2 right-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
+        onClick={scrollNext}
+      >
+        <ChevronRight className="w-10 h-10" />
+      </button>
+      <div className="absolute bottom-2 left-1/2 flex space-x-2">
+        {Details.map((_, index) => (
+          <div
+            key={index}
+            className={`w-2 h-2 rounded-full ${
+              index === activeIndex
+                ? "bg-white border border-black"
+                : "bg-black border border-white"
+            }`}
+          />
+        ))}
       </div>
     </div>
   );
