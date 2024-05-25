@@ -20,7 +20,8 @@ function generatePreview(filePath: string, animeDirectoryPath: string) {
 
       ffmpeg(filePath)
         .seekInput(seekTime)
-        .duration(15) // Generate a 15 seconds preview
+        .duration(60) // Generate a 60 seconds preview
+        .outputOptions(["-crf 23", "-preset veryfast"])
         .output(outputFilePath)
         .on("error", (err) => {
           console.error("Error generating preview: " + err.message);

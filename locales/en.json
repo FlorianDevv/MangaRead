@@ -12,7 +12,10 @@
     "read": "Read",
     "start": "Start reading",
     "watch": "Watch",
-    "startW": "Start watching"
+    "startW": "Start watching",
+    "episodes": "Episodes",
+    "seasons": "Seasons",
+    "volumes": "Volumes"
   },
   "resume": {
     "title": "Resume your viewing",
