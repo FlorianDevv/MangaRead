@@ -1,6 +1,5 @@
 /**@format */
 
-import * as crypto from "crypto";
 import * as fs from "fs";
 const CHUNK_SIZE_IN_BYTES = 5000000; // 5 mb
 
@@ -8,7 +7,9 @@ function getVideoStream(req: Request) {
   const range = req.headers.get("range");
 
   const url = new URL(req.url);
-  const videoId = url.searchParams.get("videoId");
+  let videoId = url.searchParams.get("videoId");
+  // Decode the videoId if it is not null
+  videoId = videoId !== null ? decodeURIComponent(videoId) : "";
   const videoPath = `public/${videoId}`;
   // Check if video file exists
   if (!fs.existsSync(videoPath)) {
@@ -18,17 +19,6 @@ function getVideoStream(req: Request) {
     });
   }
   const videoSizeInBytes = fs.statSync(videoPath).size;
-  // Generate ETag
-  const eTag = crypto
-    .createHash("md5")
-    .update(fs.readFileSync(videoPath))
-    .digest("hex");
-  if (req.headers.get("If-None-Match") === eTag) {
-    return new Response(null, {
-      status: 304,
-      statusText: "Not Modified",
-    });
-  }
   if (!range) {
     const headers = {
       "Content-Length": videoSizeInBytes.toString(),
@@ -73,8 +63,6 @@ function getVideoStream(req: Request) {
     "Accept-Ranges": "bytes",
     "Content-Length": contentLength.toString(),
     "Content-Type": "video/mp4",
-    "Cache-Control": "public, max-age=3600", // Cache for 1 hour
-    ETag: eTag,
   } as { [key: string]: string };
 
   try {

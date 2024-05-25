@@ -15,7 +15,7 @@ import {
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 interface Anime {
   title: string;
   episode: string;
@@ -33,7 +33,16 @@ type Season = {
 };
 export default function Player(anime: Anime) {
   const lastAnimeRef = useRef(anime);
-
+  const seasonNumber = useMemo(
+    () => anime.season.match(/\d+/)?.[0].padStart(2, "0"),
+    [anime.season]
+  );
+  const episodeNumber = useMemo(
+    () => anime.episode.match(/\d+/)?.[0].padStart(3, "0"),
+    [anime.episode]
+  );
+  const [isLoading, setIsLoading] = useState(true);
+  const [src, setSrc] = useState("");
   const getAnimeListAndIndex = useCallback(() => {
     let animeList = JSON.parse(localStorage.getItem("animeInfo") || "[]");
     if (animeList.length === 0) {
@@ -47,12 +56,19 @@ export default function Player(anime: Anime) {
       };
       animeList = [animeInfo];
       localStorage.setItem("animeInfo", JSON.stringify(animeList));
+      setIsLoading(false);
     }
+
     const animeIndex = animeList.findIndex(
       (a: { anime: string }) => a.anime === anime.title
     );
+    setIsLoading(false);
+    const currentSrc = `/api/video?videoId=${encodeURIComponent(
+      `${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`
+    )}`;
+    setSrc(currentSrc);
     return { animeList, animeIndex };
-  }, [anime.title, anime.season, anime.episode]);
+  }, [anime.title, anime.season, anime.episode, seasonNumber, episodeNumber]);
   const updateAnimeInfo = useCallback(
     (
       animeList: any[],
@@ -60,6 +76,8 @@ export default function Player(anime: Anime) {
       savedTime?: number,
       duration?: string
     ) => {
+      setIsLoading(true); // Set loading state to true at the start of the update
+
       const currentSavedTime =
         savedTime !== undefined
           ? savedTime - 1
@@ -93,28 +111,25 @@ export default function Player(anime: Anime) {
       else animeList[animeIndex] = animeInfo;
       localStorage.setItem("animeInfo", JSON.stringify(animeList));
 
+      setIsLoading(false); // Set loading state to false after the update is done
+
       return animeInfo;
     },
     [anime]
   );
 
-  const onProviderSetup = useCallback(
+  const onProviderSetup: any = useCallback(
     (provider: MediaProviderAdapter) => {
       if (isVideoProvider(provider) && isHTMLVideoElement(provider.video)) {
         const player = provider.video;
 
-        player.onloadedmetadata = () => {
+        player.oncanplaythrough = () => {
           const { animeList, animeIndex } = getAnimeListAndIndex();
           if (
             animeIndex !== -1 &&
             player.currentTime !== animeList[animeIndex].savedTime
           ) {
             player.currentTime = animeList[animeIndex].savedTime;
-
-            const currentSecond = Math.round(player.currentTime);
-            if (currentSecond !== animeList[animeIndex].savedTime) {
-              updateAnimeInfo(animeList, animeIndex, currentSecond);
-            }
           }
 
           // Update the duration of the anime
@@ -122,6 +137,7 @@ export default function Player(anime: Anime) {
             .toISOString()
             .substring(11, 19);
           updateAnimeInfo(animeList, animeIndex, undefined, duration);
+          setIsLoading(false);
         };
 
         player.ontimeupdate = () => {
@@ -158,19 +174,6 @@ export default function Player(anime: Anime) {
     lastAnimeRef.current = anime;
   }, [anime, onProviderSetup]);
 
-  const seasonNumber = useMemo(
-    () => anime.season.match(/\d+/)?.[0].padStart(2, "0"),
-    [anime.season]
-  );
-  const episodeNumber = useMemo(
-    () => anime.episode.match(/\d+/)?.[0].padStart(3, "0"),
-    [anime.episode]
-  );
-  const videoSrc = useMemo(
-    () =>
-      `/api/video?videoId=${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`,
-    [anime.title, seasonNumber, episodeNumber]
-  );
   const thumbnailSrc = useMemo(
     () =>
       `/${anime.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.webp`,
@@ -179,27 +182,32 @@ export default function Player(anime: Anime) {
 
   return (
     <div className="mt-4 flex flex-col items-center justify-center h-screen w-full">
-      <div className="w-full h-full border-2 border-gray-800">
-        <MediaPlayer
-          title={
-            decodeURIComponent(anime.title) +
-            " - S" +
-            anime.season.replace(/\D/g, "") +
-            " E" +
-            anime.episode.replace(/\D/g, "")
-          }
-          src={videoSrc}
-          playsInline
-          onProviderSetup={onProviderSetup}
-          poster={thumbnailSrc}
-        >
-          <MediaProvider>
-            <Poster className="vds-poster" />
-          </MediaProvider>
-          <DefaultVideoLayout icons={defaultLayoutIcons} />
-          <DefaultAudioLayout icons={defaultLayoutIcons} />
-        </MediaPlayer>
-      </div>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="w-full h-full ">
+          <MediaPlayer
+            key={src}
+            title={
+              decodeURIComponent(anime.title) +
+              " - S" +
+              anime.season.replace(/\D/g, "") +
+              " E" +
+              anime.episode.replace(/\D/g, "")
+            }
+            src={{ src: src, type: "video/mp4" }}
+            playsInline
+            onProviderSetup={onProviderSetup}
+            className="w-full h-full object-contain"
+          >
+            <MediaProvider>
+              <Poster className="vds-poster" src={thumbnailSrc} />
+            </MediaProvider>
+            <DefaultVideoLayout icons={defaultLayoutIcons} />
+            <DefaultAudioLayout icons={defaultLayoutIcons} />
+          </MediaPlayer>
+        </div>
+      )}
     </div>
   );
 }
