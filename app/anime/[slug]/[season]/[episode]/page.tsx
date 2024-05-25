@@ -3,7 +3,7 @@ import EpisodeSelect from "@/app/components/select/episodeselect";
 import { SeasonSelect } from "@/app/components/select/seasonselect";
 import fs from "fs";
 import path from "path";
-import Player from "../../../../components/player";
+import React, { Suspense } from "react";
 export default function Page({
   params,
 }: {
@@ -47,6 +47,10 @@ export default function Page({
     );
   }
 
+  const Player = React.lazy(() => import("../../../../components/player"));
+
+  // ...
+
   return (
     <MobileNavbarComponent>
       <div className="flex flex-col items-center ">
@@ -68,13 +72,15 @@ export default function Page({
             isPage={true}
           />
         </div>
-        <Player
-          title={params.slug}
-          season={params.season}
-          episode={params.episode}
-          episodes={episodes}
-          seasons={seasons}
-        />
+        <Suspense fallback={<div>...</div>}>
+          <Player
+            title={params.slug}
+            season={params.season}
+            episode={params.episode}
+            episodes={episodes}
+            seasons={seasons}
+          />
+        </Suspense>
       </div>
     </MobileNavbarComponent>
   );
