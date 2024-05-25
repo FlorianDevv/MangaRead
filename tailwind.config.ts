@@ -20,8 +20,7 @@ const config = {
     },
     extend: {
       height: {
-        "126": " 50rem",
-        "110": " 35rem",
+        "126": " 36.5rem",
       },
       colors: {
         border: "hsl(var(--border))",

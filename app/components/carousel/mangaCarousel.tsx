@@ -1,12 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { EmblaCarouselType } from "embla-carousel";
-import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { BookOpen, InfoIcon, PlayIcon, Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 interface MangaDetails {
   name: string;
   synopsis?: string;
@@ -39,8 +38,27 @@ interface EmblaCarouselProps {
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 
-function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
-  const imageSrc = `/${detail.name}/manga/Tome 01/01-001.webp`;
+function MangaDetailComponent({
+  detail,
+  emblaApi,
+}: {
+  detail: MangaDetails;
+  emblaApi: EmblaCarouselType | null;
+}) {
+  const imageSrc = useMemo(
+    () => `/${detail.name}/manga/Tome 01/01-001.webp`,
+    [detail.name]
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (emblaApi) {
+        emblaApi.scrollNext();
+      }
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, [emblaApi]);
 
   return (
     <div
@@ -57,35 +75,24 @@ function MangaDetailComponent({ detail }: { detail: MangaDetails }) {
         placeholder="blur"
         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
       />
-      <div className="relative w-full flex justify-center mb-4">
-        <div className="relative w-full flex flex-row">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className={`relative w-full h-110 sm:w-1/2 md:w-1/4 lg:w-1/4 ${
-                i > 0 ? "hidden md:block" : ""
-              }`}
-            >
-              <Image
-                key={i}
-                src={`/${detail.name}/manga/Tome 01/01-${String(i + 7).padStart(
-                  3,
-                  "0"
-                )}.webp`}
-                alt={`manga page ${i + 7}`}
-                className="object-contain w-full h-full"
-                quality={50}
-                fill
-                placeholder="blur"
-                blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
-              />
-            </div>
-          ))}
+      <div className="relative w-full flex justify-center mt-8">
+        <div className="relative w-full flex justify-center">
+          <div className="relative w-56 h-80">
+            <Image
+              src={imageSrc}
+              alt="7"
+              className="object-scale-down md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-110"
+              quality={10}
+              fill
+              placeholder="blur"
+              blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+            />
+          </div>
         </div>
       </div>
 
       <div className="relative w-full h-full flex items-end">
-        <div className="relative w-32 m-2 flex-col flex">
+        <div className="relative w-32 m-2">
           <Image
             src={imageSrc}
             alt={"cover image front"}
@@ -159,11 +166,17 @@ function AnimeDetailComponent({
     }
   };
 
-  const videoSrc = `/api/video?videoId=${detail.name}/anime/preview.mp4`;
-  const thumbnailSrc = `/${detail.name}/anime/thumbnail.webp`;
+  const videoSrc = useMemo(
+    () => `/api/video?videoId=${detail.name}/anime/preview.mp4`,
+    [detail.name]
+  );
+  const thumbnailSrc = useMemo(
+    () => `/${detail.name}/anime/thumbnail.webp`,
+    [detail.name]
+  );
 
   return (
-    <div className="relative flex-shrink-0 w-full" key={detail.name}>
+    <div className="relative flex-shrink-0 w-full h-126" key={detail.name}>
       <video
         ref={videoRef}
         src={videoSrc}
@@ -172,7 +185,7 @@ function AnimeDetailComponent({
         onEnded={() => emblaApi && emblaApi.scrollNext()}
       />
 
-      <div className="relative w-full h-126 flex items-end">
+      <div className="relative w-full h-full flex items-end">
         <div className="relative w-32 m-2">
           <Image
             src={thumbnailSrc}
@@ -249,7 +262,12 @@ function DetailComponent({
         />
       );
     case "manga":
-      return <MangaDetailComponent detail={detail as MangaDetails} />;
+      return (
+        <MangaDetailComponent
+          detail={detail as MangaDetails}
+          emblaApi={emblaApi}
+        />
+      );
     case "both":
       const randomNumber = Math.random();
       if (randomNumber < 0.5) {
@@ -262,7 +280,10 @@ function DetailComponent({
         );
       } else {
         return (
-          <MangaDetailComponent detail={detail as unknown as MangaDetails} />
+          <MangaDetailComponent
+            detail={detail as unknown as MangaDetails}
+            emblaApi={emblaApi}
+          />
         );
       }
     default:
@@ -273,16 +294,7 @@ function DetailComponent({
 export default function EmblaCarousel(props: EmblaCarouselProps) {
   const { Details } = props;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({
-      playOnInit: true,
-      delay: 18000,
-      speed: 5,
-      pauseOnHover: true,
-      stopOnMouseEnter: true,
-      stopOnInteraction: true,
-    }),
-  ]);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
 
   useEffect(() => {
     if (!emblaApi) return;
