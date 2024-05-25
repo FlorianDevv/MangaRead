@@ -75,13 +75,13 @@ function MangaDetailComponent({
         placeholder="blur"
         blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
       />
-      <div className="relative w-full flex justify-center mb-4">
+      <div className="relative w-full flex justify-center mt-8">
         <div className="relative w-full flex justify-center">
-          <div className="relative w-56 h-110">
+          <div className="relative w-56 h-80">
             <Image
               src={imageSrc}
-              alt="manga page 7"
-              className="object-scale-down md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-125"
+              alt="7"
+              className="object-scale-down md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-110"
               quality={10}
               fill
               placeholder="blur"
