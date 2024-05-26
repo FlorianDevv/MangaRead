@@ -204,6 +204,12 @@ function AnimeDetailComponent({
     () => `/${detail.name}/anime/thumbnail.webp`,
     [detail.name]
   );
+
+  const posterSrc = useMemo(
+    () => `/${detail.name}/anime/Season01/01-001.webp`,
+    [detail.name]
+  );
+
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -257,6 +263,7 @@ function AnimeDetailComponent({
       {isIntersecting && (
         <>
           <video
+            poster={posterSrc}
             ref={videoRef}
             src={videoSrc}
             muted={isMuted}
