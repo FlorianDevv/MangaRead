@@ -1,5 +1,5 @@
 import { getDetails } from "../../types/getDetails";
-import EmblaCarousel from "./mangaCarousel";
+import EmblaCarousel from "./Carousel";
 
 //FIX BUG SHUFFLE DOESN'T WORK ON SERVER SIDE
 export default function previewVideo() {

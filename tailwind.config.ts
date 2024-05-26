@@ -22,6 +22,9 @@ const config = {
       height: {
         "126": " 36.5rem",
       },
+      width: {
+        "126": "36.5rem",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
