@@ -3,7 +3,15 @@ import EmblaCarousel from "./mangaCarousel";
 
 //FIX BUG SHUFFLE DOESN'T WORK ON SERVER SIDE
 export default function previewVideo() {
-  const Details = getDetails();
+  let Details = getDetails();
+
+  // Transform "both" type details to "anime" or "manga" randomly
+  Details = Details.map((detail) => {
+    if (detail.type === "both") {
+      detail.type = Math.random() < 0.5 ? "manga" : "anime";
+    }
+    return detail;
+  });
 
   function shuffleArray<T>(array: T[]): T[] {
     const shuffledArray = [...array];
