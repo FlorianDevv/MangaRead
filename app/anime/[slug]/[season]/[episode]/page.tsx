@@ -1,4 +1,4 @@
-import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
+import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
 import EpisodeSelect from "@/app/components/select/episodeselect";
 import { SeasonSelect } from "@/app/components/select/seasonselect";
 import fs from "fs";

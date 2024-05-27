@@ -1,14 +1,14 @@
 import { getDetails } from "../../types/getDetails";
 import EmblaCarousel from "./Carousel";
 
-//FIX BUG SHUFFLE DOESN'T WORK ON SERVER SIDE
 export default function previewVideo() {
   let Details = getDetails();
 
   // Transform "both" type details to "anime" or "manga" randomly
   Details = Details.map((detail) => {
-    if (detail.type === "both") {
-      detail.type = Math.random() < 0.5 ? "manga" : "anime";
+    if (detail.types.length > 1) {
+      const randomIndex = Math.floor(Math.random() * detail.types.length);
+      detail.types = [detail.types[randomIndex]];
     }
     return detail;
   });
@@ -26,8 +26,12 @@ export default function previewVideo() {
   }
 
   // Separate anime and non-anime details
-  const animeDetails = Details.filter((detail) => detail.type === "anime");
-  const nonAnimeDetails = Details.filter((detail) => detail.type !== "anime");
+  const animeDetails = Details.filter((detail) =>
+    detail.types.includes("anime")
+  );
+  const nonAnimeDetails = Details.filter(
+    (detail) => !detail.types.includes("anime")
+  );
 
   // Shuffle them separately
   const shuffledAnimeDetails = shuffleArray(animeDetails);

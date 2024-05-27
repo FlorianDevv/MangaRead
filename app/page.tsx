@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import Card from "./components/Card";
-import { MobileNavbarComponent } from "./components/mobilenavbar";
+import { MobileNavbarComponent } from "./components/navbar/mobilenavbar";
 import { getDetails } from "./types/getDetails";
 const PreviewVideo = dynamic(
   () => import("./components/carousel/previewVideo")
@@ -25,7 +25,7 @@ export default function Home() {
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mx-2 lg:mx-4">
           {Details.map((Detail) => (
-            <Card key={Detail.name} Name={Detail.name} type={Detail.type} />
+            <Card key={Detail.name} name={Detail.name} types={Detail.types} />
           ))}
         </div>
       </div>

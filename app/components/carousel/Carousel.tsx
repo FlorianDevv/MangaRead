@@ -21,31 +21,31 @@ import {
   useRef,
   useState,
 } from "react";
+interface SeasonDetails {
+  season: string;
+  episodes: number[];
+}
+
 interface MangaDetails {
   name: string;
   synopsis?: string;
-  volume: number;
-  type: "manga";
+  volumes: string[];
+  types: ("manga" | "anime")[];
+  seasons: SeasonDetails[];
+  categories?: string[];
 }
 
 interface AnimeDetails {
   name: string;
   synopsis?: string;
-  episode: number;
-  season: number;
-  type: "anime";
+  types: ("manga" | "anime")[];
+  seasons: SeasonDetails[];
+  episodeNumber: number;
+  categories?: string[];
 }
 
-interface BothDetails {
-  name: string;
-  synopsis?: string;
-  volume: number;
-  episode: number;
-  season: number;
-  type: "both";
-}
+type Details = MangaDetails | AnimeDetails;
 
-type Details = MangaDetails | AnimeDetails | BothDetails;
 interface EmblaCarouselProps {
   Details: Details[];
 }
@@ -117,7 +117,7 @@ function MangaDetailComponent({
             {detail.synopsis}
           </p>
           <p className="text-sm text-gray-100 font-normal">
-            {detail.volume} {data.carousel.volumes}
+            {detail.volumes.length} {data.carousel.volumes}
           </p>
           <div>
             <Link href={`/manga/${detail.name}/Tome%2001`}>
@@ -285,6 +285,7 @@ function AnimeDetailComponent({
                 sizes="(min-width: 1080px) 216px, (min-width: 1000px) calc(-15vw + 374px), (min-width: 780px) calc(15.5vw + 72px), (min-width: 560px) 224px, (min-width: 380px) calc(18.75vw + 123px), calc(75vw - 83px)"
                 placeholder="blur"
                 blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+                priority={true}
               />
             </div>
             <div className="w-1/2 text-left ml-4 space-y-2 flex flex-col justify-center">
@@ -293,8 +294,8 @@ function AnimeDetailComponent({
                 {detail.synopsis}
               </p>
               <p className="text-sm text-gray-100 font-normal">
-                {detail.season} {data.carousel.seasons}, {detail.episode}{" "}
-                {data.carousel.episodes}
+                {detail.seasons.length} {data.carousel.seasons},{" "}
+                {detail.episodeNumber} {data.carousel.episodes}
               </p>
               <div>
                 <Link href={`/anime/${detail.name}/season01/episode01`}>
@@ -346,31 +347,26 @@ function DetailComponent({
   isActive,
   emblaApi,
 }: {
-  detail: AnimeDetails | MangaDetails | BothDetails;
+  detail: AnimeDetails | MangaDetails;
   isActive: boolean;
   emblaApi: EmblaCarouselType | null;
 }) {
-  switch (detail.type) {
-    case "anime":
-      return (
-        <AnimeDetailComponent
-          detail={detail as AnimeDetails}
-          isActive={isActive}
-          emblaApi={emblaApi}
-        />
-      );
-    case "manga":
-      return (
-        <MangaDetailComponent
-          detail={detail as MangaDetails}
-          emblaApi={emblaApi}
-        />
-      );
-    default:
-      return null;
+  if (detail.types.includes("anime")) {
+    const animeDetail = detail as AnimeDetails;
+    return (
+      <AnimeDetailComponent
+        detail={animeDetail}
+        isActive={isActive}
+        emblaApi={emblaApi}
+      />
+    );
+  } else if (detail.types.includes("manga")) {
+    const mangaDetail = detail as MangaDetails;
+    return <MangaDetailComponent detail={mangaDetail} emblaApi={emblaApi} />;
+  } else {
+    return null;
   }
 }
-
 export default function EmblaCarousel(props: EmblaCarouselProps) {
   const { Details } = props;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -425,22 +421,20 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
         >
           <ChevronRight className="w-10 h-10" />
         </button>
-        <div className="absolute bottom-2 left-1/2 flex space-x-2">
+        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {Details.map((_, index) => (
             <div
               key={index}
               className={`w-2 h-2 rounded-full flex items-center justify-center m-0 p-0 border  appearance-none tap-highlight-transparent 
-    ${
-      index === activeIndex ? "bg-white border-black" : "bg-black border-white"
-    }`}
+${index === activeIndex ? "bg-white border-black" : "bg-black border-white"}`}
             >
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center box-border 
-      ${
-        index === activeIndex
-          ? "shadow-inner text-body"
-          : "shadow-inner text-detail-medium-contrast"
-      }`}
+  ${
+    index === activeIndex
+      ? "shadow-inner text-body"
+      : "shadow-inner text-detail-medium-contrast"
+  }`}
               />
             </div>
           ))}

@@ -1,6 +1,5 @@
 // app/manga/[slug]/page.server.tsx
 import AnimeEpisode from "@/app/components/animeEpisode";
-import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
 import { AnimeProgress, MangaProgress } from "@/app/components/resumereading";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import fs from "fs";

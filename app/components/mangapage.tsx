@@ -11,8 +11,8 @@ import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FloatingButton } from "./floatingButtons";
-import { MobileNavbarComponent } from "./mobilenavbar";
-import { NavbarContext } from "./navbarcontext";
+import { MobileNavbarComponent } from "./navbar/mobilenavbar";
+import { NavbarContext } from "./navbar/navbarcontext";
 import { Quality, Read, getSettings } from "./settings";
 
 type Volume = {

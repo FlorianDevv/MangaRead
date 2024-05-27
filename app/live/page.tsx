@@ -1,3 +1,4 @@
+import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,7 +15,6 @@ import Link from "next/link";
 import path from "path";
 import { GET as GET_CURRENT } from "../api/live/current/route";
 import { GET as GET_SCHEDULE } from "../api/live/route";
-import { MobileNavbarComponent } from "../components/mobilenavbar";
 
 export const dynamic = "force-dynamic";
 interface Item {

@@ -1,9 +1,9 @@
 "use client";
+import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Settings } from "lucide-react";
 import Bookmark from "../components/bookmark";
 import ExportImportLocalStorage from "../components/exportImportLocalStorage";
-import { MobileNavbarComponent } from "../components/mobilenavbar";
 import ResumeReading from "../components/resumereading";
 import { Quality, Read } from "../components/settings";
 const language = process.env.DEFAULT_LANGUAGE;
