@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 type Episode = {
   name: string;
 };
@@ -18,7 +19,6 @@ export default function EpisodeSelect({
   slug,
   currentEpisode,
   season,
-  isPage,
 }: {
   episodes: Episode[];
   slug: string;
@@ -30,41 +30,28 @@ export default function EpisodeSelect({
   const data = require(`@/locales/${language}.json`);
   const router = useRouter();
 
-  const handleChange = (value: string) => {
-    const episode = episodes.find(
-      (episode) => formatEpisodeName(episode.name) === value
-    );
-    if (!isPage) {
-      season = "season01";
-    }
-    if (episode) {
-      const formattedName = formatEpisodeNameRoute(episode.name);
-      setSelectedEpisode(formattedName);
-      router.push(`/anime/${slug}/${season}/${formattedName}`);
-    }
-  };
-  const formatEpisodeNameRoute = (filename: string) => {
-    const match = filename.match(/(\d+)-(\d+)\.mp4/);
+  const formatEpisodeNameRoute = (episodeNumber: string) => {
+    const match = episodeNumber.match(/episode(\d+)/i);
     if (match) {
-      const [, , episode] = match;
-      const episodeNumber = parseInt(episode);
-      const formattedEpisodeNumber =
-        episodeNumber < 10 ? `0${episodeNumber}` : `${episodeNumber}`;
-      return `episode${formattedEpisodeNumber}`;
+      const [, episode] = match;
+      return `${parseInt(episode)}`;
     }
-    return filename;
+    return episodeNumber;
   };
+
   const [selectedEpisode, setSelectedEpisode] = useState(
-    formatEpisodeNameRoute(currentEpisode || "")
+    formatEpisodeNameRoute(currentEpisode)
   );
-  const formatEpisodeName = (filename: string) => {
-    const match = filename.match(/(\d+)-(\d+)\.mp4/);
-    if (match) {
-      const [, , episode] = match;
-      return `${data.episodeSelect.episode} ${parseInt(episode)}`;
-    }
-    return filename;
+  const handleChange = (value: string) => {
+    const paddedValue = value.padStart(2, "0");
+    setSelectedEpisode(`episode${paddedValue}`);
+    router.push(`/anime/${slug}/${season}/episode${paddedValue}`);
   };
+
+  const formatEpisodeName = (episodeNumber: string) => {
+    return `${data.episodeSelect.episode} ${parseInt(episodeNumber)}`;
+  };
+
   const formatCurrentEpisodeName = (slug: string) => {
     const match = slug.match(/episode(\d+)/i);
     if (match) {
@@ -74,74 +61,66 @@ export default function EpisodeSelect({
     return slug;
   };
 
-  const filteredEpisodes = episodes.filter(
-    (episode) => !episode.name.endsWith(".webp")
-  );
   const getNextEpisode = () => {
-    const currentEpisodeIndex = filteredEpisodes.findIndex(
+    const currentEpisodeIndex = episodes.findIndex(
       (episode) => formatEpisodeNameRoute(episode.name) === selectedEpisode
     );
     const nextEpisodeIndex = currentEpisodeIndex + 1;
-    if (nextEpisodeIndex < filteredEpisodes.length) {
-      return formatEpisodeNameRoute(filteredEpisodes[nextEpisodeIndex].name);
+    if (nextEpisodeIndex < episodes.length) {
+      const nextEpisodeNumber = formatEpisodeNameRoute(
+        episodes[nextEpisodeIndex].name
+      );
+      return `episode${nextEpisodeNumber.padStart(2, "0")}`;
     }
     return null;
   };
 
   const getPreviousEpisode = () => {
-    const currentEpisodeIndex = filteredEpisodes.findIndex(
+    const currentEpisodeIndex = episodes.findIndex(
       (episode) => formatEpisodeNameRoute(episode.name) === selectedEpisode
     );
     const previousEpisodeIndex = currentEpisodeIndex - 1;
     if (previousEpisodeIndex >= 0) {
-      return formatEpisodeNameRoute(
-        filteredEpisodes[previousEpisodeIndex].name
+      const previousEpisodeNumber = formatEpisodeNameRoute(
+        episodes[previousEpisodeIndex].name
       );
+      return `episode${previousEpisodeNumber.padStart(2, "0")}`;
     }
     return null;
   };
+
   const nextEpisode = getNextEpisode();
   const previousEpisode = getPreviousEpisode();
-
   return (
     <div className="flex items-center space-x-2">
-      {isPage && (
-        <>
-          {previousEpisode ? (
-            <Link
-              href={`/anime/${slug}/${season}/${formatEpisodeNameRoute(
-                previousEpisode
-              )}`}
-            >
-              <Button variant="secondary">{data.episodeSelect.previous}</Button>
-            </Link>
-          ) : (
-            <Button variant="secondary" disabled>
-              {data.episodeSelect.previous}
-            </Button>
-          )}
-          {nextEpisode ? (
-            <Link
-              href={`/anime/${slug}/${season}/${formatEpisodeNameRoute(
-                nextEpisode
-              )}`}
-            >
-              <Button variant="secondary">{data.episodeSelect.next}</Button>
-            </Link>
-          ) : (
-            <Button variant="secondary" disabled>
-              {data.episodeSelect.next}
-            </Button>
-          )}
-        </>
-      )}
+      <>
+        {previousEpisode ? (
+          <Link href={`/anime/${slug}/${season}/${previousEpisode}`}>
+            <Button variant="secondary">{data.episodeSelect.previous}</Button>
+          </Link>
+        ) : (
+          <Button variant="secondary" disabled>
+            {data.episodeSelect.previous}
+          </Button>
+        )}
+        {nextEpisode ? (
+          <Link href={`/anime/${slug}/${season}/${nextEpisode}`}>
+            <Button variant="secondary">{data.episodeSelect.next}</Button>
+          </Link>
+        ) : (
+          <Button variant="secondary" disabled>
+            {data.episodeSelect.next}
+          </Button>
+        )}
+      </>
+
       <Select
         name={data.episodeSelect.episode}
-        value={formatCurrentEpisodeName(currentEpisode)}
+        value={selectedEpisode}
         onValueChange={handleChange}
       >
         <SelectTrigger
-          className=" rounded-md text-center hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
+          className="rounded-md text-center hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
           aria-label={`Change episode. Currently on episode ${formatCurrentEpisodeName(
             currentEpisode
           )}`}
@@ -149,14 +128,11 @@ export default function EpisodeSelect({
           {formatCurrentEpisodeName(currentEpisode)}
         </SelectTrigger>
         <SelectContent>
-          {filteredEpisodes
-            .sort((a, b) => {
-              const episodeANumber = parseInt(a.name.replace("Episode ", ""));
-              const episodeBNumber = parseInt(b.name.replace("Episode ", ""));
-              return episodeANumber - episodeBNumber;
-            })
+          {episodes
+            .filter((episode) => !episode.name.endsWith(".webp"))
+            .sort((a, b) => parseInt(a.name) - parseInt(b.name))
             .map((episode, index) => (
-              <SelectItem key={index} value={formatEpisodeName(episode.name)}>
+              <SelectItem key={index} value={episode.name}>
                 {formatEpisodeName(episode.name)}
               </SelectItem>
             ))}

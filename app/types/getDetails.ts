@@ -16,7 +16,7 @@ export type ItemDetails = {
   categories?: string[];
 };
 
-export function getDetails(slug?: string): ItemDetails[] {
+export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
   const directory = path.join(process.cwd(), "public");
   const itemNames = slug
     ? [slug]
@@ -99,5 +99,8 @@ export function getDetails(slug?: string): ItemDetails[] {
     };
   });
 
+  if (slug) {
+    return itemDetails[0];
+  }
   return itemDetails;
 }

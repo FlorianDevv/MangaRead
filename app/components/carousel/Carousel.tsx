@@ -1,4 +1,5 @@
 "use client";
+import { ItemDetails } from "@/app/types/getDetails";
 import { Button } from "@/components/ui/button";
 import { EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
@@ -21,43 +22,17 @@ import {
   useRef,
   useState,
 } from "react";
-interface SeasonDetails {
-  season: string;
-  episodes: number[];
-}
-
-interface MangaDetails {
-  name: string;
-  synopsis?: string;
-  volumes: string[];
-  types: ("manga" | "anime")[];
-  seasons: SeasonDetails[];
-  categories?: string[];
-}
-
-interface AnimeDetails {
-  name: string;
-  synopsis?: string;
-  types: ("manga" | "anime")[];
-  seasons: SeasonDetails[];
-  episodeNumber: number;
-  categories?: string[];
-}
-
-type Details = MangaDetails | AnimeDetails;
 
 interface EmblaCarouselProps {
-  Details: Details[];
+  Details: ItemDetails[];
 }
-
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
-
 function MangaDetailComponent({
   detail,
   emblaApi,
 }: {
-  detail: MangaDetails;
+  detail: ItemDetails;
   emblaApi: EmblaCarouselType | null;
 }) {
   const imageSrc = useMemo(
@@ -173,7 +148,7 @@ function AnimeDetailComponent({
   isActive,
   emblaApi,
 }: {
-  detail: AnimeDetails;
+  detail: ItemDetails;
   isActive: boolean;
   emblaApi: EmblaCarouselType | null;
 }) {
@@ -347,12 +322,12 @@ function DetailComponent({
   isActive,
   emblaApi,
 }: {
-  detail: AnimeDetails | MangaDetails;
+  detail: ItemDetails;
   isActive: boolean;
   emblaApi: EmblaCarouselType | null;
 }) {
   if (detail.types.includes("anime")) {
-    const animeDetail = detail as AnimeDetails;
+    const animeDetail = detail;
     return (
       <AnimeDetailComponent
         detail={animeDetail}
@@ -361,7 +336,7 @@ function DetailComponent({
       />
     );
   } else if (detail.types.includes("manga")) {
-    const mangaDetail = detail as MangaDetails;
+    const mangaDetail = detail;
     return <MangaDetailComponent detail={mangaDetail} emblaApi={emblaApi} />;
   } else {
     return null;
@@ -401,7 +376,7 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
             const isActive = index === activeIndex;
             return (
               <DetailComponent
-                detail={Detail as AnimeDetails | MangaDetails}
+                detail={Detail}
                 isActive={isActive}
                 key={Detail.name}
                 emblaApi={emblaApi || null}
