@@ -53,10 +53,6 @@ export function SeasonSelect({
     return slug;
   };
 
-  console.log("seasons", seasons);
-  console.log("currentSeason", currentSeason);
-  console.log("selectedSeason", selectedSeason);
-
   return (
     <div className="flex flex-row">
       <Select

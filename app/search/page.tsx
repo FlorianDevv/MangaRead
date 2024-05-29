@@ -4,7 +4,8 @@ import { getDetails, ItemDetails } from "../types/getDetails";
 
 let itemData: ItemDetails[] = [];
 try {
-  itemData = getDetails();
+  const details = getDetails();
+  itemData = Array.isArray(details) ? details : [details];
 } catch (error) {
   console.error(`Failed to read public directory: ${error}`);
 }

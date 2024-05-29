@@ -17,7 +17,6 @@ import { Quality, Read, getSettings } from "./settings";
 
 type Volume = {
   name: string;
-  firstImage: string;
   totalPages: number;
 };
 
