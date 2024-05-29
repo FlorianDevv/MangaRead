@@ -8,7 +8,6 @@ import { SettingsDialog } from "./settings";
 
 type Volume = {
   name: string;
-  firstImage: string;
 };
 
 interface FloatingButtonProps {

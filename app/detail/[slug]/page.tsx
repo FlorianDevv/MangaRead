@@ -1,4 +1,4 @@
-import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
+import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
 import Info from "./info";
 
 export default function Page({ params }: { params: { slug: string } }) {

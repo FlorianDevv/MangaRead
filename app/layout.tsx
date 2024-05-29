@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import Navbar from "./components/navbar";
+import Navbar from "./components/navbar/navbar";
 import "./globals.css";
 import manifest from "./manifest.json";
 const inter = Inter({ subsets: ["latin"] });

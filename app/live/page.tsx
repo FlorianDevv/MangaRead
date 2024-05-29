@@ -1,3 +1,4 @@
+import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,14 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import fs from "fs";
 import { CalendarClock, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import path from "path";
 import { GET as GET_CURRENT } from "../api/live/current/route";
 import { GET as GET_SCHEDULE } from "../api/live/route";
-import { MobileNavbarComponent } from "../components/mobilenavbar";
+import { getDetails } from "../types/getDetails";
 
 export const dynamic = "force-dynamic";
 interface Item {
@@ -60,27 +59,18 @@ export default async function Page() {
   let synopsis: string | undefined;
   let categories: string[] = [];
   if (current && current.title) {
-    const synopsisPath = path.join(
-      process.cwd(),
-      "public",
-      current.title,
-      "resume.json"
-    );
-    if (fs.existsSync(synopsisPath)) {
-      synopsis = JSON.parse(fs.readFileSync(synopsisPath, "utf-8")).synopsis;
-    }
-    const categoriesPath = path.join(
-      process.cwd(),
-      "public",
-      current.title,
-      "resume.json"
-    );
-    if (fs.existsSync(categoriesPath)) {
-      categories = JSON.parse(
-        fs.readFileSync(categoriesPath, "utf-8")
-      ).categories;
+    const details = getDetails(current.title);
+    if (details) {
+      if (Array.isArray(details)) {
+        synopsis = details[0].synopsis;
+        categories = details[0].categories ?? [];
+      } else {
+        synopsis = details.synopsis;
+        categories = details.categories ?? [];
+      }
     }
   }
+
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
   return (

@@ -1,117 +1,38 @@
 // app/manga/[slug]/page.server.tsx
 import AnimeEpisode from "@/app/components/animeEpisode";
-import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
 import { AnimeProgress, MangaProgress } from "@/app/components/resumereading";
 import VolumeSelect from "@/app/components/select/volumeselect";
-import fs from "fs";
+import { ItemDetails, getDetails } from "@/app/types/getDetails";
 import Image from "next/image";
-import path from "path";
-type Volume = {
-  name: string;
-  firstImage: string;
-};
-
-type Manga = {
-  synopsis?: string;
-  banner?: string;
-};
-
-type Season = {
-  name: string;
-};
-
-type Episode = {
-  name: string;
-  seasonNumber: string;
-  episodeNumber: string;
-};
 
 export default function Info({ params }: { params: { slug: string } }) {
   const decodedSlug = decodeURIComponent(params.slug);
-  const mangaDirectory = path.join(
-    process.cwd(),
-    "public",
-    decodedSlug,
-    "manga"
-  );
-  const animeDirectory = path.join(
-    process.cwd(),
-    "public",
-    decodedSlug,
-    "anime"
-  );
+  const itemDetails: ItemDetails | ItemDetails[] = getDetails(decodedSlug);
 
-  let synopsis: string | undefined;
-  const synopsisPath = path.join(
-    process.cwd(),
-    "public",
-    decodedSlug,
-    "resume.json"
-  );
-  if (fs.existsSync(synopsisPath)) {
-    const data = JSON.parse(fs.readFileSync(synopsisPath, "utf-8"));
-    synopsis = data.synopsis ?? null;
-  }
-  let categories: string[] = [];
-  const categoriesPath = path.join(
-    process.cwd(),
-    "public",
-    decodedSlug,
-    "resume.json"
-  );
-  if (fs.existsSync(categoriesPath)) {
-    const data = JSON.parse(fs.readFileSync(categoriesPath, "utf-8"));
-    categories = data.categories ?? [];
+  // Ensure itemDetails is not an array
+  if (Array.isArray(itemDetails)) {
+    throw new Error("Expected itemDetails to be an object, but got an array");
   }
 
-  let volumes: Volume[] = [];
-  if (fs.existsSync(decodeURIComponent(mangaDirectory))) {
-    volumes = fs
-      .readdirSync(decodeURIComponent(mangaDirectory))
-      .map((volume) => {
-        const volumeDirectory = path.join(mangaDirectory, volume);
-        if (
-          fs.existsSync(decodeURIComponent(volumeDirectory)) &&
-          fs.lstatSync(decodeURIComponent(volumeDirectory)).isDirectory()
-        ) {
-          const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
-          const firstImage =
-            images.find((image) => /^(\d+)-001/.test(image)) ?? "01-001.webp";
-          return { name: volume, firstImage };
-        }
-      })
-      .filter(Boolean) as Volume[];
-  }
+  const { synopsis, categories = [], volumes, types, seasons } = itemDetails;
 
-  const manga: Manga = { synopsis };
-  const isMangaDirectoryExists = fs.existsSync(mangaDirectory);
-  const isAnimeDirectoryExists = fs.existsSync(animeDirectory);
+  const isMangaDirectoryExists = types.includes("manga");
+  const isAnimeDirectoryExists = types.includes("anime");
 
-  const seasons: Season[] =
-    isAnimeDirectoryExists && fs.lstatSync(animeDirectory).isDirectory()
-      ? fs
-          .readdirSync(animeDirectory)
-          .filter((season) =>
-            fs.lstatSync(path.join(animeDirectory, season)).isDirectory()
-          )
-          .map((season) => ({ name: season }))
-      : [];
+  // Convert volumes and seasons to the expected types
+  const volumesWithType = volumes.map((volume) => ({ name: volume }));
+  const seasonsWithType = seasons.map((season) => ({
+    name: `Season ${season.season}`,
+  }));
 
-  const episodes: Episode[] = isAnimeDirectoryExists
-    ? seasons.flatMap((season) => {
-        const seasonDirectory = path.join(animeDirectory, season.name);
-        const episodeFiles = fs.lstatSync(seasonDirectory).isDirectory()
-          ? fs.readdirSync(seasonDirectory)
-          : [];
-        return episodeFiles
-          .filter((episodeFile) => path.extname(episodeFile) === ".mp4")
-          .map((episodeFile) => {
-            const episodeName = episodeFile.split(".")[0];
-            const [seasonNumber, episodeNumber] = episodeName.split("-");
-            return { name: episodeFile, seasonNumber, episodeNumber };
-          });
-      })
-    : [];
+  // Convert seasons to the expected format for AnimeEpisode
+  const episodesWithType = seasons.flatMap((season) =>
+    season.episodes.map((episode) => ({
+      name: `Episode ${episode}`,
+      seasonNumber: `Season ${season.season}`,
+      episodeNumber: episode.toString(),
+    }))
+  );
 
   return (
     <div className="overflow-auto h-screen relative">
@@ -156,9 +77,9 @@ export default function Info({ params }: { params: { slug: string } }) {
                 ))}
               </div>
             )}
-            {manga.synopsis && (
+            {synopsis && (
               <p className="text-xs sm:text-sm overflow-wrap-break break-words w-5/6 text-left lg:text-justify lg:mr-4 mb-2">
-                {manga.synopsis}
+                {synopsis}
               </p>
             )}
             <div className="flex flex-col">
@@ -169,7 +90,9 @@ export default function Info({ params }: { params: { slug: string } }) {
                   </h1>
                   <MangaProgress Name={params.slug} />
                   <VolumeSelect
-                    volumes={volumes}
+                    volumes={volumesWithType.map((volume) => ({
+                      name: volume.name,
+                    }))}
                     slug={params.slug}
                     currentVolume=""
                     isPage={false}
@@ -178,8 +101,8 @@ export default function Info({ params }: { params: { slug: string } }) {
               )}
               {isAnimeDirectoryExists && (
                 <AnimeEpisode
-                  seasons={seasons}
-                  episodes={episodes}
+                  seasons={seasonsWithType}
+                  episodes={episodesWithType}
                   slug={params.slug}
                 />
               )}

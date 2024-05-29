@@ -1,45 +1,23 @@
-import { MobileNavbarComponent } from "@/app/components/mobilenavbar";
+import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
 import EpisodeSelect from "@/app/components/select/episodeselect";
 import { SeasonSelect } from "@/app/components/select/seasonselect";
-import fs from "fs";
-import path from "path";
+import { getDetails } from "@/app/types/getDetails";
 import React, { Suspense } from "react";
+const Player = React.lazy(() => import("../../../../components/player"));
+
 export default function Page({
   params,
 }: {
   params: { slug: string; season: string; episode: string };
 }) {
-  const animePath = path.join(
-    process.cwd(),
-    "public",
-    decodeURIComponent(params.slug),
-    "anime"
-  );
-  const seasonPath = path.join(animePath, params.season);
+  const details = getDetails(decodeURIComponent(params.slug));
 
-  //use fs to get the list of episodes
-  const episodes =
-    fs.existsSync(seasonPath) && fs.lstatSync(seasonPath).isDirectory()
-      ? fs
-          .readdirSync(seasonPath)
-          .filter((episodeName: string) => !episodeName.startsWith("."))
-          .map((episodeName: string) => ({ name: episodeName }))
-      : [];
-
-  const seasons =
-    fs.existsSync(animePath) && fs.lstatSync(animePath).isDirectory()
-      ? fs
-          .readdirSync(animePath)
-          .filter((seasonName: string) => {
-            const seasonPath = path.join(animePath, seasonName);
-            return (
-              !seasonName.startsWith(".") &&
-              fs.lstatSync(seasonPath).isDirectory()
-            );
-          })
-          .map((seasonName: string) => ({ name: seasonName }))
-      : [];
-  if (episodes.length === 0 || seasons.length === 0) {
+  if (
+    !details ||
+    (Array.isArray(details)
+      ? details.length === 0
+      : details.seasons.length === 0)
+  ) {
     return (
       <div>
         <h1>Error 404</h1>
@@ -47,9 +25,20 @@ export default function Page({
     );
   }
 
-  const Player = React.lazy(() => import("../../../../components/player"));
+  const detailsArray = Array.isArray(details) ? details : [details];
+  const seasons = detailsArray.flatMap((detail) => detail.seasons);
 
-  // ...
+  const seasonNumber = params.season.replace(/\D/g, ""); // Remove non-digit characters
+  const seasonNumberInt = parseInt(seasonNumber); // Convert to number
+  const seasonDetails = seasons?.find(
+    (s) => parseInt(s.season) === seasonNumberInt
+  );
+  const episodes = seasonDetails?.episodes.map((episode: number) => ({
+    name: episode.toString(),
+  }));
+  const seasonsWithName = seasons.map((season) => ({
+    name: season.season,
+  }));
 
   return (
     <MobileNavbarComponent>
@@ -59,14 +48,14 @@ export default function Page({
         </h1>
         <div className="flex flex-wrap items-center">
           <EpisodeSelect
-            episodes={episodes}
+            episodes={episodes || []}
             slug={params.slug}
             currentEpisode={params.episode}
             season={params.season}
             isPage={true}
           />
           <SeasonSelect
-            seasons={seasons}
+            seasons={seasonsWithName || []}
             slug={params.slug}
             currentSeason={params.season}
             isPage={true}
@@ -77,8 +66,8 @@ export default function Page({
             title={params.slug}
             season={params.season}
             episode={params.episode}
-            episodes={episodes}
-            seasons={seasons}
+            episodes={episodes ?? []}
+            seasons={seasons as any}
           />
         </Suspense>
       </div>

@@ -32,8 +32,9 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 }) => {
   const [selectedSeason, setSelectedSeason] = useState(seasons[0]?.name || "");
 
+  const seasonNumber = selectedSeason.match(/\d+/)?.[0] || "";
   const filteredEpisodes = episodes.filter(
-    (episode) => episode.seasonNumber === selectedSeason.substring(6)
+    (episode) => episode.seasonNumber.match(/\d+/)?.[0] === seasonNumber
   );
 
   const handleChange = (value: string) => {
@@ -78,11 +79,12 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
       <div className="grid grid-cols-2 gap-4 mt-4 justify-items-center items-center">
         {filteredEpisodes.map((episode, index) => (
           <Link
-            href={`/anime/${slug}/${selectedSeason.toLowerCase()}/episode${
-              episode.episodeNumber.length === 3
-                ? episode.episodeNumber.slice(1)
-                : episode.episodeNumber
-            }`}
+            href={`/anime/${slug}/season${selectedSeason
+              .replace(/season /i, "")
+              .padStart(2, "0")}/episode${episode.episodeNumber.padStart(
+              2,
+              "0"
+            )}`}
             key={index}
           >
             <div
@@ -90,10 +92,10 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
               className="relative rounded p-4 hover:opacity-75 hover:bg-[#2b2b2b] ease-in-out transition-opacity duration-300"
             >
               <Image
-                src={`/${slug}/anime/Season${episode.seasonNumber.padStart(
+                src={`/${slug}/anime/Season${seasonNumber.padStart(
                   2,
                   "0"
-                )}/${episode.seasonNumber.padStart(
+                )}/${seasonNumber.padStart(
                   2,
                   "0"
                 )}-${episode.episodeNumber.padStart(3, "0")}.webp`}

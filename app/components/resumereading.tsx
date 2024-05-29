@@ -61,10 +61,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 
   useEffect(() => {
     // Load data asynchronously
-    Promise.all([
-      localStorage.getItem("mangaInfo"),
-      localStorage.getItem("animeInfo"),
-    ]).then(([storedManga, storedAnime]) => {
+    const loadLocalStorageData = async () => {
+      const storedManga = localStorage.getItem("mangaInfo");
+      const storedAnime = localStorage.getItem("animeInfo");
+
       if (storedManga) {
         const parsedManga = JSON.parse(storedManga).map((item: MangaInfo) => ({
           ...item,
@@ -80,7 +80,9 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
         dispatch({ type: "SET_ANIME", payload: parsedAnime, name: Name });
       }
       setIsLoading(false);
-    });
+    };
+
+    loadLocalStorageData();
   }, [Name]);
 
   const sortedMangaState = useMemo(() => {
@@ -151,6 +153,12 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
   if (isLoading) {
     return (
       <>
+        <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start">
+          {data.resume.title}
+          <div className="ml-2">
+            <Clock3 />
+          </div>
+        </h2>
         <div className="flex overflow-x-scroll overflow-y-hidden">
           {Array(4)
             .fill(0)

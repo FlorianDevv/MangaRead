@@ -1,20 +1,18 @@
 import dynamic from "next/dynamic";
-import Card from "./components/Card";
-import { MobileNavbarComponent } from "./components/mobilenavbar";
-import { getDetails } from "./types/getDetails";
-const PreviewVideo = dynamic(
-  () => import("./components/carousel/previewVideo")
-);
-const ResumeReading = dynamic(() => import("./components/resumereading"));
+import PreviewVideo from "./components/carousel/previewVideo";
+import { MobileNavbarComponent } from "./components/navbar/mobilenavbar";
+import ResumeReading from "./components/resumereading";
+import { ItemDetails, getDetails } from "./types/getDetails";
+const Card = dynamic(() => import("./components/Card"));
 
-export default function Home() {
+export default function Page() {
   const Details = getDetails();
 
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`../locales/${language}.json`);
   return (
     <MobileNavbarComponent activePage="Home">
-      <PreviewVideo />
+      <PreviewVideo Details={Array.isArray(Details) ? Details : [Details]} />
       <div className="md:bg-[#0c0c0c] md:mx-8 lg:mx-16 2xl:mx-24">
         <div className=" p-4  ">
           <ResumeReading />
@@ -24,9 +22,10 @@ export default function Home() {
           {data.home.allMangasAvailable}
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mx-2 lg:mx-4">
-          {Details.map((Detail) => (
-            <Card key={Detail.name} Name={Detail.name} type={Detail.type} />
-          ))}
+          {Array.isArray(Details) &&
+            Details.map((Detail: ItemDetails) => (
+              <Card key={Detail.name} name={Detail.name} types={Detail.types} />
+            ))}
         </div>
       </div>
     </MobileNavbarComponent>

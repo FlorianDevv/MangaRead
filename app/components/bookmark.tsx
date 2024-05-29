@@ -36,9 +36,9 @@ export default function Bookmark() {
         </div>
       </h2>
       <div className="space-x-4 md:mx-8 flex overflow-x-scroll hover:cursor-default overflow-y-hidden">
-        {bookmarks.map((mangaName, index) => (
+        {bookmarks.map((mangaName: string, index: number) => (
           <div key={mangaName} className="flex-shrink-0 relative">
-            <CardClient Name={mangaName} />
+            <CardClient name={mangaName} types={[]} />
             <button
               onClick={(e) => {
                 e.stopPropagation();

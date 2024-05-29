@@ -1,38 +1,30 @@
 "use client";
 import { useState } from "react";
+import { ItemDetails } from "../types/getDetails";
 import CardClient from "./CardClient";
 
-interface Manga {
-  category: string[];
-  name: string;
-  type: "manga" | "anime" | "both";
-  // Add other properties as needed
-}
 export default function CategorySelector({
-  mangaData,
+  itemData,
 }: {
-  mangaData: Array<Manga>;
+  itemData: Array<ItemDetails>;
 }) {
-  const [selectedTypes, setSelectedTypes] = useState<Array<string>>([]);
+  const [selectedTypes, setSelectedTypes] = useState<Array<ItemType>>([]);
   const categories = Array.from(
-    new Set(mangaData.flatMap((manga) => manga.category))
+    new Set(itemData.flatMap((item) => item.categories ?? []))
   );
-  const types = Array.from(
-    new Set(
-      mangaData.flatMap((manga) =>
-        manga.type === "both" ? ["manga", "anime"] : [manga.type]
-      )
-    )
-  );
+  const types = Array.from(new Set(itemData.flatMap((item) => item.types)));
 
   const [selectedCategories, setSelectedCategories] = useState<Array<string>>(
     []
   );
-  const [filteredMangaData, setFilteredMangaData] = useState(mangaData);
+
+  const [filteredItemData, setFilteredItemData] = useState(itemData);
   const [searchValue, setSearchValue] = useState("");
 
-  const handleTypeClick = (type: string) => {
-    let newSelectedTypes: string[];
+  type ItemType = ItemDetails["types"][0];
+
+  const handleTypeClick = (type: ItemType) => {
+    let newSelectedTypes: ItemType[];
     if (selectedTypes.includes(type)) {
       newSelectedTypes = selectedTypes.filter((t) => t !== type);
     } else {
@@ -41,15 +33,15 @@ export default function CategorySelector({
     setSelectedTypes(newSelectedTypes);
 
     if (newSelectedTypes.length === 0) {
-      setFilteredMangaData(mangaData);
+      setFilteredItemData(itemData);
     } else {
-      const filtered = mangaData.filter(
-        (manga: Manga) =>
-          newSelectedTypes.includes(manga.type) || manga.type === "both"
+      const filtered = itemData.filter((item: ItemDetails) =>
+        newSelectedTypes.some((type) => item.types.includes(type))
       );
-      setFilteredMangaData(filtered);
+      setFilteredItemData(filtered);
     }
   };
+
   const handleCategoryClick = (category: string) => {
     let newSelectedCategories: string[];
     if (selectedCategories.includes(category)) {
@@ -60,12 +52,14 @@ export default function CategorySelector({
     setSelectedCategories(newSelectedCategories);
 
     if (newSelectedCategories.length === 0) {
-      setFilteredMangaData(mangaData);
+      setFilteredItemData(itemData);
     } else {
-      const filtered = mangaData.filter((manga: Manga) =>
-        newSelectedCategories.every((cat) => manga.category.includes(cat))
+      const filtered = itemData.filter(
+        (item: ItemDetails) =>
+          item.categories &&
+          newSelectedCategories.every((cat) => item.categories?.includes(cat))
       );
-      setFilteredMangaData(filtered);
+      setFilteredItemData(filtered);
     }
   };
 
@@ -73,8 +67,8 @@ export default function CategorySelector({
     setSearchValue(event.target.value);
   };
 
-  const displayedMangaData = filteredMangaData.filter((manga) =>
-    manga.name.toLowerCase().includes(searchValue.toLowerCase())
+  const displayedItemData = filteredItemData.filter((item) =>
+    item.name.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   return (
@@ -116,12 +110,12 @@ export default function CategorySelector({
           className="p-2 mx-2 rounded-md  bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600"
         />
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mx-2">
-          {displayedMangaData.map((manga) => (
+          {displayedItemData.map((item) => (
             <CardClient
-              key={manga.name}
-              Name={manga.name}
-              categories={manga.category}
-              type={manga.type}
+              key={item.name}
+              name={item.name}
+              types={item.types}
+              categories={item.categories}
             />
           ))}
         </div>

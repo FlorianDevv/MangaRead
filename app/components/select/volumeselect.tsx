@@ -22,7 +22,6 @@ import { useEffect, useState } from "react";
 
 type Volume = {
   name: string;
-  firstImage: string;
 };
 
 export default function VolumeSelect({

@@ -7,7 +7,6 @@ import path from "path";
 
 type Volume = {
   name: string;
-  firstImage: string;
   totalPages: number;
 };
 
@@ -34,11 +33,9 @@ export default function Page({
         fs.lstatSync(decodeURIComponent(volumeDirectory)).isDirectory()
       ) {
         const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
-        const firstImage =
-          images.find((image) => /^(\d+)-001/.test(image)) ?? "01-001.webp";
         const volumeNumber = volume.match(/\d+/)?.[0] || "";
         const totalPages = images.length;
-        return { name: volumeNumber, firstImage, totalPages };
+        return { name: volumeNumber, totalPages };
       }
     })
     .filter(Boolean) as Volume[];

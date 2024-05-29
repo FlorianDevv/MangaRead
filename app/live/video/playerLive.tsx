@@ -4,6 +4,7 @@ import {
   MediaPlayer,
   MediaProvider,
   MediaProviderAdapter,
+  Poster,
   isHTMLVideoElement,
   isVideoProvider,
 } from "@vidstack/react";
@@ -24,7 +25,7 @@ export default function PlayerLive() {
   const [title, setTitle] = useState("");
   const [episode, setEpisode] = useState(0);
   const [season, setSeason] = useState(0);
-
+  const [thumbnailSrc, setThumbnailSrc] = useState("");
   const fetchVideoData = useCallback(async () => {
     const currentResponse = await fetch("/api/live/current");
     const currentData = await currentResponse.json();
@@ -34,7 +35,8 @@ export default function PlayerLive() {
     }/anime/Season${String(currentData.season).padStart(2, "0")}/${String(
       currentData.season
     ).padStart(2, "0")}-${String(currentData.episode).padStart(3, "0")}.mp4`}`;
-
+    const thumbnailSrc = `/${currentData.title}/anime/Season${currentData.season}/${currentData.season}-${currentData.episode}.webp`;
+    setThumbnailSrc(thumbnailSrc);
     setSrc(currentSrc);
     setTitle(currentData.title);
     setEpisode(currentData.episode);
@@ -107,7 +109,9 @@ export default function PlayerLive() {
       title={title + " - S" + season + " E" + episode}
       className={`${styles.player} ${styles["vds-video-layout"]} max-w-full max-h-full object-contain`}
     >
-      <MediaProvider />
+      <MediaProvider>
+        <Poster className="vds-poster" src={thumbnailSrc} />
+      </MediaProvider>
       <DefaultVideoLayout
         disableTimeSlider={true}
         noKeyboardAnimations={true}

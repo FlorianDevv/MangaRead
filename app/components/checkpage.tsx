@@ -4,7 +4,6 @@ import MangaPage from "./mangapage";
 
 interface Volume {
   name: string;
-  firstImage: string;
   totalPages: number;
 }
 
