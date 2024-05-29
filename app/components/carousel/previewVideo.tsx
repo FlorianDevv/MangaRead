@@ -1,9 +1,11 @@
-import { getDetails } from "../../types/getDetails";
+import { ItemDetails } from "@/app/types/getDetails";
 import EmblaCarousel from "./Carousel";
 
-export default function previewVideo() {
-  let Details = getDetails();
+interface PreviewVideoProps {
+  Details: ItemDetails[];
+}
 
+export default function PreviewVideo({ Details }: PreviewVideoProps) {
   // Convert Details to an array if it's not already
   if (!Array.isArray(Details)) {
     Details = [Details];

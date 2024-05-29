@@ -61,10 +61,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 
   useEffect(() => {
     // Load data asynchronously
-    Promise.all([
-      localStorage.getItem("mangaInfo"),
-      localStorage.getItem("animeInfo"),
-    ]).then(([storedManga, storedAnime]) => {
+    const loadLocalStorageData = async () => {
+      const storedManga = localStorage.getItem("mangaInfo");
+      const storedAnime = localStorage.getItem("animeInfo");
+
       if (storedManga) {
         const parsedManga = JSON.parse(storedManga).map((item: MangaInfo) => ({
           ...item,
@@ -80,7 +80,9 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
         dispatch({ type: "SET_ANIME", payload: parsedAnime, name: Name });
       }
       setIsLoading(false);
-    });
+    };
+
+    loadLocalStorageData();
   }, [Name]);
 
   const sortedMangaState = useMemo(() => {

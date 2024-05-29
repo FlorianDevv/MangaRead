@@ -1,8 +1,9 @@
-import Card from "./components/Card";
+import dynamic from "next/dynamic";
 import PreviewVideo from "./components/carousel/previewVideo";
 import { MobileNavbarComponent } from "./components/navbar/mobilenavbar";
 import ResumeReading from "./components/resumereading";
 import { ItemDetails, getDetails } from "./types/getDetails";
+const Card = dynamic(() => import("./components/Card"));
 
 export default function Page() {
   const Details = getDetails();
@@ -11,7 +12,7 @@ export default function Page() {
   const data = require(`../locales/${language}.json`);
   return (
     <MobileNavbarComponent activePage="Home">
-      <PreviewVideo />
+      <PreviewVideo Details={Array.isArray(Details) ? Details : [Details]} />
       <div className="md:bg-[#0c0c0c] md:mx-8 lg:mx-16 2xl:mx-24">
         <div className=" p-4  ">
           <ResumeReading />
