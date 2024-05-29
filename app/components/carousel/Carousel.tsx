@@ -107,6 +107,7 @@ function MangaDetailComponent({
               <Button
                 variant="ghost"
                 className="rounded-full p-2 m-4 bg-opacity-50 bg-black"
+                aria-label="More Info"
               >
                 <InfoIcon />
               </Button>
@@ -287,6 +288,7 @@ function AnimeDetailComponent({
                   <Button
                     variant="ghost"
                     className="rounded-full p-2 m-4 bg-opacity-50 bg-black"
+                    aria-label="More Info"
                   >
                     <InfoIcon />
                   </Button>
@@ -295,6 +297,7 @@ function AnimeDetailComponent({
                   variant="ghost"
                   onClick={handleMute}
                   className="absolute right-1 bottom-8 md:bottom-1/4 transform translate-y-1/2 m-4 bg-black bg-opacity-50 rounded-full p-1"
+                  aria-label="Mute/Unmute Video"
                 >
                   {isMuted ? (
                     <VolumeX className="w-10 h-10" />
@@ -387,12 +390,14 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
         <button
           className="absolute top-1/2 left-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
           onClick={scrollPrev}
+          aria-label="Previous Slide"
         >
           <ChevronLeft className="w-10 h-10" />
         </button>
         <button
           className="absolute top-1/2 right-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
           onClick={scrollNext}
+          aria-label="Next Slide"
         >
           <ChevronRight className="w-10 h-10" />
         </button>
