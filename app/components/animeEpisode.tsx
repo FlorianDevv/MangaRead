@@ -44,11 +44,6 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
 
-  console.log(filteredEpisodes);
-  console.log(selectedSeason);
-  console.log(episodes);
-  console.log(seasons);
-
   return (
     <div className="p-2 rounded-md">
       <div className="flex flex-col justify-start items-start">
@@ -84,11 +79,12 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
       <div className="grid grid-cols-2 gap-4 mt-4 justify-items-center items-center">
         {filteredEpisodes.map((episode, index) => (
           <Link
-            href={`/anime/${slug}/${selectedSeason.toLowerCase()}/episode${
-              episode.episodeNumber.length === 3
-                ? episode.episodeNumber.slice(1)
-                : episode.episodeNumber
-            }`}
+            href={`/anime/${slug}/season${selectedSeason
+              .replace(/season /i, "")
+              .padStart(2, "0")}/episode${episode.episodeNumber.padStart(
+              2,
+              "0"
+            )}`}
             key={index}
           >
             <div
