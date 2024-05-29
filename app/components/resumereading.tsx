@@ -151,6 +151,12 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
   if (isLoading) {
     return (
       <>
+        <h2 className="w-full flex uppercase item-center justify-center text-xl md:text-2xl mb-4 mt-6 md:ml-4 md:justify-start md:items-start">
+          {data.resume.title}
+          <div className="ml-2">
+            <Clock3 />
+          </div>
+        </h2>
         <div className="flex overflow-x-scroll overflow-y-hidden">
           {Array(4)
             .fill(0)
