@@ -64,7 +64,7 @@ export default function Player(item: item) {
     );
     setIsLoading(false);
     const currentSrc = `/api/video?videoId=${encodeURIComponent(
-      `${item.title}/item/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`
+      `${item.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`
     )}`;
     setSrc(currentSrc);
     return { itemList, itemIndex };
