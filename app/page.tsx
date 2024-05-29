@@ -1,13 +1,10 @@
 import dynamic from "next/dynamic";
-import Card from "./components/Card";
+import PreviewVideo from "./components/carousel/previewVideo";
 import { MobileNavbarComponent } from "./components/navbar/mobilenavbar";
+import ResumeReading from "./components/resumereading";
 import { ItemDetails, getDetails } from "./types/getDetails";
-const PreviewVideo = dynamic(
-  () => import("./components/carousel/previewVideo")
-);
-const ResumeReading = dynamic(() => import("./components/resumereading"));
-
-export default function Home() {
+const Card = dynamic(() => import("./components/Card"));
+export default function Page() {
   const Details = getDetails();
 
   const language = process.env.DEFAULT_LANGUAGE;
