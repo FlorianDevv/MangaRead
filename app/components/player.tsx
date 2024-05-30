@@ -196,7 +196,9 @@ export default function Player(item: Item) {
 
   const thumbnailSrc = useMemo(
     () =>
-      `/${item.title}/item/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.webp`,
+      `/${item.title}/anime/Season${seasonNumber
+        .toString()
+        .padStart(2, "0")}/${seasonNumber}-${episodeNumber}.webp`,
     [item.title, seasonNumber, episodeNumber]
   );
 

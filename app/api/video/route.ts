@@ -1,33 +1,15 @@
-/**@format */
+/** @format */
 
 import * as fs from "fs";
-const CHUNK_SIZE_IN_BYTES = 5000000; // 5 mb
+import * as path from "path";
 
-function getVideoStream(req: Request) {
+const CHUNK_SIZE_IN_BYTES = 5000000; // 5 MB
+
+function getVideoStream(req: Request): Response {
   const range = req.headers.get("range");
 
   const url = new URL(req.url);
   let videoId = url.searchParams.get("videoId");
-  // Decode the videoId if it is not null
-  videoId = videoId !== null ? decodeURIComponent(videoId) : "";
-  const videoPath = `public/${videoId}`;
-  // Check if video file exists
-  if (!fs.existsSync(videoPath)) {
-    return new Response("Video not found", {
-      status: 404,
-      statusText: "Not Found",
-    });
-  }
-  const videoSizeInBytes = fs.statSync(videoPath).size;
-  if (!range) {
-    const headers = {
-      "Content-Length": videoSizeInBytes.toString(),
-      "Content-Type": "video/mp4",
-    } as { [key: string]: string };
-
-    const videoStream = fs.createReadStream(videoPath);
-    return new Response(videoStream as any, { status: 200, headers });
-  }
 
   if (!videoId) {
     return new Response("No videoId query param", {
@@ -36,6 +18,9 @@ function getVideoStream(req: Request) {
     });
   }
 
+  videoId = decodeURIComponent(videoId);
+  const videoPath = path.join("public", videoId);
+
   if (!fs.existsSync(videoPath)) {
     return new Response("Video not found", {
       status: 404,
@@ -43,46 +28,44 @@ function getVideoStream(req: Request) {
     });
   }
 
+  const videoSizeInBytes = fs.statSync(videoPath).size;
+
+  if (!range) {
+    const headers = {
+      "Content-Length": videoSizeInBytes.toString(),
+      "Content-Type": "video/mp4",
+    };
+
+    const videoStream = fs.createReadStream(videoPath);
+    return new Response(videoStream as any, { status: 200, headers });
+  }
+
   const parts = range.replace(/bytes=/, "").split("-");
   const start = parseInt(parts[0], 10);
-  if (start >= videoSizeInBytes) {
+  const end = parts[1]
+    ? parseInt(parts[1], 10)
+    : Math.min(start + CHUNK_SIZE_IN_BYTES - 1, videoSizeInBytes - 1);
+
+  if (start >= videoSizeInBytes || end >= videoSizeInBytes) {
     return new Response("Range not satisfiable", {
       status: 416,
       statusText: "Range Not Satisfiable",
     });
   }
-  const end = parts[1]
-    ? parseInt(parts[1], 10)
-    : start === 0
-    ? 1
-    : Math.min(start + CHUNK_SIZE_IN_BYTES - 1, videoSizeInBytes - 1);
-  const contentLength = end - start + 1;
 
+  const contentLength = end - start + 1;
   const headers = {
     "Content-Range": `bytes ${start}-${end}/${videoSizeInBytes}`,
     "Accept-Ranges": "bytes",
     "Content-Length": contentLength.toString(),
     "Content-Type": "video/mp4",
-  } as { [key: string]: string };
+  };
 
-  try {
-    const videoStream = fs.createReadStream(videoPath, {
-      start: start,
-      end: end,
-    });
+  const videoStream = fs.createReadStream(videoPath, { start, end });
 
-    return new Response(videoStream as any, { status: 206, headers });
-  } catch (err) {
-    if ((err as NodeJS.ErrnoException).code === "ERR_INVALID_STATE") {
-      console.error("Stream was closed before it could be read");
-    } else {
-      throw err;
-    }
-  }
-
-  return new Response(getVideoStream as any, { status: 206, headers });
+  return new Response(videoStream as any, { status: 206, headers });
 }
 
-export async function GET(req: Request) {
+export async function GET(req: Request): Promise<Response> {
   return getVideoStream(req);
 }
