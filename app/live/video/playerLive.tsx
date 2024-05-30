@@ -35,7 +35,9 @@ export default function PlayerLive() {
     }/anime/Season${String(currentData.season).padStart(2, "0")}/${String(
       currentData.season
     ).padStart(2, "0")}-${String(currentData.episode).padStart(3, "0")}.mp4`}`;
-    const thumbnailSrc = `/${currentData.title}/anime/Season${currentData.season}/${currentData.season}-${currentData.episode}.webp`;
+    const season = currentData.season.toString().padStart(2, "0");
+    const episode = currentData.episode.toString().padStart(3, "0");
+    const thumbnailSrc = `/${currentData.title}/anime/Season${currentData.season}/${season}-${episode}.webp`;
     setThumbnailSrc(thumbnailSrc);
     setSrc(currentSrc);
     setTitle(currentData.title);

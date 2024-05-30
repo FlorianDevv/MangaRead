@@ -16,7 +16,8 @@ import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-interface item {
+
+interface Item {
   title: string;
   episode: string;
   season: string;
@@ -31,23 +32,45 @@ type Episode = {
 type Season = {
   name: string;
 };
-export default function Player(item: item) {
-  const lastItemRef = useRef(item);
+
+interface ItemInfo {
+  anime: string;
+  season: string;
+  episode: string;
+  savedTime: number;
+  duration: string;
+  dateWatched: number;
+}
+
+export default function Player(item: Item) {
+  const lastItemRef = useRef<Item>(item);
+  const playerRef = useRef<HTMLVideoElement | null>(null);
+
   const seasonNumber = useMemo(
-    () => item.season.match(/\d+/)?.[0].padStart(2, "0"),
+    () => item.season.match(/\d+/)?.[0].padStart(2, "0") || "00",
     [item.season]
   );
+
   const episodeNumber = useMemo(
-    () => item.episode.match(/\d+/)?.[0].padStart(3, "0"),
+    () => item.episode.match(/\d+/)?.[0].padStart(3, "0") || "000",
     [item.episode]
   );
-  const [isLoading, setIsLoading] = useState(true);
-  const [src, setSrc] = useState("");
-  const getitemListAndIndex = useCallback(() => {
-    let itemList = JSON.parse(localStorage.getItem("itemInfo") || "[]");
+
+  const [videoState, setVideoState] = useState({
+    isLoading: true,
+    src: "",
+  });
+
+  const { isLoading, src } = videoState;
+
+  const getItemListAndIndex = useCallback(() => {
+    let itemList: ItemInfo[] = JSON.parse(
+      localStorage.getItem("animeInfo") || "[]"
+    );
+
     if (itemList.length === 0) {
-      const itemInfo = {
-        item: item.title,
+      const itemInfo: ItemInfo = {
+        anime: item.title,
         season: item.season,
         episode: item.episode,
         savedTime: 0,
@@ -55,39 +78,36 @@ export default function Player(item: item) {
         dateWatched: Date.now(),
       };
       itemList = [itemInfo];
-      localStorage.setItem("itemInfo", JSON.stringify(itemList));
-      setIsLoading(false);
+      localStorage.setItem("animeInfo", JSON.stringify(itemList));
     }
 
-    const itemIndex = itemList.findIndex(
-      (a: { item: string }) => a.item === item.title
-    );
-    setIsLoading(false);
+    const itemIndex = itemList.findIndex((a) => a.anime === item.title);
     const currentSrc = `/api/video?videoId=${encodeURIComponent(
       `${item.title}/anime/Season${seasonNumber}/${seasonNumber}-${episodeNumber}.mp4`
     )}`;
-    setSrc(currentSrc);
+    setVideoState((prevState) => ({ ...prevState, src: currentSrc }));
+
     return { itemList, itemIndex };
   }, [item.title, item.season, item.episode, seasonNumber, episodeNumber]);
-  const updateitemInfo = useCallback(
+
+  const updateItemInfo = useCallback(
     (
-      itemList: any[],
+      itemList: ItemInfo[],
       itemIndex: number,
       savedTime?: number,
       duration?: string
     ) => {
-      setIsLoading(true); // Set loading state to true at the start of the update
-
       const currentSavedTime =
-        savedTime !== undefined
+        savedTime !== undefined && savedTime > 0
           ? savedTime - 1
           : itemList[itemIndex]?.savedTime || 0;
       const currentDuration =
         duration || itemList[itemIndex]?.duration || "00:00:00";
-      const itemInfo =
+
+      const itemInfo: ItemInfo =
         itemIndex === -1
           ? {
-              item: item.title,
+              anime: item.title,
               season: item.season,
               episode: item.episode,
               savedTime: currentSavedTime,
@@ -109,22 +129,22 @@ export default function Player(item: item) {
 
       if (itemIndex === -1) itemList.push(itemInfo);
       else itemList[itemIndex] = itemInfo;
-      localStorage.setItem("itemInfo", JSON.stringify(itemList));
+      localStorage.setItem("animeInfo", JSON.stringify(itemList));
 
-      setIsLoading(false); // Set loading state to false after the update is done
-
+      setVideoState((prevState) => ({ ...prevState, isLoading: false }));
       return itemInfo;
     },
     [item]
   );
 
-  const onProviderSetup: any = useCallback(
+  const onProviderSetup = useCallback(
     (provider: MediaProviderAdapter) => {
       if (isVideoProvider(provider) && isHTMLVideoElement(provider.video)) {
         const player = provider.video;
+        playerRef.current = player;
 
         player.oncanplaythrough = () => {
-          const { itemList, itemIndex } = getitemListAndIndex();
+          const { itemList, itemIndex } = getItemListAndIndex();
           if (
             itemIndex !== -1 &&
             player.currentTime !== itemList[itemIndex].savedTime
@@ -132,47 +152,47 @@ export default function Player(item: item) {
             player.currentTime = itemList[itemIndex].savedTime;
           }
 
-          // Update the duration of the item
           const duration = new Date(player.duration * 1000)
             .toISOString()
             .substring(11, 19);
-          updateitemInfo(itemList, itemIndex, undefined, duration);
-          setIsLoading(false);
+          updateItemInfo(itemList, itemIndex, undefined, duration);
         };
 
         player.ontimeupdate = () => {
           const currentSecond = Math.round(player.currentTime);
-          const { itemList, itemIndex } = getitemListAndIndex();
+          const { itemList, itemIndex } = getItemListAndIndex();
           if (
             itemIndex !== -1 &&
             currentSecond !== itemList[itemIndex].savedTime &&
             currentSecond > 0
           ) {
-            updateitemInfo(itemList, itemIndex, currentSecond);
+            updateItemInfo(itemList, itemIndex, currentSecond);
           }
         };
       }
     },
-    [updateitemInfo, getitemListAndIndex]
+    [getItemListAndIndex, updateItemInfo]
   );
 
   useEffect(() => {
-    const { itemList, itemIndex } = getitemListAndIndex();
+    const { itemList, itemIndex } = getItemListAndIndex();
     if (itemIndex !== -1) {
       const savedTime = itemList[itemIndex].savedTime;
-      updateitemInfo(itemList, itemIndex, savedTime);
+      updateItemInfo(itemList, itemIndex, savedTime);
+    } else {
+      setVideoState((prevState) => ({ ...prevState, isLoading: false }));
     }
   }, [
-    item.episode,
-    item.season,
     item.title,
-    updateitemInfo,
-    getitemListAndIndex,
+    item.season,
+    item.episode,
+    getItemListAndIndex,
+    updateItemInfo,
   ]);
 
   useEffect(() => {
     lastItemRef.current = item;
-  }, [item, onProviderSetup]);
+  }, [item]);
 
   const thumbnailSrc = useMemo(
     () =>
