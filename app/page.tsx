@@ -1,9 +1,10 @@
 import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import PreviewVideo from "./components/carousel/previewVideo";
 import { MobileNavbarComponent } from "./components/navbar/mobilenavbar";
 import ResumeReading from "./components/resumereading";
 import { ItemDetails, getDetails } from "./types/getDetails";
-const Card = dynamic(() => import("./components/Card"));
+const Card = dynamic(() => import("./components/Card"), { suspense: true });
 
 export default function Page() {
   const Details = getDetails();
@@ -22,10 +23,16 @@ export default function Page() {
           {data.home.allMangasAvailable}
         </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mx-2 lg:mx-4">
-          {Array.isArray(Details) &&
-            Details.map((Detail: ItemDetails) => (
-              <Card key={Detail.name} name={Detail.name} types={Detail.types} />
-            ))}
+          <Suspense fallback={<div>...</div>}>
+            {Array.isArray(Details) &&
+              Details.map((Detail: ItemDetails) => (
+                <Card
+                  key={Detail.name}
+                  name={Detail.name}
+                  types={Detail.types}
+                />
+              ))}
+          </Suspense>
         </div>
       </div>
     </MobileNavbarComponent>

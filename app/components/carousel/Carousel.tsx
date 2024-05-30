@@ -247,6 +247,7 @@ function AnimeDetailComponent({
             onEnded={() => emblaApi && emblaApi.scrollNext()}
             autoPlay
             playsInline
+            preload="none"
           />
 
           <div className="relative w-full h-full flex items-end">
