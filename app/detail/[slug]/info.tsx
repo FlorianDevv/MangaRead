@@ -1,5 +1,6 @@
 // app/manga/[slug]/page.server.tsx
 import AnimeEpisode from "@/app/components/animeEpisode";
+import { ButtonAddBookmark } from "@/app/components/bookmark";
 import { AnimeProgress, MangaProgress } from "@/app/components/resumereading";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import { ItemDetails, getDetails } from "@/app/types/getDetails";
@@ -62,6 +63,7 @@ export default function Info({ params }: { params: { slug: string } }) {
         <h1 className="text-xl lg:text-3xl z-50 transform -translate-y-8">
           {decodeURIComponent(params.slug)}
         </h1>
+        <ButtonAddBookmark itemName={params.slug} types={types} />
         {isAnimeDirectoryExists && <AnimeProgress Name={params.slug} />}
         <div className="flex flex-wrap lg:flex-nowrap justify-center">
           <div className="flex flex-col items-center justify-center md:items-start md:justify-start ">
