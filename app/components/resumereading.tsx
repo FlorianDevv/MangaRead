@@ -2,7 +2,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, CirclePlay, Clock3, Play, X } from "lucide-react";
+import { BookOpen, CirclePlay, Clock3, FileText, Play, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
@@ -228,10 +228,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                       <p className="text-sm overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
                         {decodeURIComponent(mangaInfo.manga)}
                       </p>
-                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row">
+                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row group-hover:text-red-800 transition-colors duration-300 ease-in-out">
                         <p>
                           {data.resume.volume + " "}
-                          {decodeURIComponent(mangaInfo.volume).split(" ")[1]}
+                          {mangaInfo.volume}
                         </p>
                         <p className="md:mx-4 md:my-0 my-2 hidden md:block">
                           -
@@ -305,7 +305,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                       <p className="text-sm overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
                         {decodeURIComponent(animeInfo.anime)}
                       </p>
-                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row">
+                      <div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row group-hover:text-red-800 transition-colors duration-300 ease-in-out">
                         <p>
                           {data.seasonSelect.season +
                             " " +
@@ -472,29 +472,30 @@ export function MangaProgress({ Name }: { Name: string }) {
     return null;
   }
 
-  const currentVolumeNumber = parseInt(
-    decodeURIComponent(mangaInfo.volume).split(" ")[1]
-  );
-  const currentPageNumber = mangaInfo.page;
   const volumeLink = `/manga/${mangaInfo.manga}/${mangaInfo.volume}`;
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
 
   return (
     <>
-      <div className="flex flex-col p-4 rounded-lg">
-        <Link href={volumeLink}>
-          <Button className="px-4 py-2 mb-2" variant="secondary">
-            <i className="mr-2 uppercase"> {data.resume.title} </i>
+      <div className="flex flex-col sm:flex-row items-center p-4 rounded-lg">
+        <Link
+          href={volumeLink}
+          className="flex items-center mb-2 sm:mb-0 sm:mr-4"
+        >
+          <Button className="flex items-center px-4 py-2" variant="secondary">
+            <BookOpen className="mr-2" size={16} />
+            <p className="font-semibold"> {data.resume.title} </p>
           </Button>
         </Link>
-        <div className="text-sm text-gray-300">
-          <i className="mr-2"></i>
-          {data.resume.volume} {currentVolumeNumber}
-        </div>
-        <div className="text-sm text-gray-300">
-          <i className="mr-2"></i>
-          {data.resume.page} {currentPageNumber}
+        <div className="flex flex-row items-center">
+          <FileText className="mr-2 text-gray-300" size={16} />
+          <div className="text-sm text-gray-300 mr-4">
+            {data.resume.volume} {mangaInfo.volume}
+          </div>
+          <div className="text-sm text-gray-300">
+            {data.resume.page} {mangaInfo.page}
+          </div>
         </div>
       </div>
     </>

@@ -21,13 +21,13 @@ export default function Info({ params }: { params: { slug: string } }) {
   const isAnimeDirectoryExists = types.includes("anime");
 
   // Convert volumes and seasons to the expected types
-  const volumesWithType = volumes.map((volume) => ({ name: volume }));
-  const seasonsWithType = seasons.map((season) => ({
+  const volumesWithType = (volumes ?? []).map((volume) => ({ name: volume }));
+  const seasonsWithType = (seasons ?? []).map((season) => ({
     name: `Season ${season.season}`,
   }));
 
   // Convert seasons to the expected format for AnimeEpisode
-  const episodesWithType = seasons.flatMap((season) =>
+  const episodesWithType = (seasons ?? []).flatMap((season) =>
     season.episodes.map((episode) => ({
       name: `Episode ${episode}`,
       seasonNumber: `Season ${season.season}`,
@@ -93,7 +93,9 @@ export default function Info({ params }: { params: { slug: string } }) {
                   <MangaProgress Name={params.slug} />
                   <VolumeSelect
                     volumes={volumesWithType.map((volume) => ({
-                      name: volume.name,
+                      name: volume.name.name,
+                      totalPages: volume.name.totalPages,
+                      type: volume.name.type,
                     }))}
                     slug={params.slug}
                     currentVolume=""

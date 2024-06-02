@@ -8,6 +8,8 @@ import { SettingsDialog } from "./settings";
 
 type Volume = {
   name: string;
+  totalPages: number;
+  type: string;
 };
 
 interface FloatingButtonProps {
@@ -58,7 +60,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
         <Button
           title={data.floatingButton.backTop}
           className={`absolute transition-all duration-300 ease-in-out ${
-            isOpen ? "opacity-100 transform  -translate-y-32" : "opacity-0"
+            isOpen ? "opacity-100 transform  -translate-y-36" : "opacity-0"
           }`}
           onClick={() => window.scrollTo(0, 0)}
         >
@@ -69,7 +71,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
             title={data.floatingButton.home}
             className={`absolute transition-all duration-300 ease-in-out ${
               isOpen
-                ? "opacity-100 transform -translate-x-16 -translate-y-32"
+                ? "opacity-100 transform -translate-x-16 -translate-y-36"
                 : "opacity-0"
             }`}
           >
@@ -81,7 +83,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
           title={data.floatingButton.fullScreen}
           className={`absolute transition-all duration-300 ease-in-out ${
             isOpen
-              ? "opacity-100 transform -translate-x-32 -translate-y-16"
+              ? "opacity-100 transform -translate-x-32 -translate-y-20"
               : "opacity-0"
           }`}
         >
@@ -100,7 +102,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
             "ease-in-out",
             "z-10",
             isOpen
-              ? "opacity-100 transform -translate-x-32 -translate-y-0"
+              ? "opacity-100 transform -translate-x-32 -translate-y-4"
               : "opacity-0",
           ]}
           settings={{ qualityNumber, setQuality, setIsVertical, isVertical }}
@@ -119,7 +121,7 @@ export const FloatingButton: React.FC<FloatingButtonProps> = ({
             "ease-in-out",
             "z-10",
             isOpen
-              ? "opacity-100 transform -translate-x-32 -translate-y-32"
+              ? "opacity-100 transform -translate-x-32 -translate-y-36"
               : "opacity-0",
           ]}
         />

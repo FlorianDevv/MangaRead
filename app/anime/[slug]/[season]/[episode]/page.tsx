@@ -16,7 +16,7 @@ export default function Page({
     !details ||
     (Array.isArray(details)
       ? details.length === 0
-      : details.seasons.length === 0)
+      : (details.seasons ?? []).length === 0)
   ) {
     return (
       <div>
@@ -31,13 +31,13 @@ export default function Page({
   const seasonNumber = params.season.replace(/\D/g, ""); // Remove non-digit characters
   const seasonNumberInt = parseInt(seasonNumber); // Convert to number
   const seasonDetails = seasons?.find(
-    (s) => parseInt(s.season) === seasonNumberInt
+    (s) => s && parseInt(s.season) === seasonNumberInt
   );
   const episodes = seasonDetails?.episodes.map((episode: number) => ({
     name: episode.toString(),
   }));
   const seasonsWithName = seasons.map((season) => ({
-    name: season.season,
+    name: season?.season ?? "",
   }));
 
   return (

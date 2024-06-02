@@ -18,6 +18,7 @@ import { Quality, Read, getSettings } from "./settings";
 type Volume = {
   name: string;
   totalPages: number;
+  type: string;
 };
 
 type MangaPageProps = {
@@ -37,12 +38,10 @@ export default function MangaPage({
 }: MangaPageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [pageNumber, setPageNumber] = useState(initialPageNumber);
-  const volumeWithSpace = volume.replace(/%20/g, " ");
-  const volumeNumber = Number(volumeWithSpace.split(" ")[1]);
-  const formattedVolume = String(volumeNumber).padStart(2, "0");
+  const formattedVolume = String(volume).padStart(2, "0");
   const { read } = getSettings();
   const [isVertical, setIsVertical] = useState(read === "vertical");
-
+  const VolumeTome = "Tome " + formattedVolume;
   useEffect(() => {
     const handleSettingsChange = () => {
       const { read } = getSettings();
@@ -156,15 +155,16 @@ export default function MangaPage({
   }, [slug, volume, pageNumber, totalPages]);
 
   const formattedPageNumber = String(pageNumber).padStart(3, "0");
+  const formattedVolumeNumber = String(volume).padStart(2, "0");
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const imageName = `${formattedVolume}-${formattedPageNumber}`;
+  const imageName = `${formattedVolumeNumber}-${formattedPageNumber}`;
   const images = Array.from({ length: totalPages }, (_, i) => {
     const pageNumber = i + 1;
     if (isNaN(pageNumber)) {
       return;
     }
 
-    return `${formattedVolume}-${String(pageNumber).padStart(3, "0")}`;
+    return `${formattedVolumeNumber}-${String(pageNumber).padStart(3, "0")}`;
   });
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -177,7 +177,7 @@ export default function MangaPage({
   }, [isVertical, pageNumber]);
 
   const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
-  const nextImageName = `${formattedVolume}-${nextFormattedPageNumber}`;
+  const nextImageName = `${formattedVolumeNumber}-${nextFormattedPageNumber}`;
   const [isVisible, setIsVisible] = useState(true);
   useEffect(() => {
     if (!isVertical) {
@@ -232,7 +232,7 @@ export default function MangaPage({
           <div className="relative min-h-screen w-screen mt-2">
             {!isVertical && (
               <Image
-                src={`/${slug}/manga/${volume}/${imageName}.webp`}
+                src={`/${slug}/manga/${VolumeTome}/${imageName}.webp`}
                 alt={`${slug} Page ${pageNumber}`}
                 className="object-contain"
                 sizes="(min-width: 1080px) 1024px, 95.26vw"
@@ -252,7 +252,7 @@ export default function MangaPage({
             {nextPageExists && !isVertical && (
               <>
                 <Image
-                  src={`/${slug}/manga/${volume}/${nextImageName}.webp`}
+                  src={`/${slug}/manga/${VolumeTome}/${nextImageName}.webp`}
                   alt={`${slug} Page ${pageNumber + 1}`}
                   sizes="(min-width: 1080px) 1024px, 95.26vw"
                   quality={quality}
@@ -278,7 +278,7 @@ export default function MangaPage({
                     >
                       <Image
                         id={`image-${index}`}
-                        src={`/${slug}/manga/${volume}/${imageName}.webp`}
+                        src={`/${slug}/manga/${VolumeTome}/${imageName}.webp`}
                         alt={`${slug} Page ${index + 1}`}
                         width={3840}
                         height={2160}

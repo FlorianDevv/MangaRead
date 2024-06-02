@@ -8,18 +8,20 @@ type SeasonDetails = {
 
 export type ItemDetails = {
   name: string;
-  synopsis: string | undefined;
-  volumes: string[];
+  synopsis?: string | undefined;
+  volumes?: { name: string; totalPages: number; type: string }[];
   types: ("manga" | "anime")[];
-  seasons: SeasonDetails[];
+  seasons?: SeasonDetails[];
   episodeNumber?: number;
   categories?: string[];
 };
-
+const language = process.env.DEFAULT_LANGUAGE;
+const data = require(`@/locales/${language}.json`);
 export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
   const directory = path.join(process.cwd(), "public");
-  const itemNames = slug
-    ? [slug]
+  const dedodedSlug = decodeURIComponent(slug || "");
+  const itemNames = dedodedSlug
+    ? [dedodedSlug]
     : fs.readdirSync(directory).filter((name) => {
         const itemPath = path.join(directory, name);
         return fs.lstatSync(itemPath).isDirectory() && name !== "icons";
@@ -40,14 +42,29 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
       synopsis = data.synopsis;
       categories = data.categories ?? [];
     }
-    const volumes: string[] = isManga
-      ? fs.readdirSync(path.join(itemPath, "manga")).filter((volume) => {
+    let volumes: {
+      name: string;
+      totalPages: number;
+      type: string;
+    }[] = [];
+    if (isManga) {
+      types.push("manga");
+      volumes = fs
+        .readdirSync(path.join(itemPath, "manga"))
+        .filter((volume) => {
           const volumePath = path.join(itemPath, "manga", volume);
           return fs.lstatSync(volumePath).isDirectory();
         })
-      : [];
-    if (isManga) {
-      types.push("manga");
+        .map((volume) => {
+          const volumePath = path.join(itemPath, "manga", volume);
+          const images = fs.readdirSync(volumePath);
+          const totalPages = images.length;
+          const volumeNumber = parseInt(
+            volume.match(/\d+$/)?.[0] || "",
+            10
+          ).toString();
+          return { name: volumeNumber, totalPages, type: data.resume.volume };
+        });
     }
     if (isAnime) {
       types.push("anime");
@@ -99,7 +116,7 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
     };
   });
 
-  if (slug) {
+  if (dedodedSlug) {
     return itemDetails[0];
   }
   return itemDetails;

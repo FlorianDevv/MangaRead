@@ -92,7 +92,7 @@ function MangaDetailComponent({
             {detail.synopsis}
           </p>
           <p className="text-sm text-gray-100 font-normal">
-            {detail.volumes.length} {data.carousel.volumes}
+            {detail.volumes?.length ?? 0} {data.carousel.volumes}
           </p>
           <div>
             <Link href={`/manga/${detail.name}/Tome%2001`}>
@@ -271,7 +271,7 @@ function AnimeDetailComponent({
                 {detail.synopsis}
               </p>
               <p className="text-sm text-gray-100 font-normal">
-                {detail.seasons.length} {data.carousel.seasons},{" "}
+                {detail.seasons?.length ?? 0} {data.carousel.seasons},{" "}
                 {detail.episodeNumber} {data.carousel.episodes}
               </p>
               <div>

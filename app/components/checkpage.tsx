@@ -5,6 +5,7 @@ import MangaPage from "./mangapage";
 interface Volume {
   name: string;
   totalPages: number;
+  type: string;
 }
 
 interface CheckPageProps {

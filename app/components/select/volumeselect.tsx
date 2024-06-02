@@ -1,3 +1,4 @@
+// VolumeSelect.tsx
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,13 +16,14 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { Navigation } from "lucide-react";
-// VolumeSelect.tsx
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Volume = {
   name: string;
+  totalPages: number;
+  type: string;
 };
 
 export default function VolumeSelect({
@@ -45,7 +47,7 @@ export default function VolumeSelect({
     setSelectedVolume(value);
     const volume = volumes.find((volume) => volume.name === value);
     if (volume) {
-      router.push(`/manga/${slug}/Tome%20${formatVolume(volume.name)}`);
+      router.push(`/manga/${slug}/${formatVolume(volume.name)}`);
     }
   };
 
@@ -57,34 +59,30 @@ export default function VolumeSelect({
 
   useEffect(() => {
     const currentPath = isWindowDefined ? window.location.pathname : "";
-    const volumeFromUrl = currentPath.split("/").pop()?.replace("Tome%20", "");
+    const volumeFromUrl = currentPath.split("/").pop();
     setCurrentVolumeFromUrl(volumeFromUrl || "");
   }, [isWindowDefined]);
-  const previousVolume = (parseInt(currentVolumeFromUrl) - 1)
-    .toString()
-    .padStart(2, "0");
-  const nextVolume = (parseInt(currentVolumeFromUrl) + 1)
-    .toString()
-    .padStart(2, "0");
+
+  const previousVolume = (parseInt(currentVolumeFromUrl) - 1).toString();
+  const nextVolume = (parseInt(currentVolumeFromUrl) + 1).toString();
 
   const formatVolume = (volume: string) => {
-    if (volume.startsWith("Tome ")) {
-      return volume.slice(5);
-    }
     return volume;
   };
 
   const nextVolumeExists = volumes.some(
     (volume) => formatVolume(volume.name) === nextVolume
   );
+
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
+
   return (
     <div className={`flex flex-wrap items-center justify-center ${className}`}>
       {currentVolume && (
         <div className="flex justify-center space-x-2">
           {parseInt(previousVolume) > 0 ? (
-            <Link href={`/manga/${slug}/Tome%20${previousVolume}`}>
+            <Link href={`/manga/${slug}/${previousVolume}`}>
               <Button
                 variant="secondary"
                 className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
@@ -103,7 +101,7 @@ export default function VolumeSelect({
           )}
 
           {nextVolumeExists ? (
-            <Link href={`/manga/${slug}/Tome%20${nextVolume}`}>
+            <Link href={`/manga/${slug}/${nextVolume}`}>
               <Button
                 variant="secondary"
                 className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
@@ -122,34 +120,37 @@ export default function VolumeSelect({
           )}
         </div>
       )}
-      <div className="flex flex-wrap justify-center  mt-2 w-full">
+      <div className="flex flex-wrap justify-center mt-2 w-full">
         <Select
           name="volume"
-          value={isPage ? formatVolume(selectedVolume) : selectedVolume}
+          value={formatVolume(selectedVolume)}
           onValueChange={handleChange}
         >
           <SelectTrigger
             className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
             aria-label={`Changer de volume. actuellement sur le volume  ${selectedVolume} `}
           >
-            {isPage ? "Tome " + formatVolume(selectedVolume) : selectedVolume}
+            {volumes.length > 0
+              ? volumes[0].type + " " + formatVolume(selectedVolume)
+              : selectedVolume}
           </SelectTrigger>
           <SelectContent>
             {volumes
               .sort((a, b) => {
-                const volumeANumber = parseInt(a.name.replace("Tome ", ""));
-                const volumeBNumber = parseInt(b.name.replace("Tome ", ""));
+                const volumeANumber = parseInt(formatVolume(a.name));
+                const volumeBNumber = parseInt(formatVolume(b.name));
                 return volumeANumber - volumeBNumber;
               })
               .map((volume, index) => (
                 <SelectItem key={index} value={volume.name}>
-                  {isPage ? `Tome ${volume.name}` : volume.name}
+                  {volumes.length > 0
+                    ? volumes[0].type + " " + volume.name
+                    : volume.name}
                 </SelectItem>
               ))}
           </SelectContent>
         </Select>
         {!isPage && (
-          //commencer la lecture button
           <Link href={`/manga/${slug}/${selectedVolume}`}>
             <Button
               variant="secondary"

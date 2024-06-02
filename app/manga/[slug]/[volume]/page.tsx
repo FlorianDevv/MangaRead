@@ -1,56 +1,31 @@
-// app/manga/[slug]/[volume]/page.tsx
 import CheckPage from "@/app/components/checkpage";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import "@/app/mangapage.css";
-import fs from "fs";
-import path from "path";
-
-type Volume = {
-  name: string;
-  totalPages: number;
-};
+import { getDetails } from "@/app/types/getDetails";
 
 export default function Page({
   params,
 }: {
   params: { slug: string; volume: string };
 }) {
-  const mangaDirectory = path.join(
-    process.cwd(),
-    "public",
-    decodeURIComponent(params.slug),
-    "manga"
-  );
-  const volumes: Volume[] = fs
-    .readdirSync(mangaDirectory)
-    .map((volume) => {
-      const volumeDirectory = path.join(
-        mangaDirectory,
-        decodeURIComponent(volume)
-      );
-      if (
-        fs.existsSync(decodeURIComponent(volumeDirectory)) &&
-        fs.lstatSync(decodeURIComponent(volumeDirectory)).isDirectory()
-      ) {
-        const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
-        const volumeNumber = volume.match(/\d+/)?.[0] || "";
-        const totalPages = images.length;
-        return { name: volumeNumber, totalPages };
-      }
-    })
-    .filter(Boolean) as Volume[];
+  const detailsArray = getDetails(params.slug);
 
-  const decodedVolume = decodeURIComponent(params.volume);
+  const details = Array.isArray(detailsArray)
+    ? detailsArray.find((item) => item.name === params.slug)
+    : detailsArray;
 
-  const volumeDirectory = path.join(
-    process.cwd(),
-    "public",
-    params.slug,
-    "manga",
-    decodedVolume
-  );
-  const images = fs.readdirSync(decodeURIComponent(volumeDirectory));
-  const totalPages = images.length;
+  if (!details?.volumes) {
+    return <div>Error 404</div>;
+  }
+
+  const volumes = details.volumes.map((volume) => {
+    const totalPages = volume.totalPages;
+    return { name: volume.name, totalPages, type: volume.type };
+  });
+
+  const volumeDetails = volumes.find((volume) => volume.name === params.volume);
+
+  const totalPages = volumeDetails ? volumeDetails.totalPages : 0;
 
   return (
     <div className="overflow-x-hidden overflow-y-hidden">
@@ -62,7 +37,7 @@ export default function Page({
         <VolumeSelect
           volumes={volumes}
           slug={params.slug}
-          currentVolume={decodedVolume}
+          currentVolume={params.volume}
           isPage={true}
         />
       </div>
