@@ -4,19 +4,31 @@ import path from "path";
 type SeasonDetails = {
   season: string;
   episodes: number[];
+  path: string;
+};
+
+type VolumeDetails = {
+  name: string;
+  totalPages: number;
+  type: string;
+  path: string;
 };
 
 export type ItemDetails = {
   name: string;
   synopsis?: string | undefined;
-  volumes?: { name: string; totalPages: number; type: string }[];
+  volumes?: VolumeDetails[];
   types: ("manga" | "anime")[];
   seasons?: SeasonDetails[];
   episodeNumber?: number;
   categories?: string[];
+  path?: string;
+  pathImage?: string;
 };
+
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
+
 export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
   const directory = path.join(process.cwd(), "public");
   const dedodedSlug = decodeURIComponent(slug || "");
@@ -42,11 +54,8 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
       synopsis = data.synopsis;
       categories = data.categories ?? [];
     }
-    let volumes: {
-      name: string;
-      totalPages: number;
-      type: string;
-    }[] = [];
+
+    let volumes: VolumeDetails[] = [];
     if (isManga) {
       types.push("manga");
       volumes = fs
@@ -63,16 +72,18 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
             volume.match(/\d+$/)?.[0] || "",
             10
           ).toString();
-          return { name: volumeNumber, totalPages, type: data.resume.volume };
+          return {
+            name: volumeNumber,
+            totalPages,
+            type: data.resume.volume,
+            path: path.dirname(volumePath), // Get the parent directory of the volumePath
+          };
         });
-    }
-    if (isAnime) {
-      types.push("anime");
     }
 
     let seasonDetails: SeasonDetails[] = [];
-
     if (isAnime) {
+      types.push("anime");
       const animePath = path.join(itemPath, "anime");
 
       const seasons = fs.readdirSync(animePath).filter((season) => {
@@ -98,7 +109,11 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
           ? parseInt(seasonMatch[1]).toString()
           : season;
 
-        return { season: seasonNumber, episodes };
+        return {
+          season: seasonNumber,
+          episodes,
+          path: path.dirname(seasonPath),
+        }; // Get the parent directory of the seasonPath
       });
     }
 
@@ -113,6 +128,16 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
         (total, season) => total + season.episodes.length,
         0
       ),
+      path: isManga
+        ? volumes[0]?.path
+        : isAnime
+        ? seasonDetails[0]?.path
+        : undefined,
+      pathImage: isManga
+        ? path.join(volumes[0]?.path, "\\Tome 01\\01-001.webp")
+        : isAnime
+        ? path.join(seasonDetails[0]?.path, "thumbnail.webp")
+        : undefined,
     };
   });
 

@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import Image from "next/image";
-import path from "path";
 import { getPlaiceholder } from "plaiceholder";
 import React from "react";
 
@@ -9,7 +8,7 @@ const DynamicBlur: React.FC<{
   alt: string;
   className: string;
 }> = async ({ src, alt, className }) => {
-  const imagePath = path.join(process.cwd(), "public", src);
+  const imagePath = src.replace("/api/image?imagePath=", "");
 
   let file;
   try {

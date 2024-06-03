@@ -26,11 +26,7 @@ export default function Page() {
           <Suspense fallback={<div>...</div>}>
             {Array.isArray(Details) &&
               Details.map((Detail: ItemDetails) => (
-                <Card
-                  key={Detail.name}
-                  name={Detail.name}
-                  types={Detail.types}
-                />
+                <Card key={Detail.name} {...Detail} />
               ))}
           </Suspense>
         </div>

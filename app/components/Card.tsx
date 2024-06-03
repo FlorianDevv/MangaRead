@@ -4,12 +4,8 @@ import Info from "../detail/[slug]/info";
 import { ItemDetails } from "../types/getDetails";
 import DynamicBlur from "./dynamicBlur";
 
-export type CardProps = Pick<ItemDetails, "name" | "types">;
-
-export default function Card({ name, types }: CardProps) {
-  const imagePath = types.includes("anime")
-    ? `/${name}/anime/thumbnail.webp`
-    : `/${name}/manga/Tome 01/01-001.webp`;
+export default function Card(details: ItemDetails) {
+  const { name, types, pathImage } = details;
 
   return (
     <div className="relative flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transform group hover:scale-105 transition duration-300 w-full">
@@ -17,7 +13,7 @@ export default function Card({ name, types }: CardProps) {
         <DialogTrigger>
           <div className="relative flex flex-col items-stretch shine">
             <DynamicBlur
-              src={imagePath}
+              src={`/api/image?imagePath=${pathImage}`}
               alt={name}
               className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
             />
