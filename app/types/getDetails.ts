@@ -4,14 +4,12 @@ import path from "path";
 type SeasonDetails = {
   season: string;
   episodes: number[];
-  path: string;
 };
 
 type VolumeDetails = {
   name: string;
   totalPages: number;
   type: string;
-  path: string;
 };
 
 export type ItemDetails = {
@@ -22,8 +20,6 @@ export type ItemDetails = {
   seasons?: SeasonDetails[];
   episodeNumber?: number;
   categories?: string[];
-  path?: string;
-  pathImage?: string;
 };
 
 const language = process.env.DEFAULT_LANGUAGE;
@@ -81,42 +77,99 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
         });
     }
 
-    let seasonDetails: SeasonDetails[] = [];
+    let seasonDetails: SeasonDetails[] = [] as SeasonDetails[];
     if (isAnime) {
+      console.log("Processing anime...");
       types.push("anime");
-      const animePath = path.join(itemPath, "anime");
+      let baseAnimePath = path.join(itemPath, "anime").replace(/\\/g, "/");
+      console.log(`Default anime path: ${baseAnimePath}`);
 
-      const seasons = fs.readdirSync(animePath).filter((season) => {
-        const seasonPath = path.join(animePath, season);
-        return fs.lstatSync(seasonPath).isDirectory();
-      });
+      const pathJson = path
+        .join(baseAnimePath, "path.json")
+        .replace(/\\/g, "/");
+      console.log(`Checking for path.json at: ${pathJson}`);
+      if (fs.existsSync(pathJson)) {
+        console.log("path.json exists. Reading specified path...");
+        let pathData = fs.readFileSync(pathJson, "utf-8").trim();
+        pathData = pathData.replace(/^"|"$/g, "");
+        if (pathData) {
+          baseAnimePath = path.join(pathData.replace(/\\/g, "/"), "anime");
+          console.log(`Using specified path from path.json: ${baseAnimePath}`);
+        }
+      } else {
+        console.log("No path.json found, using default path.");
+      }
 
-      seasonDetails = seasons.map((season) => {
-        const seasonPath = path.join(animePath, season);
-        const episodes = fs
-          .readdirSync(seasonPath)
-          .filter((episode) => path.extname(episode) === ".mp4")
-          .map((episode) => {
-            // Extract the episode number from the filename
-            const match = episode.match(/(\d+)\.mp4$/);
-            // Convert the episode number to a number to remove leading zeros
-            return match ? parseInt(match[1]) : 0;
+      console.log(`Reading seasons and episodes from: ${baseAnimePath}`);
+
+      try {
+        console.log(`Looking for seasons in: ${baseAnimePath}`);
+        const allDirectories = fs
+          .readdirSync(baseAnimePath)
+          .filter((season) => {
+            const seasonPath = path.join(baseAnimePath, season);
+            const isDirectory = fs.lstatSync(seasonPath).isDirectory();
+            console.log(
+              `Found directory: '${season}': isDirectory=${isDirectory}`
+            );
+            return isDirectory;
           });
+        const seasons = allDirectories.filter((season) =>
+          /^Season\d+$/i.test(season)
+        );
+        console.log(`Seasons found: ${seasons.length}`);
+        if (seasons.length === 0) {
+          console.log(
+            "No seasons directories found. Please check the directory naming."
+          );
+        }
 
-        // Extract the season number from the directory name
-        const seasonMatch = season.match(/(\d+)$/);
-        const seasonNumber = seasonMatch
-          ? parseInt(seasonMatch[1]).toString()
-          : season;
+        seasonDetails = seasons
+          .map((season) => {
+            const seasonPath = path
+              .join(baseAnimePath, season)
+              .replace(/\\/g, "/");
+            console.log(`Processing season at path: ${seasonPath}`);
+            try {
+              const episodes = fs
+                .readdirSync(seasonPath)
+                .filter((episode) => {
+                  return path.extname(episode) === ".mp4";
+                })
+                .map((episode) => {
+                  const match = episode.match(/(\d+)\.mp4$/);
+                  return match ? parseInt(match[1], 10) : 0;
+                });
 
-        return {
-          season: seasonNumber,
-          episodes,
-          path: path.dirname(seasonPath),
-        }; // Get the parent directory of the seasonPath
-      });
+              console.log(`Episodes found in ${season}: ${episodes.length}`);
+              if (episodes.length === 0) {
+                console.log(
+                  `No episodes found in ${season}. Please check the files.`
+                );
+              }
+
+              const seasonMatch = season.match(/Season(\d+)$/i);
+              const seasonNumber = seasonMatch
+                ? parseInt(seasonMatch[1], 10).toString()
+                : season;
+              return {
+                season: seasonNumber,
+                episodes,
+              };
+            } catch (error) {
+              console.error(
+                `Error processing season at path: ${seasonPath}`,
+                error
+              );
+              return null;
+            }
+          })
+          .filter((detail): detail is SeasonDetails => detail !== null);
+      } catch (error) {
+        console.error("Error reading seasons and episodes.", error);
+      }
+      console.log(`Updated anime path: ${baseAnimePath}`);
     }
-
     return {
       name,
       synopsis,
@@ -128,16 +181,6 @@ export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
         (total, season) => total + season.episodes.length,
         0
       ),
-      path: isManga
-        ? volumes[0]?.path
-        : isAnime
-        ? seasonDetails[0]?.path
-        : undefined,
-      pathImage: isManga
-        ? path.join(volumes[0]?.path, "\\Tome 01\\01-001.webp")
-        : isAnime
-        ? path.join(seasonDetails[0]?.path, "thumbnail.webp")
-        : undefined,
     };
   });
 
