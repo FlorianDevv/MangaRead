@@ -92,7 +92,7 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
               className="relative rounded p-4 hover:opacity-75 hover:bg-[#2b2b2b] ease-in-out transition-opacity duration-300"
             >
               <Image
-                src={`/${slug}/anime/Season${seasonNumber.padStart(
+                src={`/api/image?path${slug}/anime/Season${seasonNumber.padStart(
                   2,
                   "0"
                 )}/${seasonNumber.padStart(

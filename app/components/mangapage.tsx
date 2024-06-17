@@ -57,12 +57,12 @@ export default function MangaPage({
     };
   }, []);
 
-  const { qualityNumber } = getSettings();
-  const [quality, setQuality] = useState(qualityNumber);
+  let { qualityNumber } = getSettings();
+  let [quality, setQuality] = useState(qualityNumber);
 
   useEffect(() => {
     const handleSettingsChange = () => {
-      const { quality: newQuality } = getSettings();
+      const { qualityNumber: newQuality } = getSettings();
       setQuality(newQuality);
     };
 
@@ -199,10 +199,22 @@ export default function MangaPage({
   }, [isVertical]);
   const [isScrollingUp, setIsScrollingUp] = useState(false);
   let lastScrollY = useRef(0);
+  useEffect(() => {
+    const preloadImage = (src: string) => {
+      // Create an image element without casting to 'any'
+      const img = document.createElement("img");
+      img.src = src;
+    };
 
+    if (nextPageExists) {
+      const nextImageSrc = `/api/image?path${slug}/manga/${VolumeTome}/${nextImageName}.webp`;
+      preloadImage(nextImageSrc);
+    }
+  }, [nextPageExists, slug, VolumeTome, nextImageName]);
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.pageYOffset;
+      // Using 'scrollY' instead of 'pageYOffset'
+      const currentScrollY = window.scrollY;
       setIsScrollingUp(lastScrollY.current > currentScrollY);
       lastScrollY.current = currentScrollY;
     };
@@ -232,7 +244,7 @@ export default function MangaPage({
           <div className="relative min-h-screen w-screen mt-2">
             {!isVertical && (
               <Image
-                src={`/${slug}/manga/${VolumeTome}/${imageName}.webp`}
+                src={`/api/image?path${slug}/manga/${VolumeTome}/${imageName}.webp`}
                 alt={`${slug} Page ${pageNumber}`}
                 className="object-contain"
                 sizes="(min-width: 1080px) 1024px, 95.26vw"
@@ -249,21 +261,6 @@ export default function MangaPage({
                 <div className="spinner"></div>
               </div>
             )}
-            {nextPageExists && !isVertical && (
-              <>
-                <Image
-                  src={`/${slug}/manga/${VolumeTome}/${nextImageName}.webp`}
-                  alt={`${slug} Page ${pageNumber + 1}`}
-                  sizes="(min-width: 1080px) 1024px, 95.26vw"
-                  quality={quality}
-                  fill
-                  priority
-                  className="hidden object-contain"
-                  placeholder="blur"
-                  blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
-                />
-              </>
-            )}
             <div className="flex flex-col">
               {isVertical && (
                 <>
@@ -278,7 +275,7 @@ export default function MangaPage({
                     >
                       <Image
                         id={`image-${index}`}
-                        src={`/${slug}/manga/${VolumeTome}/${imageName}.webp`}
+                        src={`/api/image?path${slug}/manga/${VolumeTome}/${imageName}.webp`}
                         alt={`${slug} Page ${index + 1}`}
                         width={3840}
                         height={2160}

@@ -30,13 +30,17 @@ export function getSettings() {
   }
 
   const settings = JSON.parse(localStorage.getItem("settings") || "[]");
-  const quality =
-    settings.find((setting: { qualityNumber: number }) => setting.qualityNumber)
-      ?.quality || process.env.DEFAULT_QUALITY;
-  const read =
-    settings.find((setting: { read: string }) => setting.read)?.read ||
-    "horizontal";
-  return { quality, read };
+  const qualityObj = settings.find(
+    (setting: { quality: number }) => setting.quality
+  );
+  const readObj = settings.find((setting: { read: string }) => setting.read);
+
+  const qualityNumber = qualityObj
+    ? qualityObj.quality
+    : parseInt(process.env.DEFAULT_QUALITY || "75", 10);
+  const read = readObj ? readObj.read : "horizontal";
+
+  return { qualityNumber, read };
 }
 
 export function updateSettings(newSettings: any) {
@@ -90,10 +94,13 @@ export function Quality({
     }
     return 75;
   };
+  const [tempQualityNumber, setTempQualityNumber] = useState<number>(
+    initialQualityNumber || 75
+  );
 
   const [qualityNumber, setQualityNumber] = useState<number>(getInitialQuality);
 
-  const setQuality = useCallback(
+  const setQualityFinal = useCallback(
     (value: number) => {
       setQualityNumber(value);
       if (externalSetQuality) {
@@ -120,9 +127,10 @@ export function Quality({
 
   useEffect(() => {
     if (initialQualityNumber) {
-      setQuality(initialQualityNumber);
+      setQualityFinal(initialQualityNumber);
     }
-  }, [initialQualityNumber, setQuality]);
+  }, [initialQualityNumber, setQualityFinal]);
+
   const language = process.env.DEFAULT_LANGUAGE;
   const data = require(`@/locales/${language}.json`);
   const maxQuality: number = Number(process.env.MAX_QUALITY);
@@ -144,10 +152,11 @@ export function Quality({
         min={minQuality}
         max={maxQuality}
         step={1}
-        value={[qualityNumber]}
-        onValueChange={(value: number[]) => setQuality(value[0])}
+        value={[tempQualityNumber]}
+        onValueChange={(value: number[]) => setTempQualityNumber(value[0])}
+        onValueCommit={(value: number[]) => setQualityFinal(value[0])}
         className="w-40 my-1"
-        aria-label={`Qualité: ${qualityNumber}`}
+        aria-label={`Qualité: ${tempQualityNumber}`}
       />
       <p className={`${qualityColor(qualityNumber)}`}>
         {qualityNumber} - {qualityIndicator(qualityNumber)}

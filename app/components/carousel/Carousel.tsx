@@ -36,7 +36,7 @@ function MangaDetailComponent({
   emblaApi: EmblaCarouselType | null;
 }) {
   const imageSrc = useMemo(
-    () => `/${detail.name}/manga/Tome 01/01-001.webp`,
+    () => `/api/image?path=${detail.name}/manga/Tome 01/01-001.webp`,
     [detail.name]
   );
 
@@ -46,7 +46,7 @@ function MangaDetailComponent({
       key={detail.name}
     >
       <Image
-        src={`/${detail.name}/manga/Tome 01/01-001.webp`}
+        src={`/api/image?path=${detail.name}/manga/Tome 01/01-001.webp`}
         alt={"cover image back"}
         className="object-cover opacity-25 blur-lg"
         fill
@@ -177,12 +177,12 @@ function AnimeDetailComponent({
     [detail.name]
   );
   const thumbnailSrc = useMemo(
-    () => `/${detail.name}/anime/thumbnail.webp`,
+    () => `/api/image?path=${detail.name}/anime/thumbnail.webp`,
     [detail.name]
   );
 
   const posterSrc = useMemo(
-    () => `/${detail.name}/anime/Season01/01-001.webp`,
+    () => `/api/image?path=${detail.name}/anime/Season01/01-001.webp`,
     [detail.name]
   );
 

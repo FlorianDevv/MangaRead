@@ -206,7 +206,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                   >
                     <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
                       <Image
-                        src={`/${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
+                        src={`/api/image?path=${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
                         alt={mangaInfo.manga + " resume"}
                         quality={50}
                         fill
@@ -282,7 +282,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
                   >
                     <div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
                       <Image
-                        src={`/${animeInfo.anime}/anime/thumbnail.webp`}
+                        src={`/api/image?path=${animeInfo.anime}/anime/thumbnail.webp`}
                         alt={animeInfo.anime + " resume"}
                         quality={50}
                         fill

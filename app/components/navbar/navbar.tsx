@@ -16,15 +16,19 @@ try {
   mangaData = directoryItems
     .filter((item) => item.isDirectory() && item.name !== "icons") // keep only directories and remove 'icons'
     .map((item) => {
-      const mangaPath = `/${item.name}/manga/Tome 01/01-001.webp`;
-      const animePath = `/${item.name}/anime/thumbnail.webp`;
-      const imagePath = fs.existsSync(path.join(publicDirectory, mangaPath))
+      const mangaPath = `${item.name}/manga/Tome 01/01-001.webp`;
+      const animePath = `${item.name}/anime/thumbnail.webp`;
+      const imagePathSuffix = fs.existsSync(
+        path.join(publicDirectory, `/${mangaPath}`)
+      )
         ? mangaPath
         : animePath;
+      const imagePath =
+        "/api/image?path=" + encodeURIComponent(imagePathSuffix);
       return { name: item.name, imagePath };
     });
 } catch (error) {
-  console.error(`Failed to read public directory: ${error}`);
+  console.error("Failed to load manga data:", error);
 }
 
 const language = process.env.DEFAULT_LANGUAGE;

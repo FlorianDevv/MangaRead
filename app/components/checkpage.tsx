@@ -35,7 +35,6 @@ export default function CheckPage({
         }
       }
     }
-    return 1;
   };
 
   const [initialPageNumber] = useState<number>(getInitialPageNumber());

@@ -82,7 +82,7 @@ export default async function Page() {
               <CardHeader className="text-center">
                 <div className="relative mt-2">
                   <Image
-                    src={`/${current.title}/anime/thumbnail.webp`}
+                    src={`/api/image?path=${current.title}/anime/thumbnail.webp`}
                     width={200}
                     height={200}
                     alt={current.title}
@@ -184,7 +184,7 @@ export default async function Page() {
                         <CardHeader>
                           <CardTitle className="font-bold text-lg mb-2 relative h-80 w-44">
                             <Image
-                              src={`/${item.title}/anime/thumbnail.webp`}
+                              src={`/api/image?path=${item.title}/anime/thumbnail.webp`}
                               fill
                               className="object-cover"
                               alt={item.title}

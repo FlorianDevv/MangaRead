@@ -1,24 +1,29 @@
 // MangaCard.tsx
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import Image from "next/image";
 import Info from "../detail/[slug]/info";
 import { ItemDetails } from "../types/getDetails";
-import DynamicBlur from "./dynamicBlur";
 
 export type CardProps = Pick<ItemDetails, "name" | "types">;
 
 export default function Card({ name, types }: CardProps) {
   const imagePath = types.includes("anime")
-    ? `/${name}/anime/thumbnail.webp`
-    : `/${name}/manga/Tome 01/01-001.webp`;
+    ? `/api/image?path=${name}/anime/thumbnail.webp`
+    : `/api/image?path=${name}/manga/Tome 01/01-001.webp`;
 
   return (
     <div className="relative flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transform group hover:scale-105 transition duration-300 w-full">
       <Dialog>
         <DialogTrigger>
           <div className="relative flex flex-col items-stretch shine">
-            <DynamicBlur
+            <Image
               src={imagePath}
-              alt={name}
+              alt={`${imagePath}`} // if the image conveys information
+              quality={50}
+              sizes="(min-width: 1540px) calc(20vw - 122px), (min-width: 1280px) calc(20vw - 96px), (min-width: 1040px) calc(25vw - 116px), (min-width: 780px) calc(33.33vw - 80px), calc(50vw - 16px)"
+              placeholder="blur"
+              width={200}
+              height={800}
               className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
             />
             {types.includes("manga") && (
