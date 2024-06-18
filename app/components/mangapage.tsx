@@ -207,7 +207,7 @@ export default function MangaPage({
     };
 
     if (nextPageExists) {
-      const nextImageSrc = `/api/image?path${slug}/manga/${VolumeTome}/${nextImageName}.webp`;
+      const nextImageSrc = `/api/image?path=${slug}/manga/${VolumeTome}/${nextImageName}.webp`;
       preloadImage(nextImageSrc);
     }
   }, [nextPageExists, slug, VolumeTome, nextImageName]);
@@ -244,7 +244,7 @@ export default function MangaPage({
           <div className="relative min-h-screen w-screen mt-2">
             {!isVertical && (
               <Image
-                src={`/api/image?path${slug}/manga/${VolumeTome}/${imageName}.webp`}
+                src={`/api/image?path=${slug}/manga/${VolumeTome}/${imageName}.webp`}
                 alt={`${slug} Page ${pageNumber}`}
                 className="object-contain"
                 sizes="(min-width: 1080px) 1024px, 95.26vw"
@@ -275,7 +275,7 @@ export default function MangaPage({
                     >
                       <Image
                         id={`image-${index}`}
-                        src={`/api/image?path${slug}/manga/${VolumeTome}/${imageName}.webp`}
+                        src={`/api/image?path=${slug}/manga/${VolumeTome}/${imageName}.webp`}
                         alt={`${slug} Page ${index + 1}`}
                         width={3840}
                         height={2160}

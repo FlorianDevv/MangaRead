@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": "image/webp",
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": "public, max-age=604800, immutable",
       },
     });
   } catch (error) {
