@@ -7,7 +7,7 @@ try {
   const details = getDetails();
   itemData = Array.isArray(details) ? details : [details];
 } catch (error) {
-  console.error(`Failed to read public directory: ${error}`);
+  itemData = [];
 }
 
 const language = process.env.DEFAULT_LANGUAGE;
