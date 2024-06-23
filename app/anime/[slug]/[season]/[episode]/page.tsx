@@ -5,12 +5,12 @@ import { getDetails } from "@/app/types/getDetails";
 import React, { Suspense } from "react";
 const Player = React.lazy(() => import("../../../../components/player"));
 
-export default function Page({
+export default async function Page({
   params,
 }: {
   params: { slug: string; season: string; episode: string };
 }) {
-  const details = getDetails(decodeURIComponent(params.slug));
+  const details = await getDetails(decodeURIComponent(params.slug));
 
   if (
     !details ||

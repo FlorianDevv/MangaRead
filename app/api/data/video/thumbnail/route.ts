@@ -10,7 +10,7 @@ export async function GET() {
   // Browse all folders in 'public'
   fs.readdir(rootDirectoryPath, (err, folders) => {
     if (err) {
-      return Response.json({ error: "Unable to scan directory: " + err });
+      return;
     }
 
     // Browse each 'anime/Season XX' folder
@@ -19,7 +19,6 @@ export async function GET() {
 
       fs.readdir(animeDirectoryPath, (err, seasons) => {
         if (err) {
-          console.error("Unable to scan directory: " + err);
           return;
         }
 
@@ -28,7 +27,6 @@ export async function GET() {
           const seasonPath = path.join(animeDirectoryPath, season);
           fs.readdir(seasonPath, (err, files) => {
             if (err) {
-              console.error("Unable to scan directory: " + err);
               return;
             }
 

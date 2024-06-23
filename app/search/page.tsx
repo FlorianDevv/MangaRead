@@ -4,7 +4,7 @@ import { getDetails, ItemDetails } from "../types/getDetails";
 
 let itemData: ItemDetails[] = [];
 try {
-  const details = getDetails();
+  const details = await getDetails();
   itemData = Array.isArray(details) ? details : [details];
 } catch (error) {
   itemData = [];

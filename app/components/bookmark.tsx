@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { BookmarkCheck, BookmarkIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import CardClient from "./CardClient";
 interface Bookmark {
   itemName: string;
   types: string[];
@@ -36,10 +36,7 @@ export default function Bookmark() {
       <div className="space-x-4 md:mx-8 flex overflow-x-scroll hover:cursor-default overflow-y-hidden">
         {bookmarks.map((bookmark, index) => (
           <div key={bookmark.itemName} className="flex-shrink-0 relative">
-            <CardClient
-              name={bookmark.itemName}
-              types={bookmark.types as ("manga" | "anime")[]}
-            />
+            <Card key={index} {...bookmark} />
           </div>
         ))}
       </div>

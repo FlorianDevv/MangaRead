@@ -110,13 +110,8 @@ export default function CategorySelector({
           className="p-2 mx-2 rounded-md  bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600"
         />
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mx-2">
-          {displayedItemData.map((item) => (
-            <CardClient
-              key={item.name}
-              name={item.name}
-              types={item.types}
-              categories={item.categories}
-            />
+          {displayedItemData.map((item, index) => (
+            <CardClient key={index} {...item} />
           ))}
         </div>
       </div>

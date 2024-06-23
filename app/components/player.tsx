@@ -196,7 +196,7 @@ export default function Player(item: Item) {
 
   const thumbnailSrc = useMemo(
     () =>
-      `/${item.title}/anime/Season${seasonNumber
+      `/api/image?path=${item.title}/anime/Season${seasonNumber
         .toString()
         .padStart(2, "0")}/${seasonNumber}-${episodeNumber}.webp`,
     [item.title, seasonNumber, episodeNumber]
@@ -220,8 +220,7 @@ export default function Player(item: Item) {
             src={{ src: src, type: "video/mp4" }}
             playsInline
             onProviderSetup={onProviderSetup}
-            className="w-full h-full object-contain"
-          >
+            className="w-full h-full object-contain">
             <MediaProvider>
               <Poster className="vds-poster" src={thumbnailSrc} />
             </MediaProvider>

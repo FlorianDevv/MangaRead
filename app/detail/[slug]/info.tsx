@@ -6,9 +6,11 @@ import VolumeSelect from "@/app/components/select/volumeselect";
 import { ItemDetails, getDetails } from "@/app/types/getDetails";
 import Image from "next/image";
 
-export default function Info({ params }: { params: { slug: string } }) {
+export default async function Info({ params }: { params: { slug: string } }) {
   const decodedSlug = decodeURIComponent(params.slug);
-  const itemDetails: ItemDetails | ItemDetails[] = getDetails(decodedSlug);
+  const itemDetails: ItemDetails | ItemDetails[] = await getDetails(
+    decodedSlug
+  );
 
   // Ensure itemDetails is not an array
   if (Array.isArray(itemDetails)) {
@@ -72,8 +74,7 @@ export default function Info({ params }: { params: { slug: string } }) {
                 {categories.map((category, index) => (
                   <span
                     key={index}
-                    className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1"
-                  >
+                    className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1">
                     {category}
                   </span>
                 ))}

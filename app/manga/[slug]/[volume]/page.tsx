@@ -3,12 +3,12 @@ import VolumeSelect from "@/app/components/select/volumeselect";
 import "@/app/mangapage.css";
 import { getDetails } from "@/app/types/getDetails";
 
-export default function Page({
+export default async function Page({
   params,
 }: {
   params: { slug: string; volume: string };
 }) {
-  const detailsArray = getDetails(params.slug);
+  const detailsArray = await getDetails(params.slug);
 
   const details = Array.isArray(detailsArray)
     ? detailsArray.find((item) => item.name === params.slug)
@@ -18,12 +18,16 @@ export default function Page({
     return <div>Error 404</div>;
   }
 
-  const volumes = details.volumes.map((volume) => {
-    const totalPages = volume.totalPages;
-    return { name: volume.name, totalPages, type: volume.type };
-  });
+  const volumes = details.volumes.map(
+    (volume: { totalPages: number; name: string; type: string }) => {
+      const totalPages = volume.totalPages;
+      return { name: volume.name, totalPages, type: volume.type };
+    }
+  );
 
-  const volumeDetails = volumes.find((volume) => volume.name === params.volume);
+  const volumeDetails = volumes.find(
+    (volume: { name: string }) => volume.name === params.volume
+  );
 
   const totalPages = volumeDetails ? volumeDetails.totalPages : 0;
 

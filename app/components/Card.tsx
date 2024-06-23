@@ -25,13 +25,13 @@ export default function Card({ name, types }: CardProps) {
               width={200}
               height={800}
               className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
+              blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
             />
             {types.includes("manga") && (
               <div
                 className={`absolute ${
                   types.includes("anime") ? "bottom-10" : "bottom-2"
-                } left-2 bg-blue-900 text-sm px-2 py-1 rounded`}
-              >
+                } left-2 bg-blue-900 text-sm px-2 py-1 rounded`}>
                 Manga
               </div>
             )}

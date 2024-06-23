@@ -61,12 +61,13 @@ export default async function Page() {
   if (current && current.title) {
     const details = getDetails(current.title);
     if (details) {
-      if (Array.isArray(details)) {
-        synopsis = details[0].synopsis;
-        categories = details[0].categories ?? [];
+      const resolvedDetails = await details;
+      if (Array.isArray(resolvedDetails)) {
+        synopsis = resolvedDetails[0].synopsis;
+        categories = resolvedDetails[0].categories ?? [];
       } else {
-        synopsis = details.synopsis;
-        categories = details.categories ?? [];
+        synopsis = resolvedDetails.synopsis;
+        categories = resolvedDetails.categories ?? [];
       }
     }
   }
@@ -140,8 +141,7 @@ export default async function Page() {
                   {categories.map((category, index) => (
                     <span
                       key={index}
-                      className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1"
-                    >
+                      className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1">
                       {category}
                     </span>
                   ))}
@@ -164,8 +164,7 @@ export default async function Page() {
               ([date, items]: [string, Item[]], index: number) => (
                 <ul
                   key={index}
-                  className="flex flex-col space-y-4 rounded p-2  border border-gray-500 "
-                >
+                  className="flex flex-col space-y-4 rounded p-2  border border-gray-500 ">
                   <h3 className="text-sm 2xl:text-lg font-bold text-center">
                     {new Date(
                       date.split("/").reverse().join("-")
@@ -179,8 +178,7 @@ export default async function Page() {
                     <Link href={`/detail/${item.title}`} key={index}>
                       <Card
                         key={index}
-                        className="flex flex-col rounded border border-gray-900 hover:scale-105 transform transition-transform duration-300 ease-in-out"
-                      >
+                        className="flex flex-col rounded border border-gray-900 hover:scale-105 transform transition-transform duration-300 ease-in-out">
                         <CardHeader>
                           <CardTitle className="font-bold text-lg mb-2 relative h-80 w-44">
                             <Image

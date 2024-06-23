@@ -1,39 +1,30 @@
 /** @format */
 
+import { getAnimePathFromDb } from "@/app/types/db/item/getItemDb";
 import * as fs from "fs";
 import * as path from "path";
 
 const CHUNK_SIZE_IN_BYTES = 5000000; // 5 MB
-function getBaseVideoPath(videoId: string): string {
-  const decodedVideoId = decodeURIComponent(videoId);
 
+async function getBaseVideoPath(videoId: string): Promise<string> {
+  const decodedVideoId = decodeURIComponent(videoId);
   const parts = decodedVideoId.split("/");
   const animeName = parts[0];
 
-  const jsonPath = path.join(
-    process.cwd(),
-    "public",
-    animeName,
-    "anime",
-    "path.json"
-  );
-
-  if (fs.existsSync(jsonPath)) {
-    try {
-      // Utilisation de trim() pour supprimer les espaces blancs inutiles
-      const basePath = path.normalize(
-        fs.readFileSync(jsonPath, "utf8").replace(/"/g, "").trim()
-      );
-      return basePath.endsWith("anime") ? basePath : path.join(basePath, "");
-    } catch (error) {
-      console.error("Error reading path.json:", error);
-      return path.join(process.cwd(), "public", animeName);
-    }
-  } else {
-    return path.join(process.cwd(), "public", animeName);
+  try {
+    let basePath = await getAnimePathFromDb(animeName);
+    // Normaliser le chemin pour le système d'exploitation actuel
+    basePath = path.normalize(basePath);
+    return basePath;
+  } catch (error) {
+    console.error("Error retrieving base path from DB:", error);
+    return path.join(__dirname, "videos");
   }
 }
-function getVideoStream(req: Request): Response {
+
+// Dans getVideoStream, ajustez la logique de construction de videoPath pour éviter la répétition
+
+async function getVideoStream(req: Request): Promise<Response> {
   const url = new URL(req.url);
   let videoId = url.searchParams.get("videoId");
   const range = req.headers.get("range");
@@ -47,12 +38,16 @@ function getVideoStream(req: Request): Response {
   videoId = decodeURIComponent(videoId);
 
   const parts = videoId.split("/");
-  const animeName = parts.shift() as string; // Retire le nom de l'anime du début
-  const relativeVideoPath = parts.join("/");
+  const animeName = parts.shift() as string;
+  const relativeVideoPath = parts.slice(1).join("/");
+  const baseVideoPath = await getBaseVideoPath(animeName);
 
-  const baseVideoPath = getBaseVideoPath(animeName); // Passer le nom de l'anime à getBaseVideoPath
+  let videoPath;
+  const normalizedBaseVideoPath = path.normalize(baseVideoPath);
 
-  let videoPath = path.normalize(path.join(baseVideoPath, relativeVideoPath)); // Utiliser le chemin relatif pour construire videoPath
+  videoPath = path.join(normalizedBaseVideoPath, relativeVideoPath);
+
+  videoPath = path.normalize(videoPath);
 
   if (!fs.existsSync(videoPath)) {
     return new Response("Video not found", {

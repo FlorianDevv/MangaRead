@@ -1,5 +1,8 @@
 import fs from "fs";
 import path from "path";
+import { open } from "sqlite";
+import sqlite3 from "sqlite3";
+import { getAnimePathFromDb } from "./db/item/getItemDb";
 
 type SeasonDetails = {
   season: string;
@@ -10,9 +13,12 @@ type VolumeDetails = {
   name: string;
   totalPages: number;
   type: string;
+  path: string;
 };
 
 export type ItemDetails = {
+  animePath: string;
+  mangaPath: string;
   name: string;
   synopsis?: string | undefined;
   volumes?: VolumeDetails[];
@@ -25,167 +31,193 @@ export type ItemDetails = {
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 
-export function getDetails(slug?: string): ItemDetails | ItemDetails[] {
+const dbPath = "db/items.db";
+
+async function openDb() {
+  return open({
+    filename: dbPath,
+    driver: sqlite3.Database,
+  });
+}
+
+export async function getDetails(
+  slug?: string
+): Promise<ItemDetails | ItemDetails[]> {
   const directory = path.join(process.cwd(), "public");
-  const dedodedSlug = decodeURIComponent(slug || "");
-  const itemNames = dedodedSlug
-    ? [dedodedSlug]
+  const decodedSlug = decodeURIComponent(slug || "");
+  const itemNames = decodedSlug
+    ? [decodedSlug]
     : fs.readdirSync(directory).filter((name) => {
         const itemPath = path.join(directory, name);
         return fs.lstatSync(itemPath).isDirectory() && name !== "icons";
       });
 
-  const itemDetails: ItemDetails[] = itemNames.map((name) => {
-    const itemPath = path.join(directory, name);
-    // Check if it's a manga, an anime or both
-    const isManga = fs.existsSync(path.join(itemPath, "manga"));
-    const isAnime = fs.existsSync(path.join(itemPath, "anime"));
-    let types: ItemDetails["types"] = [];
+  const itemDetailsPromises: Promise<ItemDetails>[] = itemNames.map(
+    async (name) => {
+      const itemPath = path.join(directory, name);
+      const isManga = fs.existsSync(path.join(itemPath, "manga"));
+      const isAnime = fs.existsSync(path.join(itemPath, "anime"));
+      let types: ItemDetails["types"] = [];
 
-    let synopsis: string | undefined;
-    let categories: string[] = [];
-    const resumePath = path.join(itemPath, "resume.json");
-    if (fs.existsSync(resumePath)) {
-      const data = JSON.parse(fs.readFileSync(resumePath, "utf-8"));
-      synopsis = data.synopsis;
-      categories = data.categories ?? [];
-    }
-
-    let volumes: VolumeDetails[] = [];
-    if (isManga) {
-      types.push("manga");
-      volumes = fs
-        .readdirSync(path.join(itemPath, "manga"))
-        .filter((volume) => {
-          const volumePath = path.join(itemPath, "manga", volume);
-          return fs.lstatSync(volumePath).isDirectory();
-        })
-        .map((volume) => {
-          const volumePath = path.join(itemPath, "manga", volume);
-          const images = fs.readdirSync(volumePath);
-          const totalPages = images.length;
-          const volumeNumber = parseInt(
-            volume.match(/\d+$/)?.[0] || "",
-            10
-          ).toString();
-          return {
-            name: volumeNumber,
-            totalPages,
-            type: data.resume.volume,
-            path: path.dirname(volumePath), // Get the parent directory of the volumePath
-          };
-        });
-    }
-
-    let seasonDetails: SeasonDetails[] = [] as SeasonDetails[];
-    if (isAnime) {
-      console.log("Processing anime...");
-      types.push("anime");
-      let baseAnimePath = path.join(itemPath, "anime").replace(/\\/g, "/");
-      console.log(`Default anime path: ${baseAnimePath}`);
-
-      const pathJson = path
-        .join(baseAnimePath, "path.json")
-        .replace(/\\/g, "/");
-      console.log(`Checking for path.json at: ${pathJson}`);
-      if (fs.existsSync(pathJson)) {
-        console.log("path.json exists. Reading specified path...");
-        let pathData = fs.readFileSync(pathJson, "utf-8").trim();
-        pathData = pathData.replace(/^"|"$/g, "");
-        if (pathData) {
-          baseAnimePath = path.join(pathData.replace(/\\/g, "/"), "anime");
-          console.log(`Using specified path from path.json: ${baseAnimePath}`);
-        }
-      } else {
-        console.log("No path.json found, using default path.");
+      let synopsis: string | undefined;
+      let categories: string[] = [];
+      const resumePath = path.join(itemPath, "resume.json");
+      if (fs.existsSync(resumePath)) {
+        const data = JSON.parse(fs.readFileSync(resumePath, "utf-8"));
+        synopsis = data.synopsis;
+        categories = data.categories ?? [];
       }
 
-      console.log(`Reading seasons and episodes from: ${baseAnimePath}`);
-
-      try {
-        console.log(`Looking for seasons in: ${baseAnimePath}`);
-        const allDirectories = fs
-          .readdirSync(baseAnimePath)
-          .filter((season) => {
-            const seasonPath = path.join(baseAnimePath, season);
-            const isDirectory = fs.lstatSync(seasonPath).isDirectory();
-            console.log(
-              `Found directory: '${season}': isDirectory=${isDirectory}`
-            );
-            return isDirectory;
-          });
-        const seasons = allDirectories.filter((season) =>
-          /^Season\d+$/i.test(season)
-        );
-        console.log(`Seasons found: ${seasons.length}`);
-        if (seasons.length === 0) {
-          console.log(
-            "No seasons directories found. Please check the directory naming."
-          );
-        }
-
-        seasonDetails = seasons
-          .map((season) => {
-            const seasonPath = path
-              .join(baseAnimePath, season)
-              .replace(/\\/g, "/");
-            console.log(`Processing season at path: ${seasonPath}`);
-            try {
-              const episodes = fs
-                .readdirSync(seasonPath)
-                .filter((episode) => {
-                  return path.extname(episode) === ".mp4";
-                })
-                .map((episode) => {
-                  const match = episode.match(/(\d+)\.mp4$/);
-                  return match ? parseInt(match[1], 10) : 0;
-                });
-
-              console.log(`Episodes found in ${season}: ${episodes.length}`);
-              if (episodes.length === 0) {
-                console.log(
-                  `No episodes found in ${season}. Please check the files.`
-                );
-              }
-
-              const seasonMatch = season.match(/Season(\d+)$/i);
-              const seasonNumber = seasonMatch
-                ? parseInt(seasonMatch[1], 10).toString()
-                : season;
-              return {
-                season: seasonNumber,
-                episodes,
-              };
-            } catch (error) {
-              console.error(
-                `Error processing season at path: ${seasonPath}`,
-                error
-              );
-              return null;
-            }
+      let volumes: VolumeDetails[] = [];
+      let mangaPath = "";
+      if (isManga) {
+        types.push("manga");
+        const mangaDirectory = path.join(itemPath, "manga");
+        volumes = fs
+          .readdirSync(mangaDirectory)
+          .filter((volume) => {
+            const volumePath = path.join(mangaDirectory, volume);
+            return fs.lstatSync(volumePath).isDirectory();
           })
-          .filter((detail): detail is SeasonDetails => detail !== null);
-      } catch (error) {
-        console.error("Error reading seasons and episodes.", error);
+          .map((volume) => {
+            const volumePath = path.join(mangaDirectory, volume);
+            const images = fs.readdirSync(volumePath);
+            const totalPages = images.length;
+            const volumeNumber = parseInt(
+              volume.match(/\d+$/)?.[0] || "",
+              10
+            ).toString();
+            return {
+              name: volumeNumber,
+              totalPages,
+              type: data.resume.volume,
+              path: volumePath,
+            };
+          });
+        mangaPath = mangaDirectory.replace(/\\/g, "/");
       }
-      console.log(`Updated anime path: ${baseAnimePath}`);
-    }
-    return {
-      name,
-      synopsis,
-      types,
-      seasons: seasonDetails,
-      categories,
-      volumes,
-      episodeNumber: seasonDetails.reduce(
-        (total, season) => total + season.episodes.length,
-        0
-      ),
-    };
-  });
 
-  if (dedodedSlug) {
+      let seasonDetails: SeasonDetails[] = [] as SeasonDetails[];
+      let animePath = "";
+      if (isAnime) {
+        types.push("anime");
+        let baseAnimePath = path.join(itemPath, "anime").replace(/\\/g, "/");
+        const animeId = name;
+        try {
+          baseAnimePath = await getAnimePathFromDb(animeId);
+          baseAnimePath = path.join(baseAnimePath).replace(/\\/g, "/");
+        } catch (error) {
+          console.error(error);
+        }
+
+        try {
+          const allDirectories = fs
+            .readdirSync(baseAnimePath)
+            .filter((season) => {
+              const seasonPath = path.join(baseAnimePath, season);
+              const isDirectory = fs.lstatSync(seasonPath).isDirectory();
+              return isDirectory;
+            });
+          const seasons = allDirectories.filter((season) =>
+            /^Season\d+$/i.test(season)
+          );
+          if (seasons.length === 0) {
+          }
+
+          seasonDetails = seasons
+            .map((season) => {
+              const seasonPath = path
+                .join(baseAnimePath, season)
+                .replace(/\\/g, "/");
+              try {
+                const episodes = fs
+                  .readdirSync(seasonPath)
+                  .filter((episode) => {
+                    return path.extname(episode) === ".mp4";
+                  })
+                  .map((episode) => {
+                    const match = episode.match(/(\d+)\.mp4$/);
+                    return match ? parseInt(match[1], 10) : 0;
+                  });
+
+                if (episodes.length === 0) {
+                }
+
+                const seasonMatch = season.match(/Season(\d+)$/i);
+                const seasonNumber = seasonMatch
+                  ? parseInt(seasonMatch[1], 10).toString()
+                  : season;
+                return {
+                  season: seasonNumber,
+                  episodes,
+                };
+              } catch (error) {
+                return null;
+              }
+            })
+            .filter((detail): detail is SeasonDetails => detail !== null);
+        } catch (error) {}
+        animePath = baseAnimePath.replace(/\\/g, "/");
+      }
+
+      return {
+        name,
+        synopsis,
+        types,
+        seasons: seasonDetails,
+        categories,
+        volumes,
+        episodeNumber: seasonDetails.reduce(
+          (total, season) => total + season.episodes.length,
+          0
+        ),
+        mangaPath,
+        animePath,
+      };
+    }
+  );
+
+  const itemDetails = await Promise.all(itemDetailsPromises);
+
+  if (decodedSlug) {
     return itemDetails[0];
   }
   return itemDetails;
+}
+
+export async function storeDetailsInDatabase(details: ItemDetails[]) {
+  const db = await openDb();
+
+  for (const item of details) {
+    const typesAndPaths = JSON.stringify(
+      item.types.map((type) => {
+        return {
+          type,
+          path: type === "manga" ? item.mangaPath : item.animePath,
+        };
+      })
+    );
+
+    // Vérifier si l'élément existe déjà
+    const existingItem = await db.get(
+      `SELECT * FROM items WHERE title = ?`,
+      item.name
+    );
+
+    if (existingItem) {
+      await db.run(
+        `UPDATE items SET types_and_paths = ? WHERE title = ?`,
+        typesAndPaths,
+        item.name
+      );
+    } else {
+      await db.run(
+        `INSERT INTO items (title, types_and_paths) VALUES (?, ?)`,
+        item.name,
+        typesAndPaths
+      );
+    }
+  }
+
+  console.log("Items have been stored in the database.");
 }

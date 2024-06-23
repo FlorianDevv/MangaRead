@@ -8,7 +8,11 @@ const launchTime = Number(fs.readFileSync("launchTime.txt", "utf-8"));
 
 export async function GET() {
   const now = Math.floor((Date.now() - launchTime) / 1000) % (7 * 24 * 60 * 60);
-  const db = await open({ filename: "schedule.db", driver: sqlite3.Database });
+
+  const db = await open({
+    filename: "db/schedule.db",
+    driver: sqlite3.Database,
+  });
   let currentVideo: any;
 
   const rows = await db.all(`

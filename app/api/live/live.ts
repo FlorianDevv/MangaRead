@@ -1,21 +1,11 @@
+import { createScheduleTable } from "@/app/types/db/schedule/generateScheduleDb";
 import * as fs from "fs/promises";
 import * as mm from "music-metadata";
 import * as path from "path";
 import * as sqlite3 from "sqlite3";
 
-const db = new sqlite3.Database("schedule.db");
+const db = new sqlite3.Database("db/schedule.db");
 fs.writeFile("launchTime.txt", Date.now().toString());
-db.run(`
-  CREATE TABLE IF NOT EXISTS schedule (
-    title TEXT,
-    season INTEGER,
-    episode INTEGER,
-    start REAL,
-    realStartTime INTEGER,
-    startTime TEXT,
-    duration REAL
-  )
-`);
 
 async function getVideoDuration(filename: string): Promise<number> {
   const metadata = await mm.parseFile(filename);
@@ -85,6 +75,7 @@ export async function generateBroadcastSchedule(
   });
   shuffleArray(videoInfos);
 
+  createScheduleTable();
   db.serialize(async () => {
     let lastRealStartTime = await new Promise<number>((resolve, reject) => {
       db.get(
