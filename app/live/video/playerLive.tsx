@@ -38,7 +38,7 @@ export default function PlayerLive() {
     ).padStart(2, "0")}-${String(currentData.episode).padStart(3, "0")}.mp4`}`;
     const season = currentData.season.toString().padStart(2, "0");
     const episode = currentData.episode.toString().padStart(3, "0");
-    const thumbnailSrc = `/${currentData.title}/anime/Season${season}/${season}-${episode}.webp`;
+    const thumbnailSrc = `/api/image?type=thumbnail&path=${currentData.title}/anime/Season${season}/${season}-${episode}.webp`;
     setThumbnailSrc(thumbnailSrc);
     setSrc(currentSrc);
     setTitle(currentData.title);
@@ -107,13 +107,11 @@ export default function PlayerLive() {
       onProviderSetup={onProviderSetup}
       onEnded={handleVideoEnd}
       autoPlay
-      playsInline
       keyDisabled
       onPlay={handlePlay}
       controls={false}
       title={title + " - S" + season + " E" + episode}
-      className={`${styles.player} ${styles["vds-video-layout"]} max-w-full max-h-full object-contain`}
-    >
+      className={`${styles.player} ${styles["vds-video-layout"]} max-w-full max-h-full object-contain`}>
       <MediaProvider>
         <Poster className="vds-poster" src={thumbnailSrc} />
       </MediaProvider>

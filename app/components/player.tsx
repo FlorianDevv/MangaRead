@@ -196,7 +196,7 @@ export default function Player(item: Item) {
 
   const thumbnailSrc = useMemo(
     () =>
-      `/api/image?path=${item.title}/anime/Season${seasonNumber
+      `/api/image?type=thumbnail&path=${item.title}/anime/Season${seasonNumber
         .toString()
         .padStart(2, "0")}/${seasonNumber}-${episodeNumber}.webp`,
     [item.title, seasonNumber, episodeNumber]

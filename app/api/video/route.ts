@@ -5,28 +5,22 @@ import * as fs from "fs";
 import * as path from "path";
 
 const CHUNK_SIZE_IN_BYTES = 5000000; // 5 MB
+const DEFAULT_VIDEO_FOLDER = "videos";
+const VIDEO_CONTENT_TYPE = "video/mp4";
 
 async function getBaseVideoPath(videoId: string): Promise<string> {
-  const decodedVideoId = decodeURIComponent(videoId);
-  const parts = decodedVideoId.split("/");
-  const animeName = parts[0];
-
   try {
+    const animeName = decodeURIComponent(videoId).split("/")[0];
     let basePath = await getAnimePathFromDb(animeName);
-    // Normaliser le chemin pour le système d'exploitation actuel
-    basePath = path.normalize(basePath);
-    return basePath;
+    return path.normalize(basePath);
   } catch (error) {
     console.error("Error retrieving base path from DB:", error);
-    return path.join(__dirname, "videos");
+    return path.join(__dirname, DEFAULT_VIDEO_FOLDER);
   }
 }
 
-// Dans getVideoStream, ajustez la logique de construction de videoPath pour éviter la répétition
-
 async function getVideoStream(req: Request): Promise<Response> {
-  const url = new URL(req.url);
-  let videoId = url.searchParams.get("videoId");
+  const videoId = new URL(req.url).searchParams.get("videoId");
   const range = req.headers.get("range");
 
   if (!videoId) {
@@ -35,61 +29,86 @@ async function getVideoStream(req: Request): Promise<Response> {
       statusText: "Bad Request",
     });
   }
-  videoId = decodeURIComponent(videoId);
 
-  const parts = videoId.split("/");
-  const animeName = parts.shift() as string;
-  const relativeVideoPath = parts.slice(1).join("/");
-  const baseVideoPath = await getBaseVideoPath(animeName);
-
-  let videoPath;
-  const normalizedBaseVideoPath = path.normalize(baseVideoPath);
-
-  videoPath = path.join(normalizedBaseVideoPath, relativeVideoPath);
-
-  videoPath = path.normalize(videoPath);
+  const [animeName, ...relativeVideoParts] =
+    decodeURIComponent(videoId).split("/");
+  const videoPath = path.join(
+    await getBaseVideoPath(animeName),
+    ...relativeVideoParts
+  );
 
   if (!fs.existsSync(videoPath)) {
+    console.error("Video not found:", videoPath);
     return new Response("Video not found", {
       status: 404,
       statusText: "Not Found",
     });
   }
 
-  const videoSizeInBytes = fs.statSync(videoPath).size;
-
+  const videoSize = fs.statSync(videoPath).size;
   if (!range) {
-    const headers = {
-      "Content-Length": videoSizeInBytes.toString(),
-      "Content-Type": "video/mp4",
-    };
-
-    const videoStream = fs.createReadStream(videoPath);
-    return new Response(videoStream as any, { status: 200, headers });
+    const stream = fs.createReadStream(videoPath);
+    const readableStream = new ReadableStream({
+      start(controller) {
+        stream.on("data", (chunk) => {
+          controller.enqueue(new Uint8Array(Buffer.from(chunk).buffer));
+        });
+        stream.on("end", () => {
+          controller.close();
+        });
+        stream.on("error", (err) => {
+          console.error("Stream error:", err);
+          controller.error(err);
+        });
+      },
+    });
+    return new Response(readableStream, {
+      status: 200,
+      headers: {
+        "Content-Length": videoSize.toString(),
+        "Content-Type": VIDEO_CONTENT_TYPE,
+      },
+    });
   }
 
-  const videoSize = fs.statSync(videoPath).size;
-  const start = Number(range.replace(/bytes=/, "").split("-")[0]);
-  const end = Math.min(start + CHUNK_SIZE_IN_BYTES, videoSize - 1);
+  const [startStr, endStr] = range.replace(/bytes=/, "").split("-");
+  const start = Number(startStr);
+  const end = endStr
+    ? Math.min(Number(endStr), videoSize - 1)
+    : Math.min(start + CHUNK_SIZE_IN_BYTES - 1, videoSize - 1);
 
-  if (start >= videoSizeInBytes || end >= videoSizeInBytes) {
+  if (start >= videoSize || end >= videoSize) {
     return new Response("Range not satisfiable", {
       status: 416,
       statusText: "Range Not Satisfiable",
     });
   }
 
-  const contentLength = end - start + 1;
-  const headers = {
-    "Content-Range": `bytes ${start}-${end}/${videoSizeInBytes}`,
-    "Accept-Ranges": "bytes",
-    "Content-Length": contentLength.toString(),
-    "Content-Type": "video/mp4",
-  };
+  const stream = fs.createReadStream(videoPath, { start, end });
+  const readableStream = new ReadableStream({
+    start(controller) {
+      stream.on("data", (chunk) => {
+        controller.enqueue(new Uint8Array(Buffer.from(chunk).buffer));
+      });
+      stream.on("end", () => {
+        controller.close();
+      });
+      stream.on("error", (err) => {
+        console.error("Stream error:", err);
+        controller.error(err);
+      });
+    },
+  });
 
-  const videoStream = fs.createReadStream(videoPath, { start, end });
-
-  return new Response(videoStream as any, { status: 206, headers });
+  return new Response(readableStream, {
+    status: 206,
+    headers: {
+      "Content-Range": `bytes ${start}-${end}/${videoSize}`,
+      "Accept-Ranges": "bytes",
+      "Content-Length": (end - start + 1).toString(),
+      "Content-Type": VIDEO_CONTENT_TYPE,
+    },
+  });
 }
 
 export async function GET(req: Request): Promise<Response> {

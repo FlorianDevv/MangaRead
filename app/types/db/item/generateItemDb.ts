@@ -1,6 +1,5 @@
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
-import { getDetails, storeDetailsInDatabase } from "../../getDetails";
 export async function openDbItem() {
   return open({
     filename: "db/items.db",
@@ -22,10 +21,10 @@ export default async function createSimplifiedDatabaseSchema() {
 }
 (async () => {
   await createSimplifiedDatabaseSchema();
-  const details = await getDetails();
-  if (Array.isArray(details)) {
-    await storeDetailsInDatabase(details);
-  } else {
-    await storeDetailsInDatabase([details]);
-  }
+  // const details = await getDetails();
+  // if (Array.isArray(details)) {
+  //   await storeDetailsInDatabase(details);
+  // } else {
+  //   await storeDetailsInDatabase([details]);
+  // }
 })();

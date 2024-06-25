@@ -43,8 +43,7 @@ function MangaDetailComponent({
   return (
     <div
       className="relative flex-shrink-0 w-full h-126 flex flex-col items-center"
-      key={detail.name}
-    >
+      key={detail.name}>
       <Image
         src={`/api/image?path=${detail.name}/manga/Tome 01/01-001.webp`}
         alt={"cover image back"}
@@ -107,8 +106,7 @@ function MangaDetailComponent({
               <Button
                 variant="ghost"
                 className="rounded-full p-2 m-4 bg-opacity-50 bg-black"
-                aria-label="More Info"
-              >
+                aria-label="More Info">
                 <InfoIcon />
               </Button>
             </Link>
@@ -173,7 +171,7 @@ function AnimeDetailComponent({
   };
 
   const videoSrc = useMemo(
-    () => `/api/video?videoId=${detail.name}/anime/preview.mp4`,
+    () => `/api/data/video/preview?item=${detail.name}`,
     [detail.name]
   );
   const thumbnailSrc = useMemo(
@@ -182,7 +180,8 @@ function AnimeDetailComponent({
   );
 
   const posterSrc = useMemo(
-    () => `/api/image?path=${detail.name}/anime/Season01/01-001.webp`,
+    () =>
+      `/api/image?type=thumbnail&path=${detail.name}/anime/Season01/01-001.webp`,
     [detail.name]
   );
 
@@ -234,8 +233,7 @@ function AnimeDetailComponent({
     <div
       className="relative flex-shrink-0 w-full h-126"
       key={detail.name}
-      ref={ref}
-    >
+      ref={ref}>
       {isIntersecting && (
         <>
           <video
@@ -289,8 +287,7 @@ function AnimeDetailComponent({
                   <Button
                     variant="ghost"
                     className="rounded-full p-2 m-4 bg-opacity-50 bg-black"
-                    aria-label="More Info"
-                  >
+                    aria-label="More Info">
                     <InfoIcon />
                   </Button>
                 </Link>
@@ -298,8 +295,7 @@ function AnimeDetailComponent({
                   variant="ghost"
                   onClick={handleMute}
                   className="absolute right-1 bottom-8 md:bottom-1/4 transform translate-y-1/2 m-4 bg-black bg-opacity-50 rounded-full p-1"
-                  aria-label="Mute/Unmute Video"
-                >
+                  aria-label="Mute/Unmute Video">
                   {isMuted ? (
                     <VolumeX className="w-10 h-10" />
                   ) : (
@@ -391,15 +387,13 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
         <button
           className="absolute top-1/2 left-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
           onClick={scrollPrev}
-          aria-label="Previous Slide"
-        >
+          aria-label="Previous Slide">
           <ChevronLeft className="w-10 h-10" />
         </button>
         <button
           className="absolute top-1/2 right-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
           onClick={scrollNext}
-          aria-label="Next Slide"
-        >
+          aria-label="Next Slide">
           <ChevronRight className="w-10 h-10" />
         </button>
         <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -407,8 +401,7 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
             <div
               key={index}
               className={`w-2 h-2 rounded-full flex items-center justify-center m-0 p-0 border  appearance-none tap-highlight-transparent 
-${index === activeIndex ? "bg-white border-black" : "bg-black border-white"}`}
-            >
+${index === activeIndex ? "bg-white border-black" : "bg-black border-white"}`}>
               <div
                 className={`w-7 h-7 rounded-full flex items-center justify-center box-border 
   ${

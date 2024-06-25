@@ -54,12 +54,10 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
           <Select
             name={selectedSeason}
             value={selectedSeason}
-            onValueChange={handleChange}
-          >
+            onValueChange={handleChange}>
             <SelectTrigger
               className=" rounded-md text-center hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
-              aria-label={`Change season. Currently on season ${selectedSeason}`}
-            >
+              aria-label={`Change season. Currently on season ${selectedSeason}`}>
               {`${data.seasonSelect.season} ${parseInt(
                 selectedSeason.substring(6)
               )}`}
@@ -85,14 +83,12 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
               2,
               "0"
             )}`}
-            key={index}
-          >
+            key={index}>
             <div
               key={index}
-              className="relative rounded p-4 hover:opacity-75 hover:bg-[#2b2b2b] ease-in-out transition-opacity duration-300"
-            >
+              className="relative rounded p-4 hover:opacity-75 hover:bg-[#2b2b2b] ease-in-out transition-opacity duration-300">
               <Image
-                src={`/api/image?path${slug}/anime/Season${seasonNumber.padStart(
+                src={`/api/image?type=thumbnail&path=${slug}/anime/Season${seasonNumber.padStart(
                   2,
                   "0"
                 )}/${seasonNumber.padStart(
