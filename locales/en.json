@@ -1,108 +1,108 @@
 {
-  "home": {
-    "allMangasAvailable": "All mangas/animes available"
-  },
-  "navbar": {
-    "home": "Home",
-    "search": "Search",
-    "profil": "Profil",
-    "catalog": "Catalog"
-  },
-  "carousel": {
-    "read": "Read",
-    "start": "Start reading",
-    "watch": "Watch",
-    "startW": "Start watching",
-    "episodes": "Episodes",
-    "seasons": "Seasons",
-    "volumes": "Volumes"
-  },
-  "resume": {
-    "title": "Resume your viewing",
-    "volume": "Volume",
-    "page": "Page"
-  },
-  "volumeSelect": {
-    "next": "Next Volume",
-    "previous": "Previous Volume",
-    "start": "Start reading",
-    "dialog": {
-      "title": "Navigation",
-      "desc": "Change volume quickly"
-    }
-  },
-  "episodeSelect": {
-    "episode": "Episode",
-    "next": "Next episode",
-    "previous": "Previous episode",
-    "start": "Start watching"
-  },
-  "seasonSelect": {
-    "season": "Season",
-    "next": "Next Season",
-    "previous": "Previous Season"
-  },
-  "player": {
-    "autoPlayOn": "Auto play",
-    "autoPlayOff": "Manual play"
-  },
-  "bookmark": {
-    "title": "Bookmark",
-    "add": "Add to your reading list",
-    "remove": "Remove from reading list",
-    "addToast": "Bookmark added",
-    "removeToast": "has been removed from your list",
-    "cancel": "Cancel",
-    "empty": "Your reading list is empty"
-  },
-  "search": {
-    "title": "Search"
-  },
-  "profil": {
-    "settings": "Settings"
-  },
-  "floatingButton": {
-    "menu": "Menu",
-    "backTop": "Back to top",
-    "home": "Home",
-    "fullScreen": "Full screen"
-  },
-  "live": {
-    "title": "Live",
-    "schedule": "Schedule"
-  },
-  "settings": {
-    "read": {
-      "title": "Reading",
-      "desc": "Reading settings",
-      "reading": "Reading",
-      "changeToHorizontal": "Change reading to horizontal mode",
-      "changeToVertical": "Change reading to vertical mode",
-      "vertical": "Vertical",
-      "horizontal": "Horizontal",
-      "verticalReading": "Vertical Reading",
-      "horizontalReading": "Horizontal Reading"
-    },
-    "quality": {
-      "title": "Quality"
-    },
-    "qualityIndicator": {
-      "lossless": "Lossless",
-      "excellent": "Excellent",
-      "good": "Good",
-      "average": "Average",
-      "low": "Low"
-    },
-    "dialog": {
-      "button": "Settings",
-      "settings": "Settings",
-      "modify": "Modify your settings"
-    },
-    "save": {
-      "title": "Save data",
-      "export": "Export",
-      "import": "Import",
-      "alert": "All existing data will be overwritten. Continue?"
-    }
-  }
+	"home": {
+		"allMangasAvailable": "All mangas/animes available"
+	},
+	"navbar": {
+		"home": "Home",
+		"search": "Search",
+		"profil": "Profil",
+		"catalog": "Catalog"
+	},
+	"carousel": {
+		"read": "Read",
+		"start": "Start reading",
+		"watch": "Watch",
+		"startW": "Start watching",
+		"episodes": "Episodes",
+		"seasons": "Seasons",
+		"volumes": "Volumes"
+	},
+	"resume": {
+		"title": "Resume your viewing",
+		"volume": "Volume",
+		"page": "Page"
+	},
+	"volumeSelect": {
+		"next": "Next Volume",
+		"previous": "Previous Volume",
+		"start": "Start reading",
+		"dialog": {
+			"title": "Navigation",
+			"desc": "Change volume quickly"
+		}
+	},
+	"episodeSelect": {
+		"episode": "Episode",
+		"next": "Next episode",
+		"previous": "Previous episode",
+		"start": "Start watching"
+	},
+	"seasonSelect": {
+		"season": "Season",
+		"next": "Next Season",
+		"previous": "Previous Season"
+	},
+	"player": {
+		"autoPlayOn": "Auto play",
+		"autoPlayOff": "Manual play"
+	},
+	"bookmark": {
+		"title": "Bookmark",
+		"add": "Add to your reading list",
+		"remove": "Remove from reading list",
+		"addToast": "Bookmark added",
+		"removeToast": "has been removed from your list",
+		"cancel": "Cancel",
+		"empty": "Your reading list is empty"
+	},
+	"search": {
+		"title": "Search"
+	},
+	"profil": {
+		"settings": "Settings"
+	},
+	"floatingButton": {
+		"menu": "Menu",
+		"backTop": "Back to top",
+		"home": "Home",
+		"fullScreen": "Full screen"
+	},
+	"live": {
+		"title": "Live",
+		"schedule": "Schedule"
+	},
+	"settings": {
+		"read": {
+			"title": "Reading",
+			"desc": "Reading settings",
+			"reading": "Reading",
+			"changeToHorizontal": "Change reading to horizontal mode",
+			"changeToVertical": "Change reading to vertical mode",
+			"vertical": "Vertical",
+			"horizontal": "Horizontal",
+			"verticalReading": "Vertical Reading",
+			"horizontalReading": "Horizontal Reading"
+		},
+		"quality": {
+			"title": "Quality"
+		},
+		"qualityIndicator": {
+			"lossless": "Lossless",
+			"excellent": "Excellent",
+			"good": "Good",
+			"average": "Average",
+			"low": "Low"
+		},
+		"dialog": {
+			"button": "Settings",
+			"settings": "Settings",
+			"modify": "Modify your settings"
+		},
+		"save": {
+			"title": "Save data",
+			"export": "Export",
+			"import": "Import",
+			"alert": "All existing data will be overwritten. Continue?"
+		}
+	}
 }

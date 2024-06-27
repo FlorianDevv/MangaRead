@@ -1,108 +1,108 @@
 {
-  "home": {
-    "allMangasAvailable": "Tous les mangas/animes disponibles"
-  },
-  "navbar": {
-    "home": "Accueil",
-    "search": "Recherche",
-    "profil": "Profil",
-    "catalog": "Catalogue"
-  },
-  "carousel": {
-    "read": "Lire",
-    "start": "Lecture",
-    "watch": "Regarder",
-    "startW": "Visionner",
-    "episodes": "Épisodes",
-    "seasons": "Saisons",
-    "volumes": "Tomes"
-  },
-  "resume": {
-    "title": "Reprenez votre visionnage",
-    "volume": "Volume",
-    "page": "Page"
-  },
-  "volumeSelect": {
-    "next": "Volume Suivant",
-    "previous": "Volume Précédent",
-    "start": "Commencer la lecture",
-    "dialog": {
-      "title": "Navigation",
-      "desc": "Changer de volume rapidement"
-    }
-  },
-  "episodeSelect": {
-    "episode": "Épisode",
-    "next": "Épisode Suivant",
-    "previous": "Épisode Précédent",
-    "start": "Commencer le visionnage"
-  },
-  "seasonSelect": {
-    "season": "Saison",
-    "next": "Saison Suivante",
-    "previous": "Saison Précédente"
-  },
-  "player": {
-    "autoPlayOn": "Lecture Automatique",
-    "autoPlayOff": "Lecture Manuelle"
-  },
-  "bookmark": {
-    "title": "Signet",
-    "add": "Ajoutez à votre liste de lecture",
-    "remove": "Retirer de la liste de lecture",
-    "addToast": "Ajouter un signet",
-    "removeToast": "a été retiré de votre liste",
-    "cancel": "Annuler",
-    "empty": "Votre liste de lecture est vide"
-  },
-  "search": {
-    "title": "Recherche"
-  },
-  "profil": {
-    "settings": "Paramètres"
-  },
-  "floatingButton": {
-    "menu": "Menu",
-    "backTop": "Retour en haut",
-    "home": "Accueil",
-    "fullScreen": "Plein écran"
-  },
-  "live": {
-    "title": "En direct",
-    "schedule": "Planning"
-  },
-  "settings": {
-    "read": {
-      "title": "Lecture",
-      "desc": "Paramètres de lecture",
-      "reading": "Lecture",
-      "changeToHorizontal": "Changer la lecture en mode horizontal",
-      "changeToVertical": "Changer la lecture en mode vertical",
-      "vertical": "Vertical",
-      "horizontal": "Horizontal",
-      "verticalReading": "Lecture Vertical",
-      "horizontalReading": "Lecture Horizontal"
-    },
-    "quality": {
-      "title": "Qualité"
-    },
-    "qualityIndicator": {
-      "lossless": "Sans perte",
-      "excellent": "Excellent",
-      "good": "Bon",
-      "average": "Moyen",
-      "low": "Faible"
-    },
-    "dialog": {
-      "button": "Paramètres",
-      "settings": "Paramètres",
-      "modify": "Modifier vos paramètres"
-    },
-    "save": {
-      "title": "Sauvegarder vos données",
-      "export": "Exporter",
-      "import": "Importer",
-      "alert": "Attention, cette action écrasera vos données actuelles, êtes-vous sûr de vouloir continuer ?"
-    }
-  }
+	"home": {
+		"allMangasAvailable": "Tous les mangas/animes disponibles"
+	},
+	"navbar": {
+		"home": "Accueil",
+		"search": "Recherche",
+		"profil": "Profil",
+		"catalog": "Catalogue"
+	},
+	"carousel": {
+		"read": "Lire",
+		"start": "Lecture",
+		"watch": "Regarder",
+		"startW": "Visionner",
+		"episodes": "Épisodes",
+		"seasons": "Saisons",
+		"volumes": "Tomes"
+	},
+	"resume": {
+		"title": "Reprenez votre visionnage",
+		"volume": "Tome",
+		"page": "Page"
+	},
+	"volumeSelect": {
+		"next": "Volume Suivant",
+		"previous": "Volume Précédent",
+		"start": "Commencer la lecture",
+		"dialog": {
+			"title": "Navigation",
+			"desc": "Changer de volume rapidement"
+		}
+	},
+	"episodeSelect": {
+		"episode": "Épisode",
+		"next": "Épisode Suivant",
+		"previous": "Épisode Précédent",
+		"start": "Commencer le visionnage"
+	},
+	"seasonSelect": {
+		"season": "Saison",
+		"next": "Saison Suivante",
+		"previous": "Saison Précédente"
+	},
+	"player": {
+		"autoPlayOn": "Lecture Automatique",
+		"autoPlayOff": "Lecture Manuelle"
+	},
+	"bookmark": {
+		"title": "Signet",
+		"add": "Ajoutez à votre liste de lecture",
+		"remove": "Retirer de la liste de lecture",
+		"addToast": "Ajouter un signet",
+		"removeToast": "a été retiré de votre liste",
+		"cancel": "Annuler",
+		"empty": "Votre liste de lecture est vide"
+	},
+	"search": {
+		"title": "Recherche"
+	},
+	"profil": {
+		"settings": "Paramètres"
+	},
+	"floatingButton": {
+		"menu": "Menu",
+		"backTop": "Retour en haut",
+		"home": "Accueil",
+		"fullScreen": "Plein écran"
+	},
+	"live": {
+		"title": "En direct",
+		"schedule": "Planning"
+	},
+	"settings": {
+		"read": {
+			"title": "Lecture",
+			"desc": "Paramètres de lecture",
+			"reading": "Lecture",
+			"changeToHorizontal": "Changer la lecture en mode horizontal",
+			"changeToVertical": "Changer la lecture en mode vertical",
+			"vertical": "Vertical",
+			"horizontal": "Horizontal",
+			"verticalReading": "Lecture Vertical",
+			"horizontalReading": "Lecture Horizontal"
+		},
+		"quality": {
+			"title": "Qualité"
+		},
+		"qualityIndicator": {
+			"lossless": "Sans perte",
+			"excellent": "Excellent",
+			"good": "Bon",
+			"average": "Moyen",
+			"low": "Faible"
+		},
+		"dialog": {
+			"button": "Paramètres",
+			"settings": "Paramètres",
+			"modify": "Modifier vos paramètres"
+		},
+		"save": {
+			"title": "Sauvegarder vos données",
+			"export": "Exporter",
+			"import": "Importer",
+			"alert": "Attention, cette action écrasera vos données actuelles, êtes-vous sûr de vouloir continuer ?"
+		}
+	}
 }
