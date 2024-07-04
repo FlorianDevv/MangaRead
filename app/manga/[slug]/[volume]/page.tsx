@@ -2,12 +2,19 @@ import CheckPage from "@/app/components/checkpage";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import "@/app/mangapage.css";
 import { getDetails } from "@/app/types/getDetails";
+import type { Metadata, ResolvingMetadata } from "next";
 
-export default async function Page({
-	params,
-}: {
+type Props = {
 	params: { slug: string; volume: string };
-}) {
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	return {
+		title: `${decodeURIComponent(params.slug)}`,
+	};
+}
+
+export default async function Page({ params }: Props) {
 	const detailsArray = await getDetails(params.slug);
 
 	const details = Array.isArray(detailsArray)

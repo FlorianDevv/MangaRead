@@ -1,3 +1,4 @@
+import fs from "node:fs/promises";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
@@ -27,6 +28,32 @@ async function getBasePath(
 		return pathInfo ? pathInfo.path : null;
 	}
 	return null;
+}
+
+async function findCorrectVolumePath(
+	basePath: string,
+	volumePart: string,
+): Promise<string> {
+	const fullPath = path.join(basePath, volumePart);
+	try {
+		await fs.access(fullPath);
+		return fullPath;
+	} catch (error) {
+		const parentDir = path.dirname(fullPath);
+		const files = await fs.readdir(parentDir);
+		const volumeNumber = volumePart.match(/\d+$/)?.[0];
+		if (volumeNumber) {
+			const regex = new RegExp(`(^|[^0-9])${volumeNumber}$`);
+			const matchingFolder = files.find((file) => {
+				const match = file.match(regex);
+				return match !== null;
+			});
+			if (matchingFolder) {
+				return path.join(parentDir, matchingFolder);
+			}
+		}
+		throw new Error(`Volume folder not found for ${volumePart}`);
+	}
 }
 
 export async function GET(request: NextRequest) {
@@ -59,10 +86,17 @@ export async function GET(request: NextRequest) {
 			basePath = await getBasePath(itemName, type);
 
 			if (!basePath) {
-				throw new Error("Item not found in database");
+				return;
 			}
 
-			fullPath = path.join(basePath, ...pathParts.slice(1));
+			const volumePart = pathParts[2];
+			const restOfPath = pathParts.slice(3).join("/");
+
+			const volumePath = await findCorrectVolumePath(
+				path.join(basePath, type),
+				volumePart,
+			);
+			fullPath = path.join(volumePath, restOfPath);
 		}
 
 		const image = sharp(fullPath);

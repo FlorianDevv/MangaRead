@@ -30,13 +30,11 @@ const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 function MangaDetailComponent({
 	detail,
-	emblaApi,
 }: {
 	detail: ItemDetails;
-	emblaApi: EmblaCarouselType | null;
 }) {
 	const imageSrc = useMemo(
-		() => `/api/image?path=${detail.name}/manga/Tome 01/01-001.webp`,
+		() => `/api/image?path=${detail.name}/manga/01/01-001.webp`,
 		[detail.name],
 	);
 
@@ -46,7 +44,7 @@ function MangaDetailComponent({
 			key={detail.name}
 		>
 			<Image
-				src={`/api/image?path=${detail.name}/manga/Tome 01/01-001.webp`}
+				src={imageSrc}
 				alt={"cover image back"}
 				className="object-cover opacity-25 blur-lg"
 				fill
@@ -60,9 +58,9 @@ function MangaDetailComponent({
 					<div className="relative w-56 h-80">
 						<Image
 							src={imageSrc}
-							alt="7"
+							alt=""
 							className="object-scale-down md:transform  md:transition-transform md:duration-500 md:rotate-12 md:hover:rotate-0 md:hover:scale-110"
-							quality={10}
+							quality={50}
 							fill
 							placeholder="blur"
 							blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
@@ -95,7 +93,7 @@ function MangaDetailComponent({
 						{detail.volumes?.length ?? 0} {data.carousel.volumes}
 					</p>
 					<div>
-						<Link href={`/manga/${detail.name}/Tome%2001`}>
+						<Link href={`/manga/${detail.name}/1`}>
 							<Button>
 								<BookOpen className="mr-2" />
 								<span className="sm:hidden">{data.carousel.read}</span>
@@ -173,7 +171,7 @@ function AnimeDetailComponent({
 	};
 
 	const videoSrc = useMemo(
-		() => `/api/data/video/preview?item=${detail.name}`,
+		() => `/api/video?type=preview&videoId=${detail.name}`,
 		[detail.name],
 	);
 	const thumbnailSrc = useMemo(
@@ -343,7 +341,7 @@ function DetailComponent({
 	}
 	if (detail.types.includes("manga")) {
 		const mangaDetail = detail;
-		return <MangaDetailComponent detail={mangaDetail} emblaApi={emblaApi} />;
+		return <MangaDetailComponent detail={mangaDetail} />;
 	}
 	return null;
 }
@@ -408,8 +406,7 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
 				<div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
 					{Details.map((_, index) => (
 						<div
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-							key={index}
+							key={_.name}
 							className={`w-2 h-2 rounded-full flex items-center justify-center m-0 p-0 border  appearance-none tap-highlight-transparent 
 ${index === activeIndex ? "bg-white border-black" : "bg-black border-white"}`}
 						>

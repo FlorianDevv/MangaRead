@@ -41,7 +41,7 @@ export default async function Info({ params }: { params: { slug: string } }) {
 			<div className="relative top-0 w-full h-96 ">
 				{!isAnimeDirectoryExists ? (
 					<Image
-						src={`/api/image?path=${params.slug}/manga/Tome 01/01-001.webp`}
+						src={`/api/image?path=${params.slug}/manga/01/01-001.webp`}
 						alt={`${params.slug}`}
 						quality={50}
 						fill

@@ -3,14 +3,22 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ItemDetails } from "../types/getDetails";
 
-export type CardProps = Pick<ItemDetails, "name" | "types"> & {
+export type CardProps = Pick<ItemDetails, "name" | "types" | "volumes"> & {
 	categories?: string[];
 };
 
-export default function CardClient({ name, types, categories }: CardProps) {
+export default function CardClient({
+	name,
+	types,
+	volumes,
+	categories,
+}: CardProps) {
+	const firstVolumeType =
+		volumes && volumes.length > 0 ? volumes[0].type : "Tome";
+
 	const imagePath = types.includes("anime")
 		? `/api/image?path=${name}/anime/thumbnail.webp`
-		: `/api/image?path=${name}/manga/Tome 01/01-001.webp`;
+		: `/api/image?path=${name}/manga/${firstVolumeType}01/01-001.webp`;
 
 	return (
 		<div className="relative flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl ease-in-out transform group hover:scale-105 transition-transform duration-300 w-full">

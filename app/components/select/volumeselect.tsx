@@ -73,6 +73,9 @@ export default function VolumeSelect({
 	const nextVolumeExists = volumes.some(
 		(volume) => formatVolume(volume.name) === nextVolume,
 	);
+	const selectedVolumeObject = volumes.find(
+		(volume) => volume.name === selectedVolume,
+	);
 
 	const language = process.env.DEFAULT_LANGUAGE;
 	const data = require(`@/locales/${language}.json`);
@@ -130,8 +133,8 @@ export default function VolumeSelect({
 						className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
 						aria-label={`Changer de volume. actuellement sur le volume  ${selectedVolume} `}
 					>
-						{volumes.length > 0
-							? `${volumes[0].type} ${formatVolume(selectedVolume)}`
+						{selectedVolumeObject
+							? `${selectedVolumeObject.type} ${formatVolume(selectedVolume)}`
 							: selectedVolume}
 					</SelectTrigger>
 					<SelectContent>
@@ -143,9 +146,7 @@ export default function VolumeSelect({
 							})
 							.map((volume) => (
 								<SelectItem key={volume.name} value={volume.name}>
-									{volumes.length > 0
-										? `${volumes[0].type} ${volume.name}`
-										: volume.name}
+									{`${volume.type} ${volume.name}`}
 								</SelectItem>
 							))}
 					</SelectContent>

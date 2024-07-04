@@ -5,7 +5,6 @@ import {
 	SelectItem,
 	SelectTrigger,
 } from "@/components/ui/select";
-// components/MangaPage.tsx
 
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
@@ -110,8 +109,6 @@ export default function MangaPage({
 				case "ArrowRight":
 					if (nextPageExists) {
 						nextPage();
-					} else {
-						alert("last page");
 					}
 					break;
 			}
@@ -178,6 +175,10 @@ export default function MangaPage({
 
 	const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
 	const nextImageName = `${formattedVolumeNumber}-${nextFormattedPageNumber}`;
+
+	const nextNextFormattedPageNumber = String(pageNumber + 2).padStart(3, "0");
+	const nextNextImageName = `${formattedVolumeNumber}-${nextNextFormattedPageNumber}`;
+
 	const [isVisible, setIsVisible] = useState(true);
 	useEffect(() => {
 		if (!isVertical) {
@@ -226,7 +227,6 @@ export default function MangaPage({
 					</div>
 					<div className="flex justify-center space-x-4 ">
 						<Quality qualityNumber={quality} setQuality={setQuality} />
-
 						<Read isVertical={isVertical} setIsVertical={setIsVertical} />
 					</div>
 					<div className="relative min-h-screen w-screen mt-2">
@@ -238,7 +238,7 @@ export default function MangaPage({
 								sizes="(min-width: 1080px) 1024px, 95.26vw"
 								quality={quality}
 								fill
-								priority
+								priority={true}
 								onLoad={() => setIsLoading(false)}
 								placeholder="blur"
 								blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
@@ -257,11 +257,23 @@ export default function MangaPage({
 									sizes="(min-width: 1080px) 1024px, 95.26vw"
 									quality={quality}
 									fill
-									priority
+									priority={true}
 									className="hidden object-contain"
 									placeholder="blur"
 									blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 								/>
+								{pageNumber + 2 <= totalPages && (
+									<Image
+										src={`/api/image?path=${slug}/manga/${VolumeTome}/${nextNextImageName}.webp`}
+										alt={`${slug} Page ${pageNumber + 2}`}
+										sizes="(min-width: 1080px) 1024px, 95.26vw"
+										quality={quality}
+										fill
+										className="hidden object-contain"
+										placeholder="blur"
+										blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
+									/>
+								)}
 							</>
 						)}
 						<div className="flex flex-col">
@@ -278,7 +290,7 @@ export default function MangaPage({
 										>
 											<Image
 												id={`image-${index}`}
-												src={`/${slug}/manga/${VolumeTome}/${imageName}.webp`}
+												src={`/api/image?path=${slug}/manga/${VolumeTome}/${imageName}.webp`}
 												alt={`${slug} Page ${index + 1}`}
 												width={3840}
 												height={2160}

@@ -2,10 +2,10 @@
 import {
 	MediaPlayer,
 	MediaProvider,
+	type MediaProviderAdapter,
 	Poster,
 	isHTMLVideoElement,
 	isVideoProvider,
-	type MediaProviderAdapter,
 } from "@vidstack/react";
 import {
 	DefaultAudioLayout,
@@ -14,7 +14,6 @@ import {
 } from "@vidstack/react/player/layouts/default";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
-
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 interface Item {
@@ -210,11 +209,12 @@ export default function Player(item: Item) {
 						)} E${item.episode.replace(/\D/g, "")}`}
 						src={{ src: src, type: "video/mp4" }}
 						playsInline
+						autoPlay
 						onProviderSetup={onProviderSetup}
 						className="w-full h-full object-contain"
 					>
 						<MediaProvider>
-							<Poster className="vds-poster" src={thumbnailSrc} />
+							<Poster src={thumbnailSrc} />
 						</MediaProvider>
 						<DefaultVideoLayout icons={defaultLayoutIcons} />
 						<DefaultAudioLayout icons={defaultLayoutIcons} />

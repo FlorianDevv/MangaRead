@@ -1,15 +1,19 @@
-import dynamic from "next/dynamic";
+import type { Metadata } from "next";
 import Card from "./components/Card";
 import PreviewVideo from "./components/carousel/previewVideo";
 import { MobileNavbarComponent } from "./components/navbar/mobilenavbar";
 import ResumeReading from "./components/resumereading";
 import { type ItemDetails, getDetails } from "./types/getDetails";
 
+const language = process.env.DEFAULT_LANGUAGE;
+const data = require(`../locales/${language}.json`);
+export const metadata: Metadata = {
+	title: data.metadata.home,
+};
+
 export default async function Page() {
 	const Details = await getDetails();
 
-	const language = process.env.DEFAULT_LANGUAGE;
-	const data = require(`../locales/${language}.json`);
 	return (
 		<MobileNavbarComponent activePage="Home">
 			<PreviewVideo Details={Array.isArray(Details) ? Details : [Details]} />

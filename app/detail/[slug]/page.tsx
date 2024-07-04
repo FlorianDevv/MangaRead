@@ -1,7 +1,21 @@
 import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
 import Info from "./info";
 
-export default function Page({ params }: { params: { slug: string } }) {
+interface Props {
+	params: { slug: string };
+}
+
+interface Metadata {
+	title: string;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	return {
+		title: `${decodeURIComponent(params.slug)}`,
+	};
+}
+
+export default function Page({ params }: Props) {
 	return (
 		<MobileNavbarComponent>
 			<div className="bg-black">

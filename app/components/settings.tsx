@@ -59,6 +59,7 @@ function qualityColor(quality: number) {
 	if (quality >= 25) return "text-orange-500";
 	return "text-red-500";
 }
+
 function qualityIndicator(quality: number) {
 	const language = process.env.DEFAULT_LANGUAGE;
 	const data = require(`@/locales/${language}.json`);
@@ -86,19 +87,22 @@ export function Quality({
 		if (typeof window !== "undefined") {
 			const settings = JSON.parse(localStorage.getItem("settings") || "[]");
 			const qualitySetting = settings.find(
-				(setting: string[]) => "quality" in setting,
+				(setting: object) => "quality" in setting,
 			);
 			return qualitySetting
 				? qualitySetting.quality
-				: process.env.DEFAULT_QUALITY;
+				: Number.parseInt(process.env.DEFAULT_QUALITY || "75", 10);
 		}
 		return 75;
 	};
+
 	const [tempQualityNumber, setTempQualityNumber] = useState<number>(
-		initialQualityNumber || 75,
+		initialQualityNumber || getInitialQuality(),
 	);
 
-	const [qualityNumber, setQualityNumber] = useState<number>(getInitialQuality);
+	const [qualityNumber, setQualityNumber] = useState<number>(
+		getInitialQuality(),
+	);
 
 	const setQualityFinal = useCallback(
 		(value: number) => {
@@ -109,13 +113,13 @@ export function Quality({
 			if (typeof window !== "undefined") {
 				const settings = JSON.parse(localStorage.getItem("settings") || "[]");
 				const qualityExists = settings.some(
-					(setting: string[]) => "quality" in setting,
+					(setting: object) => "quality" in setting,
 				);
-				let newSettings: string[];
+				let newSettings: object;
 				if (!qualityExists) {
 					newSettings = [...settings, { quality: value }];
 				} else {
-					newSettings = settings.map((setting: { quality: number }) =>
+					newSettings = settings.map((setting: object) =>
 						"quality" in setting ? { quality: value } : setting,
 					);
 				}
@@ -133,8 +137,15 @@ export function Quality({
 
 	const language = process.env.DEFAULT_LANGUAGE;
 	const data = require(`@/locales/${language}.json`);
-	const maxQuality: number = Number(process.env.MAX_QUALITY);
-	const minQuality: number = Number(process.env.MIN_QUALITY);
+	const maxQuality: number = Number.parseInt(
+		process.env.MAX_QUALITY || "100",
+		10,
+	);
+	const minQuality: number = Number.parseInt(
+		process.env.MIN_QUALITY || "0",
+		10,
+	);
+
 	return (
 		<div className="flex items-center flex-col ">
 			<label
@@ -158,8 +169,8 @@ export function Quality({
 				className="w-40 my-1"
 				aria-label={`Qualité: ${tempQualityNumber}`}
 			/>
-			<p className={`${qualityColor(qualityNumber)}`}>
-				{qualityNumber} - {qualityIndicator(qualityNumber)}
+			<p className={`${qualityColor(tempQualityNumber)}`}>
+				{tempQualityNumber} - {qualityIndicator(tempQualityNumber)}
 			</p>
 		</div>
 	);

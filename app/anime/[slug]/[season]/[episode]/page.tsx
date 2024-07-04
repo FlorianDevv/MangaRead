@@ -5,11 +5,21 @@ import { getDetails } from "@/app/types/getDetails";
 import React, { Suspense } from "react";
 const Player = React.lazy(() => import("../../../../components/player"));
 
-export default async function Page({
-	params,
-}: {
+interface Props {
 	params: { slug: string; season: string; episode: string };
-}) {
+}
+
+interface Metadata {
+	title: string;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+	return {
+		title: `${decodeURIComponent(params.slug)}`,
+	};
+}
+
+export default async function Page({ params }: Props) {
 	const details = await getDetails(decodeURIComponent(params.slug));
 
 	if (

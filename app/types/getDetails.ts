@@ -3,6 +3,7 @@ import path from "node:path";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 
+export const dynamic = "force-dynamic";
 const dbPath = "db/items.db";
 
 async function openDb() {
@@ -35,8 +36,6 @@ export type ItemDetails = {
 	episodeNumber?: number;
 	categories?: string[];
 };
-const language = process.env.DEFAULT_LANGUAGE;
-const data = require(`@/locales/${language}.json`);
 
 type ItemRecord = {
 	item_id: number;
@@ -110,10 +109,11 @@ export async function getDetails(
 							volume.match(/\d+$/)?.[0] || "",
 							10,
 						).toString();
+						const volumeNameWithoutNumbers = volume.replace(/\d+$/, "");
 						return {
 							name: volumeNumber,
 							totalPages,
-							type: data.resume.volume,
+							type: volumeNameWithoutNumbers,
 							path: volumePath,
 						};
 					});

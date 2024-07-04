@@ -131,36 +131,3 @@ export async function POST(request: Request) {
 		previewPath: path.join("/videos", itemName, "preview.mp4"),
 	});
 }
-
-export async function GET(req: Request): Promise<Response> {
-	const { searchParams } = new URL(req.url);
-	const itemName = searchParams.get("item");
-
-	if (!itemName) {
-		return new Response("Item name is required", { status: 400 });
-	}
-
-	const videoPath = path.join(
-		process.cwd(),
-		`videos/${itemName}`,
-		"/anime/",
-		"preview.mp4",
-	);
-
-	if (!videoPath) {
-		return new Response("Video path not found for the item", { status: 404 });
-	}
-
-	try {
-		const videoBuffer = await fsPromises.readFile(videoPath);
-		return new Response(videoBuffer, {
-			status: 200,
-			headers: {
-				"Content-Type": "video/mp4",
-			},
-		});
-	} catch (error) {
-		console.error("Error reading video file:", error);
-		return new Response("Error reading video file", { status: 500 });
-	}
-}

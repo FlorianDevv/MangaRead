@@ -13,7 +13,7 @@ async function fetchAllItems() {
 		).map((item) => {
 			let imagePath = "";
 			if (item.types.includes("manga")) {
-				imagePath = `/api/image?path=${item.name}/manga/Tome 01/01-001.webp`;
+				imagePath = `/api/image?path=${item.name}/manga/01/01-001.webp`;
 			} else if (item.types.includes("anime")) {
 				imagePath = `/api/image?path=${item.name}/anime/thumbnail.webp`;
 			}

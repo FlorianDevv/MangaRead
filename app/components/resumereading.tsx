@@ -26,9 +26,13 @@ interface AnimeInfo {
 interface ResumeReadingProps {
 	Name?: string;
 }
+interface State {
+	manga: MangaInfo[];
+	anime: AnimeInfo[];
+}
 
 function reducer(
-	state: any,
+	state: State,
 	action: { type: any; payload: any; name?: string },
 ) {
 	switch (action.type) {
@@ -206,7 +210,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 									>
 										<div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
 											<Image
-												src={`/api/image?path=${mangaInfo.manga}/manga/Tome 01/01-001.webp`}
+												src={`/api/image?path=${mangaInfo.manga}/manga/01/01-001.webp`}
 												alt={`${mangaInfo.manga} resume`}
 												quality={50}
 												fill

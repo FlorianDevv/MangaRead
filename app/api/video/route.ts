@@ -1,10 +1,10 @@
-/** @format */
-
-import { getAnimePathFromDb } from "@/app/types/db/item/getItemDb";
+import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { PassThrough } from "node:stream";
+import { getAnimePathFromDb } from "@/app/types/db/item/getItemDb";
 
-const CHUNK_SIZE_IN_BYTES = 5000000; // 5 MB
+let CHUNK_SIZE_IN_BYTES = 5000000; // 5 MB
 const DEFAULT_VIDEO_FOLDER = "videos";
 const VIDEO_CONTENT_TYPE = "video/mp4";
 
@@ -20,7 +20,9 @@ async function getBaseVideoPath(videoId: string): Promise<string> {
 }
 
 async function getVideoStream(req: Request): Promise<Response> {
-	const videoId = new URL(req.url).searchParams.get("videoId");
+	const url = new URL(req.url);
+	const videoId = url.searchParams.get("videoId");
+	const type = url.searchParams.get("type");
 	const range = req.headers.get("range");
 
 	if (!videoId) {
@@ -30,12 +32,29 @@ async function getVideoStream(req: Request): Promise<Response> {
 		});
 	}
 
-	const [animeName, ...relativeVideoParts] =
-		decodeURIComponent(videoId).split("/");
-	const videoPath = path.join(
-		await getBaseVideoPath(animeName),
-		...relativeVideoParts,
-	);
+	let videoPath: string;
+	const headers: { [key: string]: string } = {
+		"Content-Type": VIDEO_CONTENT_TYPE,
+	};
+
+	if (type === "preview") {
+		CHUNK_SIZE_IN_BYTES = 1000000; // 1 MB
+		const [itemName] = decodeURIComponent(videoId).split("/");
+		videoPath = path.join(
+			process.cwd(),
+			`videos/${itemName}`,
+			"/anime/",
+			"preview.mp4",
+		);
+		headers["Cache-Control"] = "public, max-age=604800, immutable";
+	} else {
+		const [animeName, ...relativeVideoParts] =
+			decodeURIComponent(videoId).split("/");
+		videoPath = path.join(
+			await getBaseVideoPath(animeName),
+			...relativeVideoParts,
+		);
+	}
 
 	if (!fs.existsSync(videoPath)) {
 		console.error("Video not found:", videoPath);
@@ -62,15 +81,12 @@ async function getVideoStream(req: Request): Promise<Response> {
 				});
 			},
 		});
+		headers["Content-Length"] = videoSize.toString();
 		return new Response(readableStream, {
 			status: 200,
-			headers: {
-				"Content-Length": videoSize.toString(),
-				"Content-Type": VIDEO_CONTENT_TYPE,
-			},
+			headers: headers,
 		});
 	}
-
 	const [startStr, endStr] = range.replace(/bytes=/, "").split("-");
 	const start = Number(startStr);
 	const end = endStr
@@ -100,14 +116,13 @@ async function getVideoStream(req: Request): Promise<Response> {
 		},
 	});
 
+	headers["Content-Range"] = `bytes ${start}-${end}/${videoSize}`;
+	headers["Accept-Ranges"] = "bytes";
+	headers["Content-Length"] = (end - start + 1).toString();
+
 	return new Response(readableStream, {
 		status: 206,
-		headers: {
-			"Content-Range": `bytes ${start}-${end}/${videoSize}`,
-			"Accept-Ranges": "bytes",
-			"Content-Length": (end - start + 1).toString(),
-			"Content-Type": VIDEO_CONTENT_TYPE,
-		},
+		headers: headers,
 	});
 }
 

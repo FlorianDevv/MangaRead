@@ -18,6 +18,7 @@ import {
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
+import Image from "next/image";
 
 interface VideoData {
 	title: string;
@@ -104,7 +105,9 @@ export default function PlayerLive() {
 			className={`${styles.player} ${styles["vds-video-layout"]} max-w-full max-h-full object-contain`}
 		>
 			<MediaProvider>
-				<Poster className="vds-poster" src={thumbnailSrc} />
+				<Poster asChild className="vds-poster">
+					<Image src={thumbnailSrc} alt="Thumbnail" />
+				</Poster>
 			</MediaProvider>
 			<DefaultVideoLayout
 				disableTimeSlider={true}

@@ -1,15 +1,24 @@
 // MangaCard.tsx
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Info from "../detail/[slug]/info";
 import type { ItemDetails } from "../types/getDetails";
 
-export type CardProps = Pick<ItemDetails, "name" | "types">;
+export type CardProps = Pick<ItemDetails, "name" | "types" | "volumes">;
 
-export default function Card({ name, types }: CardProps) {
+export default function Card({ name, types, volumes }: CardProps) {
+	const firstVolumeType =
+		volumes && volumes.length > 0 ? volumes[0].type : "TypeInconnu";
+
 	const imagePath = types.includes("anime")
 		? `/api/image?path=${name}/anime/thumbnail.webp`
-		: `/api/image?path=${name}/manga/Tome 01/01-001.webp`;
+		: `/api/image?path=${name}/manga/${firstVolumeType}01/01-001.webp`;
 
 	return (
 		<div className="relative flex flex-col items-stretch rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transform group hover:scale-105 transition duration-300 w-full">
@@ -18,7 +27,7 @@ export default function Card({ name, types }: CardProps) {
 					<div className="relative flex flex-col items-stretch shine">
 						<Image
 							src={imagePath}
-							alt={`${imagePath}`} // if the image conveys information
+							alt={`${imagePath}`}
 							quality={50}
 							sizes="(min-width: 1540px) calc(20vw - 122px), (min-width: 1280px) calc(20vw - 96px), (min-width: 1040px) calc(25vw - 116px), (min-width: 780px) calc(33.33vw - 80px), calc(50vw - 16px)"
 							placeholder="blur"
@@ -42,11 +51,15 @@ export default function Card({ name, types }: CardProps) {
 							</div>
 						)}
 					</div>
-					<h1 className="text-xs sm:text-sm md:text-base text-center transition-colors duration-300 group-hover:text-red-500 p-2">
+					<DialogTitle className="text-xs sm:text-sm md:text-base text-center transition-colors duration-300 group-hover:text-red-500 p-2">
 						{name}
-					</h1>
+					</DialogTitle>
 				</DialogTrigger>
-				<DialogContent className=" h-full">
+				<DialogContent
+					className=" h-full"
+					title={name}
+					aria-describedby={`${name} info`}
+				>
 					<Info
 						params={{
 							slug: encodeURI(name),

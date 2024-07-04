@@ -1,4 +1,5 @@
 import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import type { Metadata } from "next";
 import CategorySelector from "../components/catalogue";
 import { type ItemDetails, getDetails } from "../types/getDetails";
 
@@ -12,6 +13,10 @@ try {
 
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
+
+export const metadata: Metadata = {
+	title: data.metadata.catalog,
+};
 
 export default function Page() {
 	return (
