@@ -19,7 +19,7 @@
   },
   "resume": {
     "title": "Reprenez votre visionnage",
-    "volume": "Volume",
+    "volume": "Tome",
     "page": "Page"
   },
   "volumeSelect": {
@@ -104,5 +104,11 @@
       "import": "Importer",
       "alert": "Attention, cette action écrasera vos données actuelles, êtes-vous sûr de vouloir continuer ?"
     }
+  },
+  "metadata": {
+    "home": "Accueil",
+    "catalog": "Catalogue",
+    "profile": "Profil",
+    "schedule": "Planning"
   }
 }

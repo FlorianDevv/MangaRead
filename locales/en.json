@@ -104,5 +104,11 @@
       "import": "Import",
       "alert": "All existing data will be overwritten. Continue?"
     }
+  },
+  "metadata": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "profile": "Profile",
+    "schedule": "Schedule"
   }
 }

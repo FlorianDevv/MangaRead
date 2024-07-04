@@ -1,65 +1,155 @@
+import fs from "node:fs";
+import path from "node:path";
 import ffmpeg from "fluent-ffmpeg";
-import fs from "fs";
-import path from "path";
+import { open } from "sqlite";
+import sqlite3 from "sqlite3";
 
-export const dynamic = "force-static";
+const dbPath = path.join(process.cwd(), "db/items.db");
 
-export async function GET() {
-  const rootDirectoryPath = path.join(process.cwd(), "public");
-
-  // Browse all folders in 'public'
-  fs.readdir(rootDirectoryPath, (err, folders) => {
-    if (err) {
-      return Response.json({ error: "Unable to scan directory: " + err });
-    }
-
-    // Browse each 'anime/Season XX' folder
-    folders.forEach((folder) => {
-      const animeDirectoryPath = path.join(rootDirectoryPath, folder, "anime");
-
-      fs.readdir(animeDirectoryPath, (err, seasons) => {
-        if (err) {
-          console.error("Unable to scan directory: " + err);
-          return;
-        }
-
-        // Browse all files in each season
-        seasons.forEach((season) => {
-          const seasonPath = path.join(animeDirectoryPath, season);
-          fs.readdir(seasonPath, (err, files) => {
-            if (err) {
-              console.error("Unable to scan directory: " + err);
-              return;
-            }
-
-            // Generate a thumbnail for each video file
-            files.forEach((file) => {
-              const filePath = path.join(seasonPath, file);
-              const outputFilePath = filePath.replace(".mp4", ".webp");
-
-              // Check if the thumbnail already exists
-              if (!fs.existsSync(outputFilePath)) {
-                ffmpeg(filePath)
-                  .screenshots({
-                    timestamps: ["15%"],
-                    filename: file.replace(".mp4", ".webp"),
-                    folder: seasonPath,
-                    size: "1920x1080",
-                  })
-                  .on("error", (err) => {
-                    console.error(
-                      "Error generating screenshot: " + err.message
-                    );
-                  });
-              }
-            });
-          });
-        });
-      });
-    });
-  });
-
-  return Response.json({
-    message: "Thumbnail generation started.",
-  });
+async function openDb() {
+	return open({
+		filename: dbPath,
+		driver: sqlite3.Database,
+	});
 }
+
+async function getAllVideoPaths(): Promise<
+	Array<{ itemName: string; videoDir: string }>
+> {
+	const db = await openDb();
+	const query = "SELECT title, types_and_paths FROM items";
+	const items = await db.all(query);
+
+	return items.flatMap((item) => {
+		const pathsInfo = JSON.parse(item.types_and_paths);
+		const pathInfo = pathsInfo.find(
+			(p: { type: string }) => p.type === "anime",
+		);
+		if (pathInfo) {
+			return [
+				{
+					itemName: item.title,
+					videoDir: `${pathInfo.path}/anime`,
+				},
+			];
+		}
+		return [];
+	});
+}
+
+function generateThumbnail(filePath: string, outputFilePath: string) {
+	return new Promise<void>((resolve, reject) => {
+		ffmpeg.ffprobe(filePath, (err, metadata) => {
+			if (err) {
+				console.error("Error during ffprobe:", err);
+				reject(err);
+				return;
+			}
+
+			const { width, height } = metadata.streams[0] as {
+				width: number;
+				height: number;
+			};
+			const aspectRatio = width / height;
+
+			let size: string;
+			if (aspectRatio > 16 / 9) {
+				size = "1920x?";
+			} else if (aspectRatio < 16 / 9) {
+				size = "?x1080";
+			} else {
+				size = "1920x1080";
+			}
+
+			ffmpeg(filePath)
+				.screenshots({
+					timestamps: ["15%"],
+					filename: path.basename(outputFilePath),
+					folder: path.dirname(outputFilePath),
+					size: size,
+				})
+				.on("error", (err) => {
+					console.error(`Error generating thumbnail: ${err.message}`);
+					reject(err);
+				})
+				.on("end", () => {
+					resolve();
+				});
+		});
+	});
+}
+
+function getAllVideoFiles(dir: string): string[] {
+	let results: string[] = [];
+	const list = fs.readdirSync(dir);
+	for (const file of list) {
+		const filePath = path.join(dir, file);
+		const stat = fs.statSync(filePath);
+		if (stat?.isDirectory()) {
+			results = results.concat(getAllVideoFiles(filePath));
+		} else if (path.extname(filePath).toLowerCase() === ".mp4") {
+			results.push(filePath);
+		}
+	}
+	return results;
+}
+
+async function generateThumbnails() {
+	const itemsPaths = await getAllVideoPaths();
+	const videosDirectoryPath = path.join(process.cwd(), "videos");
+
+	if (!fs.existsSync(videosDirectoryPath)) {
+		fs.mkdirSync(videosDirectoryPath, { recursive: true });
+	}
+
+	for (const { itemName, videoDir } of itemsPaths) {
+		const itemThumbnailDir = path.join(videosDirectoryPath, itemName, "/anime");
+		if (!fs.existsSync(itemThumbnailDir)) {
+			fs.mkdirSync(itemThumbnailDir, { recursive: true });
+		}
+
+		const videoFiles = getAllVideoFiles(videoDir);
+
+		for (const videoFile of videoFiles) {
+			const relativePath = path.relative(videoDir, videoFile);
+			const thumbnailPath = path.join(
+				itemThumbnailDir,
+				relativePath.replace(".mp4", ".webp"),
+			);
+
+			const thumbnailDir = path.dirname(thumbnailPath);
+			if (!fs.existsSync(thumbnailDir)) {
+				fs.mkdirSync(thumbnailDir, { recursive: true });
+			}
+
+			if (!fs.existsSync(thumbnailPath)) {
+				try {
+					await generateThumbnail(videoFile, thumbnailPath);
+					console.log(`Generated thumbnail for ${relativePath}`);
+				} catch (error) {
+					console.error(
+						`Failed to generate thumbnail for ${relativePath}:`,
+						error,
+					);
+				}
+			}
+		}
+	}
+}
+
+// Fonction de gestion de la requête POST
+
+export async function POST(): Promise<Response> {
+	await generateThumbnails();
+	return new Response(
+		JSON.stringify({ message: "Thumbnail generation completed." }),
+		{
+			status: 200,
+			headers: {
+				"Content-Type": "application/json",
+			},
+		},
+	);
+}
+
+generateThumbnails();
