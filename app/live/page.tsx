@@ -8,7 +8,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { S } from "@vidstack/react/types/vidstack-framework.js";
 import { CalendarClock, CalendarDays } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
