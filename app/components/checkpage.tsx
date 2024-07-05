@@ -62,7 +62,7 @@ export default function CheckPage({
 				manga: slug,
 				volume: volume,
 				page: initialPageNumber,
-				type: volumes[0].type,
+				type: volumes.length > 0 ? volumes[0].type : "Volume",
 				totalPages: totalPages,
 				dateWatched: Date.now(),
 			});
