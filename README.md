@@ -25,20 +25,22 @@ A self-hosted website for reading local manga and watching anime videos.
   - [Contributors ✨](#contributors-)
   - [Tech Stack 🛠️](#tech-stack-️)
   - [Lighthouse 🦅](#lighthouse-)
+  - [Star History 🌟](#star-history-)
   - [License 📝](#license-)
 
 ## Status 🚦
 
 🚧 WORK IN PROGRESS 🚧
 
-_Please note that this project is currently under active development. The project's architecture and other aspects may undergo changes, which could potentially break some functionalities, particularly those related to files in the `/public` directory._
+_Please note that this project is currently under active development. The project's architecture and other aspects may undergo changes, which could potentially break some functionalities._
 
 ## Features ✨
 
-- Read manga from /public folder 📖
+- Read manga from diffents folder source (path on db) 📖
 - Watching anime videos 📺
+- LIVE TV with random anime videos 📺
 - Automatically bookmark your last read page or the second where you paused watching, allowing you to resume seamlessly (utilizing local storage). 📌
-- Image preloading & optimization for faster navigation 🚀
+- Image preloading (cache) & optimization for faster navigation 🚀
 - Keyboard navigation (left/right arrow keys) ⌨️
 - Mobile App PWA 📱
 - Full screen mode using all available space for the images 🖼️
@@ -48,6 +50,7 @@ _Please note that this project is currently under active development. The projec
 
 ## Upcoming Features 📅
 
+- Admin panel for managing manga and anime 🛠️
 - Docker for self-hosting 🐳
 
 ## Usage 🚀
@@ -58,7 +61,7 @@ _Please note that this project is currently under active development. The projec
 
 Follow these steps to set up your manga:
 
-1. Rename your main manga folder to match the name of the manga. Inside this main folder, create another folder named "manga". Within this "manga" folder, create subfolders for each volume, following the naming convention "Volume 01", "Volume 02", and so on.
+1. Rename your main manga folder to match the name of the manga. Inside this main folder, create another folder named "manga". Within this "manga" folder, create subfolders for each volume, following the naming convention "Volume 01", "Chapter 02", and so on.
 2. Within each volume folder, add the images for each page. The images should be named in the format "01-001.webp", "01-002.webp", etc. The first number represents the chapter, while the second number represents the page number.
 
 ### Anime
@@ -76,7 +79,7 @@ npm run build
 npm run start
 ```
 
-> Note: You have to rebuild the project every time you add a new manga but for anime videos you don't have to rebuild the project since the videos are loaded dynamically via api.
+> Note: Currently, you must rebuild the project every time you add a new manga or anime. This requirement will change with Next.js 15.
 
 > Tips: You can use AI like ChatGPT to create a python script to rename the images for you and convert them to webp format if needed.
 
@@ -122,6 +125,11 @@ This project uses the following technologies:
 
 ![Lighthouse Image](readme/image/lighthouse.png)
 Performance is the main focus of this project to ensure a smooth reading experience. The website is optimized for mobile and desktop devices, with a focus on image optimization and preloading.
+
+## Star History 🌟
+
+[![Star History Chart](https://api.star-history.com/svg?repos=FlorianDevv/MangaRead&type=Date)](https://star-history.com/#FlorianDevv/MangaRead&Date)
+</a>
 
 ## License 📝
 
