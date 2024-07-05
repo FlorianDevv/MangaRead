@@ -4,7 +4,7 @@ import ffmpeg from "fluent-ffmpeg";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 
-const dbPath = path.join(process.cwd(), "db/items.db");
+const dbPath = path.resolve(process.cwd(), "db/items.db");
 
 async function openDb() {
 	return open({
@@ -83,7 +83,7 @@ function getAllVideoFiles(dir: string): string[] {
 	let results: string[] = [];
 	const list = fs.readdirSync(dir);
 	for (const file of list) {
-		const filePath = path.join(dir, file);
+		const filePath = path.resolve(dir, file);
 		const stat = fs.statSync(filePath);
 		if (stat?.isDirectory()) {
 			results = results.concat(getAllVideoFiles(filePath));
@@ -96,14 +96,18 @@ function getAllVideoFiles(dir: string): string[] {
 
 async function generateThumbnails() {
 	const itemsPaths = await getAllVideoPaths();
-	const videosDirectoryPath = path.join(process.cwd(), "videos");
+	const videosDirectoryPath = path.resolve(process.cwd(), "videos");
 
 	if (!fs.existsSync(videosDirectoryPath)) {
 		fs.mkdirSync(videosDirectoryPath, { recursive: true });
 	}
 
 	for (const { itemName, videoDir } of itemsPaths) {
-		const itemThumbnailDir = path.join(videosDirectoryPath, itemName, "/anime");
+		const itemThumbnailDir = path.resolve(
+			videosDirectoryPath,
+			itemName,
+			"/anime",
+		);
 		if (!fs.existsSync(itemThumbnailDir)) {
 			fs.mkdirSync(itemThumbnailDir, { recursive: true });
 		}
@@ -112,7 +116,7 @@ async function generateThumbnails() {
 
 		for (const videoFile of videoFiles) {
 			const relativePath = path.relative(videoDir, videoFile);
-			const thumbnailPath = path.join(
+			const thumbnailPath = path.resolve(
 				itemThumbnailDir,
 				relativePath.replace(".mp4", ".webp"),
 			);

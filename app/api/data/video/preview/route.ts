@@ -4,7 +4,7 @@ import ffmpeg from "fluent-ffmpeg";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 
-const dbPath = path.join(process.cwd(), "db/items.db");
+const dbPath = path.resolve(process.cwd(), "db/items.db");
 
 async function openDb() {
 	return open({
@@ -53,14 +53,18 @@ async function getVideoPath(itemName: string): Promise<string | null> {
 
 async function generatePreviewsForAllItems() {
 	const itemsPaths = await getAllVideoPaths();
-	const videosDirectoryPath = path.join(process.cwd(), "videos");
+	const videosDirectoryPath = path.resolve(process.cwd(), "videos");
 
 	if (!fs.existsSync(videosDirectoryPath)) {
 		fs.mkdirSync(videosDirectoryPath);
 	}
 
 	for (const { itemName, videoPath } of itemsPaths) {
-		const itemPreviewPath = path.join(videosDirectoryPath, itemName, "/anime");
+		const itemPreviewPath = path.resolve(
+			videosDirectoryPath,
+			itemName,
+			"/anime",
+		);
 		if (!fs.existsSync(itemPreviewPath)) {
 			fs.mkdirSync(itemPreviewPath);
 		}
@@ -69,7 +73,7 @@ async function generatePreviewsForAllItems() {
 }
 
 function generatePreview(filePath: string, outputDirectoryPath: string) {
-	const outputFilePath = path.join(outputDirectoryPath, "preview.mp4");
+	const outputFilePath = path.resolve(outputDirectoryPath, "preview.mp4");
 
 	if (!fs.existsSync(outputFilePath)) {
 		ffmpeg.ffprobe(filePath, (err, metadata) => {
@@ -114,12 +118,12 @@ export async function POST(request: Request) {
 		);
 	}
 
-	const videosDirectoryPath = path.join(process.cwd(), "videos");
+	const videosDirectoryPath = path.resolve(process.cwd(), "videos");
 	if (!fs.existsSync(videosDirectoryPath)) {
 		fs.mkdirSync(videosDirectoryPath);
 	}
 
-	const itemPreviewPath = path.join(videosDirectoryPath, itemName);
+	const itemPreviewPath = path.resolve(videosDirectoryPath, itemName);
 	if (!fs.existsSync(itemPreviewPath)) {
 		fs.mkdirSync(itemPreviewPath);
 	}
@@ -128,6 +132,6 @@ export async function POST(request: Request) {
 
 	return Response.json({
 		message: `Preview generation started for ${itemName}`,
-		previewPath: path.join("/videos", itemName, "preview.mp4"),
+		previewPath: path.resolve("/videos", itemName, "preview.mp4"),
 	});
 }

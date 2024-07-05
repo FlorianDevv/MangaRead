@@ -15,7 +15,7 @@ async function getBaseVideoPath(videoId: string): Promise<string> {
 		return path.normalize(basePath);
 	} catch (error) {
 		console.error("Error retrieving base path from DB:", error);
-		return path.join(__dirname, DEFAULT_VIDEO_FOLDER);
+		return path.resolve(__dirname, DEFAULT_VIDEO_FOLDER);
 	}
 }
 
@@ -40,7 +40,7 @@ async function getVideoStream(req: Request): Promise<Response> {
 	if (type === "preview") {
 		CHUNK_SIZE_IN_BYTES = 1000000; // 1 MB
 		const [itemName] = decodeURIComponent(videoId).split("/");
-		videoPath = path.join(
+		videoPath = path.resolve(
 			process.cwd(),
 			`videos/${itemName}`,
 			"/anime/",
@@ -50,7 +50,7 @@ async function getVideoStream(req: Request): Promise<Response> {
 	} else {
 		const [animeName, ...relativeVideoParts] =
 			decodeURIComponent(videoId).split("/");
-		videoPath = path.join(
+		videoPath = path.resolve(
 			await getBaseVideoPath(animeName),
 			...relativeVideoParts,
 		);
