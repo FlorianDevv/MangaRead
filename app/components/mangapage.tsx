@@ -17,7 +17,7 @@ import { Quality, Read, getSettings } from "./settings";
 type Volume = {
 	name: string;
 	totalPages: number;
-	type: string;
+	type?: string;
 };
 
 type MangaPageProps = {
@@ -338,7 +338,10 @@ export default function MangaPage({
 										setQuality={setQuality}
 										setIsVertical={setIsVertical}
 										isVertical={isVertical}
-										volumes={[...volumes]}
+										volumes={volumes.map((volume) => ({
+											...volume,
+											type: volume.type || "",
+										}))}
 										slug={slug}
 										currentVolume={decodeURIComponent(volume)}
 										isFullscreen={isFullscreen}
