@@ -87,7 +87,7 @@ export async function generateBroadcastSchedule(
 		}
 		for (const dir of seasonDirs) {
 			if (dir.isDirectory() && dir.name.startsWith("Season")) {
-				const seasonPath = path.join(animePath, dir.name);
+				const seasonPath = path.resolve(animePath, dir.name);
 				const videoFiles = await getVideoFiles(seasonPath);
 				for (const videoPath of videoFiles) {
 					const match = videoPath.match(/Season(\d+)[\/\\](\d+)-(\d+)\.mp4$/);

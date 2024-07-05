@@ -17,7 +17,7 @@ import { Quality, Read, getSettings } from "./settings";
 type Volume = {
 	name: string;
 	totalPages: number;
-	type: string;
+	type?: string;
 };
 
 type MangaPageProps = {
@@ -138,6 +138,7 @@ export default function MangaPage({
 			volume: volume,
 			page: pageNumber,
 			totalPages: totalPages,
+			type: volumes[pageNumber - 1].type || "Volume",
 			dateWatched:
 				existingMangaInfo[existingMangaIndex]?.dateWatched || Date.now(),
 		};
@@ -149,7 +150,7 @@ export default function MangaPage({
 		}
 
 		localStorage.setItem("mangaInfo", JSON.stringify(existingMangaInfo));
-	}, [slug, volume, pageNumber, totalPages]);
+	}, [slug, volume, pageNumber, totalPages, volumes]);
 
 	const formattedPageNumber = String(pageNumber).padStart(3, "0");
 	const formattedVolumeNumber = String(volume).padStart(2, "0");
@@ -235,7 +236,7 @@ export default function MangaPage({
 								src={`/api/image?path=${slug}/manga/${VolumeTome}/${imageName}.webp`}
 								alt={`${slug} Page ${pageNumber}`}
 								className="object-contain"
-								sizes="(min-width: 1080px) 1024px, 95.26vw"
+								sizes="(min-width: 1080px) 1024px, 100vw"
 								quality={quality}
 								fill
 								priority={true}
@@ -254,7 +255,7 @@ export default function MangaPage({
 								<Image
 									src={`/api/image?path=${slug}/manga/${VolumeTome}/${nextImageName}.webp`}
 									alt={`${slug} Page ${pageNumber + 1}`}
-									sizes="(min-width: 1080px) 1024px, 95.26vw"
+									sizes="(min-width: 1080px) 1024px, 100vw"
 									quality={quality}
 									fill
 									priority={true}
@@ -266,7 +267,7 @@ export default function MangaPage({
 									<Image
 										src={`/api/image?path=${slug}/manga/${VolumeTome}/${nextNextImageName}.webp`}
 										alt={`${slug} Page ${pageNumber + 2}`}
-										sizes="(min-width: 1080px) 1024px, 95.26vw"
+										sizes="(min-width: 1080px) 1024px, 100vw"
 										quality={quality}
 										fill
 										className="hidden object-contain"
@@ -337,7 +338,10 @@ export default function MangaPage({
 										setQuality={setQuality}
 										setIsVertical={setIsVertical}
 										isVertical={isVertical}
-										volumes={[...volumes]}
+										volumes={volumes.map((volume) => ({
+											...volume,
+											type: volume.type || "",
+										}))}
 										slug={slug}
 										currentVolume={decodeURIComponent(volume)}
 										isFullscreen={isFullscreen}

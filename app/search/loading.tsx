@@ -20,8 +20,6 @@ export default function LoadingCatalogue() {
 				</div>
 			</div>
 			<div className="flex justify-center items-center flex-col">
-				{/* Skeleton for search input */}
-				<Skeleton className="h-10 w-64 mx-2 rounded-md" />
 				{/* Skeletons for items */}
 				<div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mx-2">
 					{[...Array(10)].map((_, index) => (
