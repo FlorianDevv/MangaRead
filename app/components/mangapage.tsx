@@ -138,7 +138,7 @@ export default function MangaPage({
 			volume: volume,
 			page: pageNumber,
 			totalPages: totalPages,
-			type: volumes[pageNumber - 1].type,
+			type: volumes[pageNumber - 1].type || "Volume",
 			dateWatched:
 				existingMangaInfo[existingMangaIndex]?.dateWatched || Date.now(),
 		};
