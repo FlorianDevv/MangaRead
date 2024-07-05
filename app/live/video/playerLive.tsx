@@ -105,9 +105,7 @@ export default function PlayerLive() {
 			className={`${styles.player} ${styles["vds-video-layout"]} max-w-full max-h-full object-contain`}
 		>
 			<MediaProvider>
-				<Poster asChild className="vds-poster">
-					<Image src={thumbnailSrc} alt="Thumbnail" />
-				</Poster>
+				<Poster className="vds-poster" src={thumbnailSrc} />
 			</MediaProvider>
 			<DefaultVideoLayout
 				disableTimeSlider={true}

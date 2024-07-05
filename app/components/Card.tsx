@@ -2,9 +2,8 @@
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog-responsive";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Info from "../detail/[slug]/info";
@@ -14,7 +13,7 @@ export type CardProps = Pick<ItemDetails, "name" | "types" | "volumes">;
 
 export default function Card({ name, types, volumes }: CardProps) {
 	const firstVolumeType =
-		volumes && volumes.length > 0 ? volumes[0].type : "TypeInconnu";
+		volumes && volumes.length > 0 ? volumes[0].type : "Unknown";
 
 	const imagePath = types.includes("anime")
 		? `/api/image?path=${name}/anime/thumbnail.webp`
@@ -55,11 +54,7 @@ export default function Card({ name, types, volumes }: CardProps) {
 						{name}
 					</DialogTitle>
 				</DialogTrigger>
-				<DialogContent
-					className=" h-full"
-					title={name}
-					aria-describedby={`${name} info`}
-				>
+				<DialogContent className=" h-full" aria-describedby={`${name} info`}>
 					<Info
 						params={{
 							slug: encodeURI(name),

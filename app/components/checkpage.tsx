@@ -62,6 +62,7 @@ export default function CheckPage({
 				manga: slug,
 				volume: volume,
 				page: initialPageNumber,
+				type: volumes[initialPageNumber - 1].type,
 				totalPages: totalPages,
 				dateWatched: Date.now(),
 			});
@@ -70,7 +71,7 @@ export default function CheckPage({
 		mangaInfos = mangaInfos.reverse();
 
 		localStorage.setItem("mangaInfo", JSON.stringify(mangaInfos));
-	}, [initialPageNumber, slug, totalPages, volume]);
+	}, [initialPageNumber, slug, totalPages, volume, volumes]);
 
 	return (
 		<MangaPage

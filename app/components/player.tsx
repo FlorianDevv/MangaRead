@@ -1,11 +1,13 @@
 "use client";
 import {
+	type MediaPlayEvent,
 	MediaPlayer,
 	MediaProvider,
 	type MediaProviderAdapter,
 	Poster,
 	isHTMLVideoElement,
 	isVideoProvider,
+	useMediaRemote,
 } from "@vidstack/react";
 import {
 	DefaultAudioLayout,
@@ -194,11 +196,20 @@ export default function Player(item: Item) {
 				.padStart(2, "0")}/${seasonNumber}-${episodeNumber}.webp`,
 		[item.title, seasonNumber, episodeNumber],
 	);
+	const remote = useMediaRemote();
+	const handlePlay = useCallback(
+		(triggerEvent: MediaPlayEvent) => {
+			if (remote) {
+				remote.enterFullscreen("prefer-media", triggerEvent);
+			}
+		},
+		[remote],
+	);
 
 	return (
 		<div className="mt-4 flex flex-col items-center justify-center h-screen w-full">
 			{isLoading ? (
-				<div>Loading...</div>
+				<div className="spinner" />
 			) : (
 				<div className="w-full h-full ">
 					<MediaPlayer
@@ -209,12 +220,13 @@ export default function Player(item: Item) {
 						)} E${item.episode.replace(/\D/g, "")}`}
 						src={{ src: src, type: "video/mp4" }}
 						playsInline
+						onPlay={handlePlay}
 						autoPlay
 						onProviderSetup={onProviderSetup}
 						className="w-full h-full object-contain"
 					>
 						<MediaProvider>
-							<Poster src={thumbnailSrc} />
+							<Poster src={thumbnailSrc} className="vds-poster" />
 						</MediaProvider>
 						<DefaultVideoLayout icons={defaultLayoutIcons} />
 						<DefaultAudioLayout icons={defaultLayoutIcons} />

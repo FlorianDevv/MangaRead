@@ -12,7 +12,6 @@ import { CalendarClock, CalendarDays } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 import { GET as GET_CURRENT } from "../api/live/current/route";
 import { GET as GET_SCHEDULE, type Schedule } from "../api/live/route";
 import { getDetails } from "../types/getDetails";
@@ -53,9 +52,6 @@ export default async function Page() {
 	const current: CurrentResponse = await responseCurrent.json();
 
 	async function CurrentItem() {
-		const responseCurrent = await GET_CURRENT();
-		const current: CurrentResponse = await responseCurrent.json();
-
 		let synopsis: string | undefined;
 		let categories: string[] = [];
 		if (current?.title) {
@@ -271,12 +267,8 @@ export default async function Page() {
 	return (
 		<MobileNavbarComponent activePage="Live">
 			<div className="flex flex-col items-center justify-center mt-8">
-				<Suspense fallback={<div>...</div>}>
-					<CurrentItem />
-				</Suspense>
-				<Suspense fallback={<div>...</div>}>
-					<ScheduleItems />
-				</Suspense>
+				<CurrentItem />
+				<ScheduleItems />
 			</div>
 		</MobileNavbarComponent>
 	);

@@ -12,6 +12,7 @@ interface MangaInfo {
 	volume: string;
 	page: number;
 	totalPages: number;
+	type: string;
 	dateWatched: number;
 }
 
@@ -23,37 +24,38 @@ interface AnimeInfo {
 	duration: string;
 	dateWatched: number;
 }
+
 interface ResumeReadingProps {
 	Name?: string;
 }
+
 interface State {
 	manga: MangaInfo[];
 	anime: AnimeInfo[];
 }
 
-function reducer(
-	state: State,
-	action: { type: any; payload: any; name?: string },
-) {
+type Action =
+	| { type: "SET_MANGA"; payload: MangaInfo[]; name?: string }
+	| { type: "SET_ANIME"; payload: AnimeInfo[]; name?: string };
+
+function reducer(state: State, action: Action): State {
 	switch (action.type) {
 		case "SET_MANGA":
 			return {
 				...state,
 				manga: action.payload.filter(
-					(manga: { manga: string }) =>
-						!action.name || manga.manga === action.name,
+					(manga) => !action.name || manga.manga === action.name,
 				),
 			};
 		case "SET_ANIME":
 			return {
 				...state,
 				anime: action.payload.filter(
-					(anime: { anime: string }) =>
-						!action.name || anime.anime === action.name,
+					(anime) => !action.name || anime.anime === action.name,
 				),
 			};
 		default:
-			throw new Error();
+			return state;
 	}
 }
 
@@ -64,23 +66,26 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		// Load data asynchronously
 		const loadLocalStorageData = async () => {
 			const storedManga = localStorage.getItem("mangaInfo");
 			const storedAnime = localStorage.getItem("animeInfo");
 
 			if (storedManga) {
-				const parsedManga = JSON.parse(storedManga).map((item: MangaInfo) => ({
-					...item,
-					dateWatched: new Date(item.dateWatched),
-				}));
+				const parsedManga: MangaInfo[] = JSON.parse(storedManga).map(
+					(item: MangaInfo) => ({
+						...item,
+						dateWatched: new Date(item.dateWatched).getTime(),
+					}),
+				);
 				dispatch({ type: "SET_MANGA", payload: parsedManga, name: Name });
 			}
 			if (storedAnime) {
-				const parsedAnime = JSON.parse(storedAnime).map((item: AnimeInfo) => ({
-					...item,
-					dateWatched: new Date(item.dateWatched),
-				}));
+				const parsedAnime: AnimeInfo[] = JSON.parse(storedAnime).map(
+					(item: AnimeInfo) => ({
+						...item,
+						dateWatched: new Date(item.dateWatched).getTime(),
+					}),
+				);
 				dispatch({ type: "SET_ANIME", payload: parsedAnime, name: Name });
 			}
 			setIsLoading(false);
@@ -90,30 +95,23 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 	}, [Name]);
 
 	const sortedMangaState = useMemo(() => {
-		return [...state.manga].sort(
-			(a, b) =>
-				new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime(),
-		);
+		return [...state.manga].sort((a, b) => b.dateWatched - a.dateWatched);
 	}, [state.manga]);
 
 	const sortedAnimeState = useMemo(() => {
-		return [...state.anime].sort(
-			(a, b) =>
-				new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime(),
-		);
+		return [...state.anime].sort((a, b) => b.dateWatched - a.dateWatched);
 	}, [state.anime]);
 
 	const combinedState = useMemo(() => {
 		return [...sortedMangaState, ...sortedAnimeState].sort(
-			(a, b) =>
-				new Date(b.dateWatched).getTime() - new Date(a.dateWatched).getTime(),
+			(a, b) => b.dateWatched - a.dateWatched,
 		);
 	}, [sortedMangaState, sortedAnimeState]);
 
 	const deleteManga = useCallback(
 		(mangaName: string) => {
 			const newMangaState = state.manga.filter(
-				(manga: { manga: string }) => manga.manga !== mangaName,
+				(manga) => manga.manga !== mangaName,
 			);
 			dispatch({
 				type: "SET_MANGA",
@@ -127,7 +125,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 	const deleteAnime = useCallback(
 		(animeName: string) => {
 			const newAnimeState = state.anime.filter(
-				(anime: { anime: string }) => anime.anime !== animeName,
+				(anime) => anime.anime !== animeName,
 			);
 			dispatch({
 				type: "SET_ANIME",
@@ -137,6 +135,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 		},
 		[state.anime],
 	);
+
 	const calculateProgress = useMemo(() => {
 		return (mangaInfo: MangaInfo) => {
 			const currentPage = mangaInfo.page;
@@ -146,10 +145,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 	}, []);
 
 	const calculateAnimeProgress = useMemo(() => {
-		return (animeInfo: any) => {
+		return (animeInfo: AnimeInfo) => {
 			const totalSeconds = animeInfo.duration
 				.split(":")
-				.reduce((acc: number, time: string | number) => 60 * acc + +time);
+				.reduce((acc, time) => 60 * acc + +time, 0);
 			return (animeInfo.savedTime / totalSeconds) * 100;
 		};
 	}, []);
@@ -166,8 +165,14 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 				<div className="flex overflow-x-scroll overflow-y-hidden">
 					{Array(4)
 						.fill(0)
-						.map((_) => (
-							<div key={_.name} className="m-2 relative">
+						.map((_, index) => (
+							<div
+								key={`loading-${
+									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+									index
+								}`}
+								className="m-2 relative"
+							>
 								<div className="flex flex-col items-stretch rounded-lg overflow-hidden ">
 									<div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 animate-pulse bg-gray-800" />
 									<div className="flex-grow p-2">
@@ -200,12 +205,12 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 						const mangaInfo = item as MangaInfo;
 						return (
 							<div
-								key={item.name}
+								key={`${mangaInfo.manga}-${mangaInfo.volume}-${mangaInfo.page}`}
 								className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
 							>
 								<div className="flex flex-col overflow-hidden rounded-lg relative">
 									<Link
-										key={item.name}
+										key={`${mangaInfo.manga}-${mangaInfo.volume}-${mangaInfo.page}`}
 										href={`/manga/${mangaInfo.manga}/${mangaInfo.volume}/`}
 									>
 										<div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
@@ -234,7 +239,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 											</p>
 											<div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row group-hover:text-red-800 transition-colors duration-300 ease-in-out">
 												<p>
-													{`${data.resume.volume} `}
+													{`${mangaInfo.type} `}
 													{mangaInfo.volume}
 												</p>
 												<p className="md:mx-4 md:my-0 my-2 hidden md:block">
@@ -277,12 +282,12 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 					const animeInfo = item as AnimeInfo;
 					return (
 						<div
-							key={item.name}
+							key={`${animeInfo.anime}-${animeInfo.season}-${animeInfo.episode}`}
 							className="m-2 relative ease-in-out transform group hover:scale-105 transition-transform duration-300"
 						>
 							<div className="flex flex-col overflow-hidden rounded-lg relative">
 								<Link
-									key={item.name}
+									key={`${animeInfo.anime}-${animeInfo.season}-${animeInfo.episode}`}
 									href={`/anime/${animeInfo.anime}/${animeInfo.season}/${animeInfo.episode}`}
 								>
 									<div className="relative h-48 md:h-56 w-32 sm:w-48 md:w-56">
