@@ -5,7 +5,7 @@ import sharp from "sharp";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 
-const dbPath = path.resolve(process.cwd(), "db/items.db");
+const dbPath = path.join(process.cwd(), "db/items.db");
 
 async function openDb() {
 	return open({
@@ -34,7 +34,7 @@ async function findCorrectVolumePath(
 	basePath: string,
 	volumePart: string,
 ): Promise<string> {
-	const fullPath = path.resolve(basePath, volumePart);
+	const fullPath = path.join(basePath, volumePart);
 	try {
 		await fs.access(fullPath);
 		return fullPath;
@@ -49,7 +49,7 @@ async function findCorrectVolumePath(
 				return match !== null;
 			});
 			if (matchingFolder) {
-				return path.resolve(parentDir, matchingFolder);
+				return path.join(parentDir, matchingFolder);
 			}
 		}
 		throw new Error(`Volume folder not found for ${volumePart}`);
@@ -77,8 +77,8 @@ export async function GET(request: NextRequest) {
 		let fullPath: string | null;
 
 		if (isThumbnail) {
-			basePath = path.resolve(process.cwd(), "videos");
-			fullPath = path.resolve(basePath, decodedImagePath);
+			basePath = path.join(process.cwd(), "videos");
+			fullPath = path.join(basePath, decodedImagePath);
 		} else {
 			const pathParts = decodedImagePath.split("/");
 			const itemName = pathParts[0];
@@ -93,10 +93,10 @@ export async function GET(request: NextRequest) {
 			const restOfPath = pathParts.slice(3).join("/");
 
 			const volumePath = await findCorrectVolumePath(
-				path.resolve(basePath, type),
+				path.join(basePath, type),
 				volumePart,
 			);
-			fullPath = path.resolve(volumePath, restOfPath);
+			fullPath = path.join(volumePath, restOfPath);
 		}
 
 		const image = sharp(fullPath);
@@ -112,7 +112,7 @@ export async function GET(request: NextRequest) {
 			},
 		});
 	} catch (error) {
-		console.error("Error processing image:", error);
+		// console.error("Error processing image:", error);
 		return new NextResponse(
 			JSON.stringify({ error: (error as Error).message }),
 			{

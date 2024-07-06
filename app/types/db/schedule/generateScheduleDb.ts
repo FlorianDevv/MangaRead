@@ -4,7 +4,7 @@ import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 
 async function openDbSchedule() {
-	const dbPath = path.resolve("db", "schedule.db");
+	const dbPath = path.join("db", "schedule.db");
 	const dir = path.dirname(dbPath);
 
 	if (!fs.existsSync(dir)) {

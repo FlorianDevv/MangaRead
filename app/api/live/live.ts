@@ -29,7 +29,7 @@ async function getVideoFiles(dir: string): Promise<string[]> {
 	let files: string[] = [];
 
 	for (const entry of entries) {
-		const res = path.resolve(dir, entry.name);
+		const res = path.join(dir, entry.name);
 		if (entry.isDirectory()) {
 			console.log(`Found directory: ${res}, recursing into it.`);
 			files = files.concat(await getVideoFiles(res));
@@ -87,7 +87,7 @@ export async function generateBroadcastSchedule(
 		}
 		for (const dir of seasonDirs) {
 			if (dir.isDirectory() && dir.name.startsWith("Season")) {
-				const seasonPath = path.resolve(animePath, dir.name);
+				const seasonPath = path.join(animePath, dir.name);
 				const videoFiles = await getVideoFiles(seasonPath);
 				for (const videoPath of videoFiles) {
 					const match = videoPath.match(/Season(\d+)[\/\\](\d+)-(\d+)\.mp4$/);

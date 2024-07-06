@@ -72,17 +72,17 @@ export async function getDetails(
 
 		for (const pathInfo of pathsInfo) {
 			if (pathInfo.type === "manga") {
-				mangaPath = path.resolve(pathInfo.path, "manga");
+				mangaPath = path.join(pathInfo.path, "manga");
 				types.push("manga");
 			} else if (pathInfo.type === "anime") {
-				animePath = path.resolve(pathInfo.path, "anime");
+				animePath = path.join(pathInfo.path, "anime");
 				types.push("anime");
 			}
 		}
 
 		let synopsis: string | undefined;
 		let categories: string[] = [];
-		const resumePath = path.resolve(
+		const resumePath = path.join(
 			path.dirname(mangaPath || animePath),
 			"resume.json",
 		);
@@ -98,11 +98,11 @@ export async function getDetails(
 				volumes = fs
 					.readdirSync(mangaPath)
 					.filter((volume) => {
-						const volumePath = path.resolve(mangaPath, volume);
+						const volumePath = path.join(mangaPath, volume);
 						return fs.lstatSync(volumePath).isDirectory();
 					})
 					.map((volume) => {
-						const volumePath = path.resolve(mangaPath, volume);
+						const volumePath = path.join(mangaPath, volume);
 						const images = fs.readdirSync(volumePath);
 						const totalPages = images.length;
 						const volumeNumber = Number.parseInt(
@@ -126,7 +126,7 @@ export async function getDetails(
 		if (animePath) {
 			try {
 				const allDirectories = fs.readdirSync(animePath).filter((season) => {
-					const seasonPath = path.resolve(animePath, season);
+					const seasonPath = path.join(animePath, season);
 					return fs.lstatSync(seasonPath).isDirectory();
 				});
 				const seasons = allDirectories.filter((season) =>
@@ -135,7 +135,7 @@ export async function getDetails(
 
 				seasonDetails = seasons
 					.map((season) => {
-						const seasonPath = path.resolve(animePath, season);
+						const seasonPath = path.join(animePath, season);
 						try {
 							const episodes = fs
 								.readdirSync(seasonPath)
