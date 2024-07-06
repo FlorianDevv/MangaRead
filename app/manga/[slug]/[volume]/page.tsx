@@ -2,7 +2,7 @@ import CheckPage from "@/app/components/checkpage";
 import VolumeSelect from "@/app/components/select/volumeselect";
 import "@/app/mangapage.css";
 import { getDetails } from "@/app/types/getDetails";
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 
 type Props = {
 	params: { slug: string; volume: string };
@@ -22,7 +22,7 @@ export default async function Page({ params }: Props) {
 		: detailsArray;
 
 	if (!details?.volumes) {
-		console.log(detailsArray, details, params.slug, params.volume);
+		// console.log(detailsArray, details, params.slug, params.volume);
 		return <div>Error 404</div>;
 	}
 
@@ -53,9 +53,7 @@ export default async function Page({ params }: Props) {
 					isPage={true}
 				/>
 			</div>
-			<div className="flex justify-center">
-				<CheckPage params={params} totalPages={totalPages} volumes={volumes} />
-			</div>
+			<CheckPage params={params} totalPages={totalPages} volumes={volumes} />
 		</div>
 	);
 }
