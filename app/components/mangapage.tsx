@@ -73,13 +73,33 @@ export default function MangaPage({
 	}, []);
 	const [nextPageExists, setNextPageExists] = useState(true);
 
+	const getNextVolume = useCallback(() => {
+		const currentPath = window.location.pathname;
+		const currentVolumeFromUrl = currentPath.split("/").pop();
+		const nextVolume = (
+			Number.parseInt(currentVolumeFromUrl || "0", 10) + 1
+		).toString();
+		return nextVolume;
+	}, []);
+
 	const nextPage = useCallback(() => {
 		if (isLoading) {
 			return;
 		}
-		setPageNumber(pageNumber + 1);
-		setIsLoading(true);
-	}, [pageNumber, isLoading]);
+		if (pageNumber < totalPages) {
+			setPageNumber(pageNumber + 1);
+			setIsLoading(true);
+		} else {
+			const nextVolume = getNextVolume();
+			if (nextVolume) {
+				// Construire correctement la nouvelle URL pour naviguer au prochain volume
+				const parts = window.location.pathname.split("/");
+				parts[parts.length - 1] = nextVolume; // Remplacer le dernier segment par le prochain numéro de volume
+				const newPathname = parts.join("/");
+				window.location.pathname = newPathname;
+			}
+		}
+	}, [pageNumber, totalPages, isLoading, getNextVolume]);
 
 	const previousPage = useCallback(() => {
 		if (pageNumber > 1) {
@@ -107,9 +127,7 @@ export default function MangaPage({
 					previousPage();
 					break;
 				case "ArrowRight":
-					if (nextPageExists) {
-						nextPage();
-					}
+					nextPage();
 					break;
 			}
 		};
@@ -119,7 +137,7 @@ export default function MangaPage({
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
 		};
-	}, [nextPageExists, previousPage, nextPage, isVertical]);
+	}, [previousPage, nextPage, isVertical]);
 	useEffect(() => {
 		let existingMangaInfo = JSON.parse(
 			localStorage.getItem("mangaInfo") || "[]",
@@ -138,7 +156,7 @@ export default function MangaPage({
 			volume: volume,
 			page: pageNumber,
 			totalPages: totalPages,
-			type: volumes[pageNumber - 1].type || "Volume",
+			type: volumes[0].type || "Volume",
 			dateWatched:
 				existingMangaInfo[existingMangaIndex]?.dateWatched || Date.now(),
 		};
@@ -354,11 +372,7 @@ export default function MangaPage({
 							<PreviousPageButton previousPage={previousPage} />
 						)}
 						{!isVertical && (
-							<NextPageButton
-								nextPageExists={nextPageExists}
-								nextPage={nextPage}
-								disabled={isLoading}
-							/>
+							<NextPageButton nextPage={nextPage} disabled={isLoading} />
 						)}
 					</div>
 				</>
@@ -462,30 +476,23 @@ function PreviousPageButton({ previousPage }: PreviousPageButtonProps) {
 		</button>
 	);
 }
-interface NextPageButtonProps {
-	nextPageExists: boolean;
-	nextPage: () => void;
-	disabled: boolean;
-}
+
 function NextPageButton({
-	nextPageExists,
 	nextPage,
 	disabled,
-}: NextPageButtonProps) {
-	const cursorImage = !nextPageExists
-		? "default"
-		: "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjgwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LWJpZy1yaWdodCI+PHBhdGggZD0iTTYgOWg2VjVsNyA3LTcgN3YtNEg2Vjl6Ii8+PC9zdmc+'), auto";
-
+}: {
+	nextPage: () => void;
+	disabled: boolean;
+}) {
 	return (
 		<button
 			type="button"
-			className={
-				"absolute top-1/2 right-0 transform -translate-y-1/2 w-5/12 h-full opacity-0 hover:opacity-70 flex items-center justify-end mr-4"
-			}
-			onClick={nextPageExists ? nextPage : undefined}
+			className="absolute top-1/2 right-0 transform -translate-y-1/2 w-5/12 h-full opacity-0 hover:opacity-70 flex items-center justify-end mr-4"
+			onClick={nextPage}
 			disabled={disabled}
 			style={{
-				cursor: cursorImage,
+				cursor:
+					"url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjgwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LWJpZy1yaWdodCI+PHBhdGggZD0iTTYgOWg2VjVsNyA3LTcgN3YtNEg2Vjl6Ii8+PC9zdmc+'), auto",
 			}}
 		>
 			<ChevronRight className="w-40 h-40 md:hidden block" />
