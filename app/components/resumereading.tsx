@@ -497,7 +497,7 @@ export function MangaProgress({ Name }: { Name: string }) {
 				<div className="flex flex-row items-center">
 					<FileText className="mr-2 text-gray-300" size={16} />
 					<div className="text-sm text-gray-300 mr-4">
-						{data.resume.volume} {mangaInfo.volume}
+						{mangaInfo.type} {mangaInfo.volume}
 					</div>
 					<div className="text-sm text-gray-300">
 						{data.resume.page} {mangaInfo.page}
