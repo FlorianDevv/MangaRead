@@ -91,7 +91,7 @@ function MangaDetailComponent({
 					</p>
 					<p className="text-sm text-gray-100 font-normal">
 						{detail.volumes?.length ?? 0}{" "}
-						{detail.volumes?.[0]?.type ?? data.carousel.volumes}
+						{`${(detail.volumes?.[0]?.type ?? data.carousel.volumes).trim()}s`}
 					</p>
 					<div>
 						<Link href={`/manga/${detail.name}/1`}>
