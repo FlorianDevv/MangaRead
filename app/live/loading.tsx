@@ -36,13 +36,13 @@ export default function Loading() {
 				<div className="overflow-x-auto max-w-full md:mx-8 mx-2">
 					<Skeleton className="h-8 w-48 mb-4" />
 					<div className="grid grid-flow-col gap-4">
-						{[1, 2, 3].map((day) => (
+						{[1, 2, 3, 4, 5, 6, 7].map((day) => (
 							<div
 								key={day}
 								className="flex flex-col space-y-4 rounded p-2 border border-gray-300"
 							>
 								<Skeleton className="h-6 w-32 mx-auto mb-2" />
-								{[1, 2, 3].map((item) => (
+								{[1, 2, 3, 4, 5, 6, 7].map((item) => (
 									<Card key={item} className="flex flex-col rounded">
 										<CardHeader>
 											<Skeleton className="h-[320px] w-[176px] mb-2" />
