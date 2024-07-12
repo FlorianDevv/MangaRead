@@ -110,5 +110,10 @@
     "catalog": "Catalogue",
     "profile": "Profil",
     "schedule": "Planning"
+  },
+  "darkMode": {
+    "dark": "Sombre",
+    "light": "Clair",
+    "system": "Système"
   }
 }

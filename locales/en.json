@@ -110,5 +110,10 @@
     "catalog": "Catalog",
     "profile": "Profile",
     "schedule": "Schedule"
+  },
+  "darkMode": {
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
   }
 }
