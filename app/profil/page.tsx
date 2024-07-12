@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Settings } from "lucide-react";
 import Bookmark from "../components/bookmark";
 import ExportImportLocalStorage from "../components/exportImportLocalStorage";
+import { ModeToggle } from "../components/modeToggle";
 import ResumeReading from "../components/resumereading";
 import { Quality, Read } from "../components/settings";
 const language = process.env.DEFAULT_LANGUAGE;
@@ -24,9 +25,10 @@ export default function Profile() {
 								{data.profil.settings} <Settings />
 							</CardTitle>
 						</CardHeader>
-						<CardContent className="space-y-4 items-center">
+						<CardContent className="space-y-4 items-center justify-center flex flex-col">
 							<Quality />
 							<Read />
+							<ModeToggle />
 						</CardContent>
 					</Card>
 					<ExportImportLocalStorage />

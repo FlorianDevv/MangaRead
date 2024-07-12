@@ -1,4 +1,5 @@
 "use client";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import type { ItemDetails } from "../types/getDetails";
 import CardClient from "./CardClient";
@@ -70,7 +71,8 @@ export default function CategorySelector({
 	const displayedItemData = filteredItemData.filter((item) =>
 		item.name.toLowerCase().includes(searchValue.toLowerCase()),
 	);
-
+	const language = process.env.DEFAULT_LANGUAGE;
+	const data = require(`@/locales/${language}.json`);
 	return (
 		<div>
 			<div className="flex flex-col justify-center mb-4 mb:mx-8">
@@ -102,12 +104,11 @@ export default function CategorySelector({
 				</div>
 			</div>
 			<div className="flex justify-center items-center flex-col">
-				<input
-					type="text"
-					placeholder="Search"
+				<Input
+					placeholder={data.search.title}
 					value={searchValue}
 					onChange={handleSearchChange}
-					className="p-2 mx-2 rounded-md  bg-black border-2 border-[#21496b] border-opacity-75 md:w-72 w-64 transition-all duration-200 ease-in-out focus:outline-none focus:border-sky-600"
+					className="p-2 mx-2 rounded-md  md:w-72 w-64 font-normal"
 				/>
 				<div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mx-2">
 					{displayedItemData.map((item) => (

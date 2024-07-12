@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default function Page({ params }: Props) {
 	return (
 		<MobileNavbarComponent>
-			<div className="bg-black">
+			<div className="dark:bg-black bg-white">
 				<div className="max-w-3xl mx-auto ">
 					<Info
 						params={{

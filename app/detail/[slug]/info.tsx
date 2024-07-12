@@ -59,9 +59,9 @@ export default async function Info({ params }: { params: { slug: string } }) {
 					/>
 				)}
 			</div>
-			<div className="w-full h-24 bg-gradient-to-t from-black to-transparent absolute top-56" />
-			<div className="relative bg-black transform -translate-y-16 px-8">
-				<h1 className="text-xl lg:text-3xl z-50 transform -translate-y-8">
+			<div className="w-full h-24 bg-gradient-to-t dark:from-black from-white to-transparent absolute top-56" />
+			<div className="relative dark:bg-background bg-background transform -translate-y-16 px-8">
+				<h1 className="text-xl lg:text-3xl z-50 transform -translate-y-8 ">
 					{decodeURIComponent(params.slug)}
 				</h1>
 				<ButtonAddBookmark itemName={params.slug} types={types} />
@@ -73,7 +73,7 @@ export default async function Info({ params }: { params: { slug: string } }) {
 								{categories.map((category) => (
 									<span
 										key={category}
-										className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1"
+										className="bg-gray-900 text-xs sm:text-sm rounded-full px-2 py-1 m-1 text-white"
 									>
 										{category}
 									</span>
@@ -88,7 +88,7 @@ export default async function Info({ params }: { params: { slug: string } }) {
 						<div className="flex flex-col">
 							{isMangaDirectoryExists && (
 								<div className="p-2 rounded-md flex flex-col justify-start items-start">
-									<h1 className="p-4 bg-blue-900 text-lg py-1 rounded inline-block m-2">
+									<h1 className="p-4 bg-blue-900 text-lg py-1 rounded inline-block m-2 text-white">
 										Manga
 									</h1>
 									<MangaProgress Name={params.slug} />

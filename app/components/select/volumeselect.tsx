@@ -130,7 +130,7 @@ export default function VolumeSelect({
 					onValueChange={handleChange}
 				>
 					<SelectTrigger
-						className="mx-2 shadow-md rounded-md overflow-hidden max-w-sm p-2 text-center hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
+						className="w-auto"
 						aria-label={`Changer de volume. actuellement sur le volume  ${selectedVolume} `}
 					>
 						{selectedVolumeObject
@@ -153,10 +153,7 @@ export default function VolumeSelect({
 				</Select>
 				{!isPage && (
 					<Link href={`/manga/${slug}/${selectedVolume}`}>
-						<Button
-							variant="secondary"
-							className="inline-block px-4 py-2 text-center uppercase focus:outline-none hover:opacity-75 ease-in-out transition-opacity duration-300 cursor-pointer"
-						>
+						<Button variant="secondary" className="inline-block mx-4">
 							{data.volumeSelect.start}
 						</Button>
 					</Link>

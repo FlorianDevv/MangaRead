@@ -17,7 +17,7 @@ export default async function Page() {
 	return (
 		<MobileNavbarComponent activePage="Home">
 			<PreviewVideo Details={Array.isArray(Details) ? Details : [Details]} />
-			<div className="md:bg-[#0c0c0c] md:mx-8 lg:mx-16 2xl:mx-24">
+			<div className="bg-accent/10 md:mx-8 lg:mx-16 2xl:mx-24">
 				<div className="p-4">
 					<ResumeReading />
 				</div>

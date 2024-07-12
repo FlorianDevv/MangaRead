@@ -48,7 +48,7 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 	return (
 		<div className="p-2 rounded-md">
 			<div className="flex flex-col justify-start items-start">
-				<h1 className="inline-block bg-red-900 text-lg py-1 rounded p-4 m-2 ">
+				<h1 className="inline-block bg-red-900 text-lg py-1 rounded p-4 m-2 text-white">
 					Anime
 				</h1>
 				<div className="inline-block p-2">
@@ -77,7 +77,7 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 					</Select>
 				</div>
 			</div>
-			<div className="grid grid-cols-2 gap-4 mt-4 justify-items-center items-center">
+			<div className="grid grid-cols-2 gap-4 mt-4 justify-items-center items-center ">
 				{filteredEpisodes.map((episode) => (
 					<Link
 						href={`/anime/${slug}/season${selectedSeason
@@ -90,7 +90,7 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 					>
 						<div
 							key={episode.name}
-							className="relative rounded p-4 hover:opacity-75 hover:bg-[#2b2b2b] ease-in-out transition-opacity duration-300"
+							className="relative rounded p-4  hover:bg-accent ease-in-out transition-opacity duration-300"
 						>
 							<Image
 								src={`/api/image?type=thumbnail&path=${slug}/anime/Season${seasonNumber.padStart(
@@ -103,9 +103,10 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 								alt={episode.name}
 								width={300}
 								height={300}
+								className="object-cover"
 							/>
-							<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black bg-opacity-50 rounded-full transition-transform duration-200 hover:scale-110">
-								<CirclePlay className="w-14 h-14 text-white " />
+							<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white bg-opacity-50 rounded-full transition-transform duration-200 hover:scale-110">
+								<CirclePlay size={30} />
 							</div>
 							<p className="text-xs mt-2">
 								{Number.parseInt(episode.episodeNumber)}.{" "}

@@ -37,7 +37,7 @@ export default function CardClient({
 					/>
 					{types.includes("manga") && (
 						<div
-							className={`absolute ${
+							className={`absolute text-white ${
 								types.includes("anime") ? "bottom-10" : "bottom-2"
 							} left-2 bg-blue-900 text-sm px-2 py-1 rounded`}
 						>
@@ -45,17 +45,17 @@ export default function CardClient({
 						</div>
 					)}
 					{types.includes("anime") && (
-						<div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
+						<div className="text-white absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
 							Anime
 						</div>
 					)}
 				</div>
 				<div className="p-2">
-					<h4 className="text-sm text-center transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
+					<h4 className="text-sm text-center  transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
 						{decodeURIComponent(name)}
 					</h4>
 					{categories && (
-						<p className="text-xs text-center  transition-colors duration-300 ease-in-out group-hover:text-red-800 break-words text-gray-400">
+						<p className="text-xs text-center text-foreground/80 transition-colors duration-300 ease-in-out group-hover:text-red-800 break-words">
 							{categories.join(", ")}
 						</p>
 					)}

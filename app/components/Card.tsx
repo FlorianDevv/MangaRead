@@ -37,7 +37,7 @@ export default function Card({ name, types, volumes }: CardProps) {
 						/>
 						{types.includes("manga") && (
 							<div
-								className={`absolute ${
+								className={`absolute text-white ${
 									types.includes("anime") ? "bottom-10" : "bottom-2"
 								} left-2 bg-blue-900 text-sm px-2 py-1 rounded`}
 							>
@@ -45,7 +45,7 @@ export default function Card({ name, types, volumes }: CardProps) {
 							</div>
 						)}
 						{types.includes("anime") && (
-							<div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
+							<div className="text-white absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
 								Anime
 							</div>
 						)}
@@ -54,7 +54,7 @@ export default function Card({ name, types, volumes }: CardProps) {
 						{name}
 					</DialogTitle>
 				</DialogTrigger>
-				<DialogContent className=" h-full" aria-describedby={`${name} info`}>
+				<DialogContent className="" aria-describedby={`${name} info`}>
 					<Info
 						params={{
 							slug: encodeURI(name),
