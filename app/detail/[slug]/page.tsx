@@ -1,12 +1,8 @@
 import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import type { Metadata } from "next";
 import Info from "./info";
-
 interface Props {
 	params: { slug: string };
-}
-
-interface Metadata {
-	title: string;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
