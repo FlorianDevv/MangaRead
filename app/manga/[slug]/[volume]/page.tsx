@@ -15,28 +15,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-	const detailsArray = await getDetails(params.slug);
+	const details = await getDetails(params.slug, { mangaOnly: true });
 
-	const details = Array.isArray(detailsArray)
-		? detailsArray.find((item) => item.name === params.slug)
-		: detailsArray;
-
-	if (!details?.volumes) {
-		// console.log(detailsArray, details, params.slug, params.volume);
+	if (!details || !("volumes" in details) || !details.volumes) {
 		return <div>Error 404</div>;
 	}
 
-	const volumes = details.volumes.map(
-		(volume: { totalPages: number; name: string; type: string }) => {
-			const totalPages = volume.totalPages;
-			return { name: volume.name, totalPages, type: volume.type };
-		},
-	);
+	const volumes = details.volumes.map((volume) => ({
+		name: volume.name,
+		totalPages: volume.totalPages,
+		type: volume.type,
+	}));
 
-	const volumeDetails = volumes.find(
-		(volume: { name: string }) => volume.name === params.volume,
-	);
-
+	const volumeDetails = volumes.find((volume) => volume.name === params.volume);
 	const totalPages = volumeDetails ? volumeDetails.totalPages : 0;
 
 	return (
