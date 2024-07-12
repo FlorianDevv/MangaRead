@@ -61,7 +61,7 @@ const DialogCloseRoot = clx(
 	STYLES.OFFSET_BG,
 	STYLES.RING_FOCUS,
 	"data-[state=open]:bg-accent data-[state=open]:text-muted-foreground",
-	"absolute right-2 top-2 rounded-sm opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none",
+	"absolute right-8 top-8 rounded-sm opacity-70 transition-opacity hover:opacity-100 disabled:pointer-events-none",
 );
 
 function BaseDialogContent({
