@@ -8,12 +8,12 @@ import {
 
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { FloatingButton } from "./floatingButtons";
 import { MobileNavbarComponent } from "./navbar/mobilenavbar";
 import { NavbarContext } from "./navbar/navbarcontext";
 import { Quality, Read, getSettings } from "./settings";
-
 type Volume = {
 	name: string;
 	totalPages: number;
@@ -82,6 +82,8 @@ export default function MangaPage({
 		return nextVolume;
 	}, []);
 
+	const router = useRouter();
+	const pathname = usePathname();
 	const nextPage = useCallback(() => {
 		if (isLoading) {
 			return;
@@ -92,14 +94,13 @@ export default function MangaPage({
 		} else {
 			const nextVolume = getNextVolume();
 			if (nextVolume) {
-				// Construire correctement la nouvelle URL pour naviguer au prochain volume
-				const parts = window.location.pathname.split("/");
-				parts[parts.length - 1] = nextVolume; // Remplacer le dernier segment par le prochain numéro de volume
+				const parts = pathname.split("/");
+				parts[parts.length - 1] = nextVolume;
 				const newPathname = parts.join("/");
-				window.location.pathname = newPathname;
+				router.push(newPathname);
 			}
 		}
-	}, [pageNumber, totalPages, isLoading, getNextVolume]);
+	}, [pageNumber, totalPages, isLoading, getNextVolume, pathname, router]);
 
 	const previousPage = useCallback(() => {
 		if (pageNumber > 1) {
@@ -254,10 +255,9 @@ export default function MangaPage({
 								src={`/api/image?path=${slug}/manga/${VolumeTome}/${imageName}.webp`}
 								alt={`${slug} Page ${pageNumber}`}
 								className="object-contain"
-								sizes="(min-width: 1080px) 1024px, 100vw"
 								quality={quality}
-								fill
 								priority={true}
+								fill
 								onLoad={() => setIsLoading(false)}
 								placeholder="blur"
 								blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
@@ -273,7 +273,6 @@ export default function MangaPage({
 								<Image
 									src={`/api/image?path=${slug}/manga/${VolumeTome}/${nextImageName}.webp`}
 									alt={`${slug} Page ${pageNumber + 1}`}
-									sizes="(min-width: 1080px) 1024px, 100vw"
 									quality={quality}
 									fill
 									priority={true}
@@ -285,9 +284,9 @@ export default function MangaPage({
 									<Image
 										src={`/api/image?path=${slug}/manga/${VolumeTome}/${nextNextImageName}.webp`}
 										alt={`${slug} Page ${pageNumber + 2}`}
-										sizes="(min-width: 1080px) 1024px, 100vw"
 										quality={quality}
 										fill
+										priority={true}
 										className="hidden object-contain"
 										placeholder="blur"
 										blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
