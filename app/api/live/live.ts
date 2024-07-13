@@ -1,8 +1,9 @@
+import { exec } from "node:child_process";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import { promisify } from "node:util";
 import { getAnimePathFromDb } from "@/app/types/db/item/getItemDb";
 import { createScheduleTable } from "@/app/types/db/schedule/generateScheduleDb";
-import * as mm from "music-metadata";
 import * as sqlite3 from "sqlite3";
 
 interface VideoInfo {
@@ -17,29 +18,33 @@ const dbSchedule = new sqlite3.Database(
 ) as sqlite3.Database & { time: number };
 const dbItems = new sqlite3.Database("db/items.db");
 
-async function getVideoDuration(filename: string): Promise<number> {
-	// console.log(`Getting video duration for file: ${filename}`);
-	const metadata = await mm.parseFile(filename);
-	return metadata.format.duration || 0;
-}
+const execAsync = promisify(exec);
 
+async function getVideoDuration(filename: string): Promise<number> {
+	try {
+		const command = `ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${filename}"`;
+		const { stdout } = await execAsync(command);
+		const duration = Number.parseFloat(stdout.trim());
+		return Number.isNaN(duration) ? 0 : duration;
+	} catch (error) {
+		console.error(`error when get duration video${filename}:`, error);
+		return 0;
+	}
+}
 async function getVideoFiles(dir: string): Promise<string[]> {
 	// console.log(`Getting video files from directory: ${dir}`);
 	const entries = await fs.readdir(dir, { withFileTypes: true });
 	let files: string[] = [];
 
 	for (const entry of entries) {
-		const res = path.resolve(dir, entry.name);
+		const res = path.join(dir, entry.name);
 		if (entry.isDirectory()) {
-			console.log(`Found directory: ${res}, recursing into it.`);
 			files = files.concat(await getVideoFiles(res));
 		} else if (entry.isFile() && path.extname(res) === ".mp4") {
-			console.log(`Found video file: ${res}`);
 			files.push(res);
 		}
 	}
 
-	console.log(`Found ${files.length} video files in directory: ${dir}`);
 	return files;
 }
 
@@ -52,19 +57,12 @@ function shuffleArray(array: VideoInfo[]) {
 export async function generateBroadcastSchedule(
 	addVideo = false,
 ): Promise<void> {
-	console.log("Starting to generate broadcast schedule...");
-
 	let totalDuration = 0;
-	// const currentTime = new Date();
-
-	console.log("Fetching anime titles from database...");
 	const animeTitles = await new Promise<string[]>((resolve, reject) => {
 		dbItems.all("SELECT title FROM items", (err, rows: { title: string }[]) => {
 			if (err) {
-				console.error("Error fetching titles from database:", err);
 				reject(err);
 			} else {
-				console.log(`Fetched ${rows.length} titles.`);
 				resolve(rows.map((row) => row.title));
 			}
 		});
@@ -73,21 +71,17 @@ export async function generateBroadcastSchedule(
 	const videoInfos: VideoInfo[] = [];
 
 	for (const title of animeTitles) {
-		console.log(`Processing title: ${title}`);
 		let animePath = await getAnimePathFromDb(title);
 		if (!animePath) {
-			console.log(`No path found for ${title}`);
 			continue;
 		}
 		animePath += "/anime";
-		console.log(`Modified anime path for ${title}: ${animePath}`);
 		const seasonDirs = await fs.readdir(animePath, { withFileTypes: true });
 		if (seasonDirs.length === 0) {
-			console.log(`No season directories found in ${animePath}`);
 		}
 		for (const dir of seasonDirs) {
 			if (dir.isDirectory() && dir.name.startsWith("Season")) {
-				const seasonPath = path.resolve(animePath, dir.name);
+				const seasonPath = path.join(animePath, dir.name);
 				const videoFiles = await getVideoFiles(seasonPath);
 				for (const videoPath of videoFiles) {
 					const match = videoPath.match(/Season(\d+)[\/\\](\d+)-(\d+)\.mp4$/);
@@ -254,19 +248,6 @@ VALUES (?, ?, ?, ?, ?, ?, ?)
 	});
 }
 
-// // Assuming dbSchedule is properly initialized and imported from elsewhere
-// export async function getLaunchTime(): Promise<number> {
-// 	try {
-// 		const result = await dbSchedule.get<{ time: number }>(
-// 			"SELECT time FROM launch_time WHERE id = 1",
-// 		);
-// 		return result ? result.time : Date.now();
-// 	} catch (error) {
-// 		console.error("Error accessing the database:", error);
-// 		return Date.now(); // Fallback to current time on error
-// 	}
-// }
-
 export function startScheduledBroadcast() {
 	// Planifier l'exécution de la fonction toutes les 12 heures
 	setInterval(
@@ -274,6 +255,7 @@ export function startScheduledBroadcast() {
 			console.log("Regenerating broadcast schedule...");
 			generateBroadcastSchedule(true);
 		},
+		// 12 hours in milliseconds
 		12 * 60 * 60 * 1000,
 	);
 }

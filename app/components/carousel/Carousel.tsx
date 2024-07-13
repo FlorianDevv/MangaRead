@@ -86,11 +86,12 @@ function MangaDetailComponent({
 
 				<div className="w-1/2 text-left ml-4 space-y-2 flex flex-col justify-center">
 					<h1 className="text-xl">{detail.name}</h1>
-					<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3 text-gray-100 max-w-lg">
+					<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3  max-w-lg ">
 						{detail.synopsis}
 					</p>
-					<p className="text-sm text-gray-100 font-normal">
-						{detail.volumes?.length ?? 0} {data.carousel.volumes}
+					<p className="text-sm font-normal">
+						{detail.volumes?.length ?? 0}{" "}
+						{`${(detail.volumes?.[0]?.type ?? data.carousel.volumes).trim()}s`}
 					</p>
 					<div>
 						<Link href={`/manga/${detail.name}/1`}>
@@ -104,7 +105,7 @@ function MangaDetailComponent({
 						<Link href={`/detail/${detail.name}`}>
 							<Button
 								variant="ghost"
-								className="rounded-full p-2 m-4 bg-opacity-50 bg-black"
+								className="rounded-full p-2 m-4 bg-opacity-50 dark:bg-black bg-white"
 								aria-label="More Info"
 							>
 								<InfoIcon />
@@ -265,11 +266,11 @@ function AnimeDetailComponent({
 							/>
 						</div>
 						<div className="w-1/2 text-left ml-4 space-y-2 flex flex-col justify-center">
-							<h1 className="text-xl">{detail.name}</h1>
-							<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3 text-gray-100 max-w-lg">
+							<h1 className="text-xl text-white">{detail.name}</h1>
+							<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3 max-w-lg text-white">
 								{detail.synopsis}
 							</p>
-							<p className="text-sm text-gray-100 font-normal">
+							<p className="text-sm font-normal text-white">
 								{detail.seasons?.length ?? 0} {data.carousel.seasons},{" "}
 								{detail.episodeNumber} {data.carousel.episodes}
 							</p>
@@ -287,7 +288,7 @@ function AnimeDetailComponent({
 								<Link href={`/detail/${detail.name}`}>
 									<Button
 										variant="ghost"
-										className="rounded-full p-2 m-4 bg-opacity-50 bg-black"
+										className="rounded-full p-2 m-4 bg-opacity-50 dark:bg-black bg-white"
 										aria-label="More Info"
 									>
 										<InfoIcon />
@@ -296,7 +297,7 @@ function AnimeDetailComponent({
 								<Button
 									variant="ghost"
 									onClick={handleMute}
-									className="absolute right-1 bottom-8 md:bottom-1/4 transform translate-y-1/2 m-4 bg-black bg-opacity-50 rounded-full p-1"
+									className="absolute right-1 bottom-8 md:bottom-1/4 transform translate-y-1/2 m-4 dark:bg-black bg-white bg-opacity-50 rounded-full p-1"
 									aria-label="Mute/Unmute Video"
 								>
 									{isMuted ? (
@@ -308,7 +309,7 @@ function AnimeDetailComponent({
 							</div>
 						</div>
 					</div>
-					<div className="h-1 bg-black  w-full bottom-0 absolute">
+					<div className="h-1 dark:bg-black bg-white w-full bottom-0 absolute">
 						<div
 							style={{ width: `${progress}%` }}
 							className="absolute h-1 bg-red-600"
@@ -389,7 +390,7 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
 				</div>
 				<button
 					type="button"
-					className="absolute top-1/2 left-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
+					className="absolute top-1/2 left-2 transform -translate-y-1/2 p-2 dark:bg-black bg-white bg-opacity-50 rounded-full shadow-lg"
 					onClick={scrollPrev}
 					aria-label="Previous Slide"
 				>
@@ -397,7 +398,7 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
 				</button>
 				<button
 					type="button"
-					className="absolute top-1/2 right-2 transform -translate-y-1/2 p-2 bg-black bg-opacity-50 rounded-full shadow-lg"
+					className="absolute top-1/2 right-2 transform -translate-y-1/2 p-2 dark:bg-black bg-white bg-opacity-50 rounded-full shadow-lg"
 					onClick={scrollNext}
 					aria-label="Next Slide"
 				>
@@ -408,15 +409,11 @@ export default function EmblaCarousel(props: EmblaCarouselProps) {
 						<div
 							key={_.name}
 							className={`w-2 h-2 rounded-full flex items-center justify-center m-0 p-0 border  appearance-none tap-highlight-transparent 
-${index === activeIndex ? "bg-white border-black" : "bg-black border-white"}`}
+${index === activeIndex ? "dark:bg-white dark:border-black bg-black border-white" : "dark:bg-black bg-white dark:border-white border-black"}`}
 						>
 							<div
 								className={`w-7 h-7 rounded-full flex items-center justify-center box-border 
-  ${
-		index === activeIndex
-			? "shadow-inner text-body"
-			: "shadow-inner text-detail-medium-contrast"
-	}`}
+  ${index === activeIndex ? "text-body" : "stext-detail-medium-contrast"}`}
 							/>
 						</div>
 					))}

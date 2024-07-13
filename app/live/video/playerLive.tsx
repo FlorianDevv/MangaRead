@@ -18,7 +18,6 @@ import {
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
-import Image from "next/image";
 
 interface VideoData {
 	title: string;
@@ -29,9 +28,14 @@ interface VideoData {
 
 export default function PlayerLive() {
 	const [videoData, setVideoData] = useState<VideoData | null>(null);
+	const playerRef = useRef<HTMLVideoElement | null>(null);
+	const [metadataLoaded, setMetadataLoaded] = useState(false);
+	const [isFullscreen, setIsFullscreen] = useState(false);
+
 	const [src, setSrc] = useState("");
 	const [thumbnailSrc, setThumbnailSrc] = useState("");
 	const remote = useMediaRemote();
+
 	const fetchVideoData = useCallback(async () => {
 		try {
 			const response = await fetch("/api/live/current");
@@ -51,6 +55,7 @@ export default function PlayerLive() {
 			setThumbnailSrc(
 				`/api/image?type=thumbnail&path=${data.title}/anime/Season${season}/${season}-${episode}.webp`,
 			);
+			setMetadataLoaded(false);
 		} catch (error) {
 			console.error("Error fetching video data:", error);
 		}
@@ -63,29 +68,55 @@ export default function PlayerLive() {
 	const onProviderSetup = useCallback(
 		(provider: MediaProviderAdapter): void => {
 			if (isVideoProvider(provider) && isHTMLVideoElement(provider.video)) {
-				const player = provider.video;
-				player.onloadedmetadata = () => {
-					if (videoData) {
-						player.currentTime = videoData.elapsedTime;
-					}
+				playerRef.current = provider.video;
+				playerRef.current.onloadedmetadata = () => {
+					setMetadataLoaded(true);
 				};
 			}
 		},
-		[videoData],
+		[],
 	);
 
+	useEffect(() => {
+		if (videoData && metadataLoaded && playerRef.current) {
+			playerRef.current.currentTime = videoData.elapsedTime;
+		}
+	}, [videoData, metadataLoaded]);
+
 	const handlePlay = useCallback(
-		(triggerEvent: MediaPlayEvent) => {
-			if (remote) {
-				remote.enterFullscreen("prefer-media", triggerEvent);
+		async (event: MediaPlayEvent) => {
+			// Fetch the latest video data when play is triggered
+			await fetchVideoData();
+
+			if (playerRef.current && videoData) {
+				playerRef.current.currentTime = videoData.elapsedTime;
+			}
+
+			if (remote && !isFullscreen) {
+				setTimeout(() => {
+					remote.enterFullscreen("prefer-media", event);
+					setIsFullscreen(true);
+				}, 2000);
 			}
 		},
-		[remote],
+		[remote, isFullscreen, fetchVideoData, videoData],
 	);
 
 	const handleVideoEnd = useCallback(() => {
+		setIsFullscreen(document.fullscreenElement !== null);
 		fetchVideoData();
 	}, [fetchVideoData]);
+
+	const handleFullscreenChange = useCallback(() => {
+		setIsFullscreen(document.fullscreenElement !== null);
+	}, []);
+
+	useEffect(() => {
+		document.addEventListener("fullscreenchange", handleFullscreenChange);
+		return () => {
+			document.removeEventListener("fullscreenchange", handleFullscreenChange);
+		};
+	}, [handleFullscreenChange]);
 
 	if (!videoData) {
 		return null;
@@ -98,6 +129,7 @@ export default function PlayerLive() {
 			onProviderSetup={onProviderSetup}
 			onEnded={handleVideoEnd}
 			autoPlay
+			playsInline
 			onPlay={handlePlay}
 			keyDisabled
 			controls={false}

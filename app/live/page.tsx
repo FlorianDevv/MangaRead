@@ -132,7 +132,7 @@ export default async function Page() {
 								{categories.map((category) => (
 									<span
 										key={category}
-										className="bg-gray-900 text-white text-xs sm:text-sm rounded-full px-2 py-1 m-1"
+										className="bg-accent  text-xs sm:text-sm rounded-full px-2 py-1 m-1"
 									>
 										{category}
 									</span>
@@ -224,7 +224,7 @@ export default async function Page() {
 														alt={item.title}
 														quality={50}
 													/>
-													<p className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-center text-sm">
+													<p className="absolute bottom-0 left-0 right-0 bg-white dark:bg-black bg-opacity-50  text-center text-sm">
 														{item.title}
 													</p>
 												</CardTitle>

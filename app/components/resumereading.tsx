@@ -2,7 +2,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, CirclePlay, Clock3, FileText, Play, X } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { BookOpen, CirclePlay, Clock3, Play, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
@@ -166,18 +167,13 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 					{Array(4)
 						.fill(0)
 						.map((_, index) => (
-							<div
-								key={`loading-${
-									// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-									index
-								}`}
-								className="m-2 relative"
-							>
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							<div key={`loading-${index}`} className="m-2 relative">
 								<div className="flex flex-col items-stretch rounded-lg overflow-hidden ">
-									<div className="relative h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 animate-pulse bg-gray-800" />
+									<Skeleton className="h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0" />
 									<div className="flex-grow p-2">
-										<div className="h-4 animate-pulse bg-gray-800" />
-										<div className="h-4 mt-2 animate-pulse bg-gray-800" />
+										<Skeleton className="h-4" />
+										<Skeleton className="h-4 mt-2" />
 									</div>
 								</div>
 							</div>
@@ -225,11 +221,11 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 												blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 											/>
 											<div className="absolute inset-0 flex items-center justify-center hover:scale-110 transition-transform duration-500">
-												<div className="bg-black bg-opacity-50 rounded-full p-2">
+												<div className="dark:bg-black bg-white bg-opacity-50 rounded-full p-2">
 													<BookOpen className="w-10 h-10" />
 												</div>
 											</div>
-											<div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded">
+											<div className="absolute bottom-2 left-2 bg-blue-900 text-sm px-2 py-1 rounded text-white">
 												Manga
 											</div>
 										</div>
@@ -237,7 +233,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 											<p className="text-sm overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
 												{decodeURIComponent(mangaInfo.manga)}
 											</p>
-											<div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row group-hover:text-red-800 transition-colors duration-300 ease-in-out">
+											<div className="text-sm mt-2  overflow-wrap break-words flex flex-col md:flex-row group-hover:text-red-800 transition-colors duration-300 ease-in-out">
 												<p>
 													{`${mangaInfo.type} `}
 													{mangaInfo.volume}
@@ -257,7 +253,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 														value={calculateProgress(mangaInfo)}
 														aria-label="Reading progress"
 													/>
-													<p className="my-2 text-gray-200 text-sm ">
+													<p className="my-2 text-sm ">
 														{`${mangaInfo.page} / ${mangaInfo.totalPages}`}
 													</p>
 												</>
@@ -270,7 +266,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 											e.stopPropagation();
 											deleteManga(item.manga);
 										}}
-										className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
+										className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 hover:text-red-600 dark:bg-black bg-white shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
 										title="🗑️"
 									>
 										<X />
@@ -301,13 +297,13 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 											placeholder="blur"
 											blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 										/>
-										<div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
+										<div className="absolute inset-0 dark:bg-black bg-white opacity-0 group-hover:opacity-50 transition-opacity duration-300" />
 										<div className="absolute inset-0 flex items-center justify-center hover:scale-110 transition-transform duration-500">
-											<div className="bg-black bg-opacity-50 rounded-full p-2">
+											<div className="dark:bg-black bg-white bg-opacity-50 rounded-full p-2">
 												<Play className="w-10 h-10" />
 											</div>
 										</div>
-										<div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded">
+										<div className="absolute bottom-2 left-2 bg-red-900 text-sm px-2 py-1 rounded text-white">
 											Anime
 										</div>
 									</div>
@@ -315,7 +311,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 										<p className="text-sm overflow-wrap transition-colors duration-300 ease-in-out group-hover:text-red-500 break-words">
 											{decodeURIComponent(animeInfo.anime)}
 										</p>
-										<div className="text-sm mt-2 text-gray-400 overflow-wrap break-words flex flex-col md:flex-row group-hover:text-red-800 transition-colors duration-300 ease-in-out">
+										<div className="text-sm mt-2  overflow-wrap break-words flex flex-col md:flex-row group-hover:text-red-800 transition-colors duration-300 ease-in-out">
 											<p>
 												{`${data.seasonSelect.season} ${animeInfo.season.split("season")[1]}`}
 											</p>
@@ -330,7 +326,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 											value={calculateAnimeProgress(animeInfo)}
 											aria-label="Watching progress"
 										/>
-										<p className="my-2 text-gray-200 text-sm ">
+										<p className="my-2 text-sm ">
 											{`-${new Date(
 												(animeInfo.duration
 													.split(":")
@@ -361,7 +357,7 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 										e.stopPropagation();
 										deleteAnime(item.anime);
 									}}
-									className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 hover:text-red-600 bg-black shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
+									className="absolute top-0 right-0 flex items-center justify-center w-6 h-6 hover:text-red-600 dark:bg-black bg-white shadow-lg shadow-black outline outline-2 outline-gray-700 rounded transition-all duration-200"
 									title="🗑️"
 								>
 									<X />
@@ -397,8 +393,8 @@ export function AnimeProgress({ Name }: { Name: string }) {
 		return (
 			<div className="relative">
 				<Link href={`/anime/${Name}/season01/episode01`}>
-					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-60 flex items-center justify-center text-white text-center bg-black bg-opacity-50 rounded-full transition-all duration-200 ease-in-out hover:bg-opacity-75 hover:scale-110">
-						<CirclePlay className="w-14 h-14" />
+					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-60 flex items-center justify-center text-center bg-black text-white bg-opacity-50 rounded-full transition-all duration-200 ease-in-out hover:bg-opacity-75 hover:scale-110">
+						<CirclePlay size={60} />
 					</div>
 				</Link>
 			</div>
@@ -428,8 +424,8 @@ export function AnimeProgress({ Name }: { Name: string }) {
 		<>
 			<div className="relative">
 				<Link href={episodeLink}>
-					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-60 flex items-center justify-center text-white text-center bg-black bg-opacity-50 rounded-full transition-all duration-200 ease-in-out hover:bg-opacity-75 hover:scale-110">
-						<CirclePlay className="w-14 h-14" />
+					<div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-60 flex items-center justify-center text-center bg-black text-white  bg-opacity-50 rounded-full transition-all duration-200 ease-in-out hover:bg-opacity-75 hover:scale-110">
+						<CirclePlay size={60} />
 					</div>
 				</Link>
 			</div>
@@ -437,7 +433,7 @@ export function AnimeProgress({ Name }: { Name: string }) {
 				<div className="flex justify-between items-center mb-2">
 					<span className="text-lg font-bold">
 						{`S${formattedSeason} : E${formattedEpisode} `}
-						<span className="text-sm text-gray-300">
+						<span className="text-sm ">
 							{data.episodeSelect.episode} {formattedEpisode}
 						</span>
 					</span>
@@ -446,7 +442,7 @@ export function AnimeProgress({ Name }: { Name: string }) {
 					<div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-[#333333] flex-grow mr-2">
 						<div
 							style={{ width: `${progress}%` }}
-							className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-600"
+							className="shadow-none flex flex-col text-center whitespace-nowrap  justify-center bg-red-600"
 						/>
 					</div>
 					<span className=" -translate-y-2 text-xs text-opacity-50 self-center">{`${savedTime} sur ${totalDuration}`}</span>
@@ -484,22 +480,21 @@ export function MangaProgress({ Name }: { Name: string }) {
 
 	return (
 		<>
-			<div className="flex flex-col sm:flex-row items-center p-4 rounded-lg">
+			<div className="flex flex-col sm:flex-row items-center ml-2 rounded-lg">
 				<Link
 					href={volumeLink}
 					className="flex items-center mb-2 sm:mb-0 sm:mr-4"
 				>
 					<Button className="flex items-center px-4 py-2" variant="secondary">
-						<BookOpen className="mr-2" size={16} />
+						<BookOpen className="mr-2" size={14} />
 						<p className="font-semibold"> {data.resume.title} </p>
 					</Button>
 				</Link>
 				<div className="flex flex-row items-center">
-					<FileText className="mr-2 text-gray-300" size={16} />
-					<div className="text-sm text-gray-300 mr-4">
-						{data.resume.volume} {mangaInfo.volume}
+					<div className="text-sm mr-4 flex-row flex">
+						{mangaInfo.type} {mangaInfo.volume}
 					</div>
-					<div className="text-sm text-gray-300">
+					<div className="text-sm ">
 						{data.resume.page} {mangaInfo.page}
 					</div>
 				</div>
