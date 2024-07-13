@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BookOpen, CirclePlay, Clock3, FileText, Play, X } from "lucide-react";
+import { BookOpen, CirclePlay, Clock3, Play, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
@@ -170,10 +170,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 							<div key={`loading-${index}`} className="m-2 relative">
 								<div className="flex flex-col items-stretch rounded-lg overflow-hidden ">
-									<Skeleton className="h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0 bg-gray-800" />
+									<Skeleton className="h-32 sm:h-48 md:h-64 w-32 sm:w-48 md:w-64 flex-shrink-0" />
 									<div className="flex-grow p-2">
-										<Skeleton className="h-4 bg-gray-800" />
-										<Skeleton className="h-4 mt-2 bg-gray-800" />
+										<Skeleton className="h-4" />
+										<Skeleton className="h-4 mt-2" />
 									</div>
 								</div>
 							</div>
@@ -480,19 +480,18 @@ export function MangaProgress({ Name }: { Name: string }) {
 
 	return (
 		<>
-			<div className="flex flex-col sm:flex-row items-center p-4 rounded-lg">
+			<div className="flex flex-col sm:flex-row items-center ml-2 rounded-lg">
 				<Link
 					href={volumeLink}
 					className="flex items-center mb-2 sm:mb-0 sm:mr-4"
 				>
 					<Button className="flex items-center px-4 py-2" variant="secondary">
-						<BookOpen className="mr-2" size={16} />
+						<BookOpen className="mr-2" size={14} />
 						<p className="font-semibold"> {data.resume.title} </p>
 					</Button>
 				</Link>
 				<div className="flex flex-row items-center">
-					<FileText className="mr-2 " size={16} />
-					<div className="text-sm  mr-4">
+					<div className="text-sm mr-4 flex-row flex">
 						{mangaInfo.type} {mangaInfo.volume}
 					</div>
 					<div className="text-sm ">

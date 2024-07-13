@@ -123,7 +123,7 @@ export default function VolumeSelect({
 					)}
 				</div>
 			)}
-			<div className="flex flex-wrap justify-center mt-2 w-full">
+			<div className="ml-2 flex flex-wrap justify-center mt-2 w-full">
 				<Select
 					name="volume"
 					value={formatVolume(selectedVolume)}

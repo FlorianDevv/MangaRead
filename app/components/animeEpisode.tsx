@@ -90,7 +90,7 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 					>
 						<div
 							key={episode.name}
-							className="relative rounded p-4  hover:bg-accent ease-in-out transition-opacity duration-300"
+							className="relative rounded p-4  hover:bg-accent ease-in-out transition-opacity duration-300 w-44 h-28"
 						>
 							<Image
 								src={`/api/image?type=thumbnail&path=${slug}/anime/Season${seasonNumber.padStart(
@@ -101,8 +101,7 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 									"0",
 								)}-${episode.episodeNumber.padStart(3, "0")}.webp`}
 								alt={episode.name}
-								width={300}
-								height={300}
+								fill
 								className="object-cover"
 							/>
 							<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white bg-opacity-50 rounded-full transition-transform duration-200 hover:scale-110">
