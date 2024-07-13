@@ -8,7 +8,7 @@
 
 A self-hosted website for reading local manga and watching anime videos.
 
-![Manga Reader](readme/image/pres.webp)
+![Manga Reader](readme/image/home.webp)
 
 ## Table of Contents
 
