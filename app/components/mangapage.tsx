@@ -9,7 +9,14 @@ import {
 import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+	use,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { FloatingButton } from "./floatingButtons";
 import { MobileNavbarComponent } from "./navbar/mobilenavbar";
 import { NavbarContext } from "./navbar/navbarcontext";
@@ -73,14 +80,20 @@ export default function MangaPage({
 	}, []);
 	const [nextPageExists, setNextPageExists] = useState(true);
 
+	const currentPath = usePathname();
+
 	const getNextVolume = useCallback(() => {
-		const currentPath = window.location.pathname;
 		const currentVolumeFromUrl = currentPath.split("/").pop();
 		const nextVolume = (
 			Number.parseInt(currentVolumeFromUrl || "0", 10) + 1
 		).toString();
-		return nextVolume;
-	}, []);
+
+		const nextVolumeExists = volumes.some(
+			(volume) => volume.name === nextVolume,
+		);
+
+		return nextVolumeExists ? nextVolume : false;
+	}, [currentPath, volumes]);
 
 	const router = useRouter();
 	const pathname = usePathname();
