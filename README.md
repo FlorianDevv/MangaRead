@@ -123,7 +123,7 @@ This project uses the following technologies:
 
 ## Lighthouse 🦅
 
-![Lighthouse Image](readme/image/lighthouse.png)
+![Lighthouse Image](readme/image/lighthouse.webp)
 Performance is the main focus of this project to ensure a smooth reading experience. The website is optimized for mobile and desktop devices, with a focus on image optimization and preloading.
 
 ## Star History 🌟
