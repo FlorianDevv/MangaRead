@@ -86,7 +86,7 @@ function MangaDetailComponent({
 
 				<div className="w-1/2 text-left ml-4 space-y-2 flex flex-col justify-center">
 					<h1 className="text-xl">{detail.name}</h1>
-					<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3  max-w-lg">
+					<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3  max-w-lg ">
 						{detail.synopsis}
 					</p>
 					<p className="text-sm font-normal">
@@ -266,11 +266,11 @@ function AnimeDetailComponent({
 							/>
 						</div>
 						<div className="w-1/2 text-left ml-4 space-y-2 flex flex-col justify-center">
-							<h1 className="text-xl">{detail.name}</h1>
-							<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3  max-w-lg">
+							<h1 className="text-xl text-white">{detail.name}</h1>
+							<p className="text-xs pr-2 line-clamp-2 lg:line-clamp-3 max-w-lg text-white">
 								{detail.synopsis}
 							</p>
-							<p className="text-sm  font-normal">
+							<p className="text-sm font-normal text-white">
 								{detail.seasons?.length ?? 0} {data.carousel.seasons},{" "}
 								{detail.episodeNumber} {data.carousel.episodes}
 							</p>

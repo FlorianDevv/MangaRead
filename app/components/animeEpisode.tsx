@@ -80,38 +80,27 @@ const AnimeEpisode: React.FC<AnimeComponentProps> = ({
 			<div className="grid grid-cols-2 gap-4 mt-4 justify-items-center items-center ">
 				{filteredEpisodes.map((episode) => (
 					<Link
-						href={`/anime/${slug}/season${selectedSeason
-							.replace(/season /i, "")
-							.padStart(2, "0")}/episode${episode.episodeNumber.padStart(
-							2,
-							"0",
-						)}`}
+						href={`/anime/${slug}/season${selectedSeason.replace(/season /i, "").padStart(2, "0")}/episode${episode.episodeNumber.padStart(2, "0")}`}
 						key={episode.name}
 					>
 						<div
 							key={episode.name}
-							className="relative rounded p-4  hover:bg-accent ease-in-out transition-opacity duration-300 w-44 h-28"
+							className="relative group rounded p-4 hover:opacity-60 ease-in-out transition-opacity duration-300 w-44 h-28"
 						>
 							<Image
-								src={`/api/image?type=thumbnail&path=${slug}/anime/Season${seasonNumber.padStart(
-									2,
-									"0",
-								)}/${seasonNumber.padStart(
-									2,
-									"0",
-								)}-${episode.episodeNumber.padStart(3, "0")}.webp`}
+								src={`/api/image?type=thumbnail&path=${slug}/anime/Season${seasonNumber.padStart(2, "0")}/${seasonNumber.padStart(2, "0")}-${episode.episodeNumber.padStart(3, "0")}.webp`}
 								alt={episode.name}
 								fill
 								className="object-cover"
 							/>
-							<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white bg-opacity-50 rounded-full transition-transform duration-200 hover:scale-110">
+							<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black text-white bg-opacity-50 rounded-full transition-transform duration-200 group-hover:scale-110">
 								<CirclePlay size={30} />
 							</div>
-							<p className="text-xs mt-2">
-								{Number.parseInt(episode.episodeNumber)}.{" "}
-								{data.episodeSelect.episode}{" "}
-								{Number.parseInt(episode.episodeNumber)}
-							</p>
+							<div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 p-1">
+								<p className="text-xs text-white">
+									{Number.parseInt(episode.episodeNumber)}. {episode.name}
+								</p>
+							</div>
 						</div>
 					</Link>
 				))}

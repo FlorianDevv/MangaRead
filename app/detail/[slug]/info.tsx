@@ -62,7 +62,7 @@ export default async function Info({ params }: { params: { slug: string } }) {
 								{categories.map((category) => (
 									<span
 										key={category}
-										className="bg-gray-900 text-xs sm:text-sm rounded-full px-2 py-1 m-1 text-white"
+										className="bg-accent text-xs sm:text-sm rounded-full px-2 py-1 m-1"
 									>
 										{category}
 									</span>
