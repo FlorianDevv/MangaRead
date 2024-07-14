@@ -54,18 +54,17 @@ export default async function Navbar() {
 							<span className="ml-2"> {data.navbar.catalog}</span>
 						</NavItem>
 						<SearchBar details={details} />
-						<a
-							href="https://github.com/FlorianDevv/MangaRead"
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="View source on GitHub"
-						>
-							<Button variant="ghost">
+						<Button variant="ghost" aria-label="View source on GitHub">
+							<a
+								href="https://github.com/FlorianDevv/MangaRead"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
 								<p className="transition-colors hover:text-foreground/80">
 									<Github size={20} />
 								</p>
-							</Button>
-						</a>
+							</a>
+						</Button>
 						<ModeToggle />
 					</div>
 				</>

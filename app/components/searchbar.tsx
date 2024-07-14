@@ -66,7 +66,7 @@ export default function SearchBar({ details }: SearchBarProps) {
 										alt={result.name}
 										width={60}
 										height={60}
-										quality={50}
+										quality={75}
 										placeholder="blur"
 										blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 									/>

@@ -213,10 +213,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 											<Image
 												src={`/api/image?path=${mangaInfo.manga}/manga/01/01-001.webp`}
 												alt={`${mangaInfo.manga} resume`}
-												quality={50}
-												fill
-												sizes="(min-width: 780px) 224px, (min-width: 640px) 192px, 128px"
-												className="object-cover opacity-100 group-hover:opacity-50 transition-opacity duration-300"
+												quality={75}
+												width={224}
+												height={224}
+												className="object-cover opacity-100 group-hover:opacity-50 transition-opacity duration-300 w-full h-full"
 												placeholder="blur"
 												blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 											/>
@@ -290,10 +290,10 @@ export default function ResumeReading({ Name }: ResumeReadingProps) {
 										<Image
 											src={`/api/image?path=${animeInfo.anime}/anime/thumbnail.webp`}
 											alt={`${animeInfo.anime} resume`}
-											quality={50}
-											fill
-											sizes="(min-width: 780px) 224px, (min-width: 640px) 192px, 128px"
-											className="object-cover"
+											quality={75}
+											width={224}
+											height={224}
+											className="object-cover w-full h-full"
 											placeholder="blur"
 											blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 										/>

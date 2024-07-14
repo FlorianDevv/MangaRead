@@ -78,7 +78,7 @@ export default async function Page() {
 									width={200}
 									height={200}
 									alt={current.title}
-									quality={50}
+									quality={75}
 								/>
 								<div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4 bg-red-600 rounded-lg mb-2 animate-pulse whitespace-nowrap">
 									{data.live.title}
@@ -222,7 +222,7 @@ export default async function Page() {
 														fill
 														className="object-cover"
 														alt={item.title}
-														quality={50}
+														quality={75}
 													/>
 													<p className="absolute bottom-0 left-0 right-0 bg-white dark:bg-black bg-opacity-50  text-center text-sm">
 														{item.title}

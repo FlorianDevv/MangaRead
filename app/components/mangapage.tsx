@@ -325,7 +325,6 @@ export default function MangaPage({
 												alt={`${slug} Page ${index + 1}`}
 												width={3840}
 												height={2160}
-												sizes="(min-width: 1080px) 1024px, 95.26vw"
 												quality={quality}
 												loading="lazy"
 												placeholder="blur"

@@ -42,7 +42,7 @@ export default async function Info({ params }: { params: { slug: string } }) {
 				<Image
 					src={`/api/image?path=${params.slug}/${isAnimeDirectoryExists ? "anime/thumbnail.webp" : "manga/01/01-001.webp"}`}
 					alt={`${params.slug}`}
-					quality={50}
+					quality={75}
 					fill
 					priority={true}
 					className="object-cover"

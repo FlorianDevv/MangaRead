@@ -27,10 +27,11 @@ export default function Card({ name, types, volumes }: CardProps) {
 						<Image
 							src={imagePath}
 							alt={`${imagePath}`}
-							quality={50}
+							quality={75}
 							placeholder="blur"
-							fill
-							className="object-cover w-full "
+							width={300}
+							height={400}
+							className="object-cover h-full"
 							blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 						/>
 						{types.includes("manga") && (
