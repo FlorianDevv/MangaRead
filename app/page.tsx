@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Card from "./components/Card";
-import PreviewVideo from "./components/carousel/previewVideo";
-import { MobileNavbarComponent } from "./components/navbar/mobilenavbar";
-import ResumeReading from "./components/resumereading";
+import Card from "../components/Card";
+import PreviewVideo from "../components/carousel/previewVideo";
+import { MobileNavbarComponent } from "../components/navbar/mobilenavbar";
+import ResumeReading from "../components/resumereading";
 import { type ItemDetails, getDetails } from "./types/getDetails";
 
 const language = process.env.DEFAULT_LANGUAGE;
@@ -15,7 +15,7 @@ export default async function Page() {
 	const Details = await getDetails();
 
 	return (
-		<MobileNavbarComponent activePage="Home">
+		<MobileNavbarComponent>
 			<PreviewVideo Details={Array.isArray(Details) ? Details : [Details]} />
 			<div className="bg-accent/10 md:mx-8 lg:mx-16 2xl:mx-24">
 				<div className="p-4">

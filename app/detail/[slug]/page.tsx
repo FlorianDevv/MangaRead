@@ -1,4 +1,4 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import type { Metadata } from "next";
 import Info from "./info";
 interface Props {

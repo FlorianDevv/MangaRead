@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Home, Menu, MoveUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { Fullscreen } from "./mangapage";
+import Fullscreen from "./manga/fullscreen";
 import { VolumeSelectDialog } from "./select/volumeselect";
 import { SettingsDialog } from "./settings";
 

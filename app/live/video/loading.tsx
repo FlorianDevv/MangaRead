@@ -1,8 +1,8 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 
 export default async function Loading() {
 	return (
-		<MobileNavbarComponent activePage="Live">
+		<MobileNavbarComponent>
 			<div className="fixed inset-0 flex items-center justify-center dark:bg-black bg-white">
 				<div className="spinner" />
 			</div>

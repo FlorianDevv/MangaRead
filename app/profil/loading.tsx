@@ -1,9 +1,9 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
 	return (
-		<MobileNavbarComponent activePage="Profil">
+		<MobileNavbarComponent>
 			<div className="lg:mx-48 md:mx-24">
 				<Skeleton className="h-5 w-full" />
 				<hr className="my-8" />

@@ -1,9 +1,9 @@
-// app/manga/[slug]/page.server.tsx
-import AnimeEpisode from "@/app/components/animeEpisode";
-import { ButtonAddBookmark } from "@/app/components/bookmark";
-import { AnimeProgress, MangaProgress } from "@/app/components/resumereading";
-import VolumeSelect from "@/app/components/select/volumeselect";
 import { type ItemDetails, getDetails } from "@/app/types/getDetails";
+// app/manga/[slug]/page.server.tsx
+import AnimeEpisode from "@/components/animeEpisode";
+import { ButtonAddBookmark } from "@/components/bookmark";
+import { AnimeProgress, MangaProgress } from "@/components/resumereading";
+import VolumeSelect from "@/components/select/volumeselect";
 import Image from "next/image";
 
 export default async function Info({ params }: { params: { slug: string } }) {

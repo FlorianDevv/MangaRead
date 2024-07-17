@@ -1,7 +1,7 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import type { ItemDetails } from "../types/getDetails";
+import type { ItemDetails } from "../app/types/getDetails";
 import CardClient from "./CardClient";
 
 export default function CategorySelector({

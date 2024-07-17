@@ -1,4 +1,4 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 

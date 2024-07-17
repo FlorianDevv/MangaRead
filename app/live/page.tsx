@@ -1,4 +1,4 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -265,7 +265,7 @@ export default async function Page() {
 	}
 
 	return (
-		<MobileNavbarComponent activePage="Live">
+		<MobileNavbarComponent>
 			<div className="flex flex-col items-center justify-center mt-8">
 				<CurrentItem />
 				<ScheduleItems />

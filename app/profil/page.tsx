@@ -1,18 +1,18 @@
 "use client";
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Settings } from "lucide-react";
-import Bookmark from "../components/bookmark";
-import ExportImportLocalStorage from "../components/exportImportLocalStorage";
-import { ModeToggle } from "../components/modeToggle";
-import ResumeReading from "../components/resumereading";
-import { Quality, Read } from "../components/settings";
+import Bookmark from "../../components/bookmark";
+import ExportImportLocalStorage from "../../components/exportImportLocalStorage";
+import { ModeToggle } from "../../components/modeToggle";
+import ResumeReading from "../../components/resumereading";
+import { Quality, Read } from "../../components/settings";
 const language = process.env.DEFAULT_LANGUAGE;
 const data = require(`@/locales/${language}.json`);
 
 export default function Profile() {
 	return (
-		<MobileNavbarComponent activePage="Profil">
+		<MobileNavbarComponent>
 			<div className="lg:mx-48 md:mx-24">
 				<ResumeReading />
 				<hr className="my-8" />

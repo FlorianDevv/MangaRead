@@ -1,5 +1,5 @@
-import CheckPage from "@/app/components/checkpage";
-import VolumeSelect from "@/app/components/select/volumeselect";
+import CheckPage from "@/components/checkpage";
+import VolumeSelect from "@/components/select/volumeselect";
 import "@/app/mangapage.css";
 import { getDetails } from "@/app/types/getDetails";
 import type { Metadata } from "next";

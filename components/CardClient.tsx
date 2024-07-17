@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import type { ItemDetails } from "../types/getDetails";
+import type { ItemDetails } from "../app/types/getDetails";
 
 export type CardProps = Pick<ItemDetails, "name" | "types" | "volumes"> & {
 	categories?: string[];
