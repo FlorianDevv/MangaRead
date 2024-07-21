@@ -1,19 +1,16 @@
 "use client";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-} from "@/components/ui/select";
-
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { FloatingButton } from "./floatingButtons";
-import { MobileNavbarComponent } from "./navbar/mobilenavbar";
-import { NavbarContext } from "./navbar/navbarcontext";
-import { Quality, Read, getSettings } from "./settings";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { FloatingButton } from "../floatingButtons";
+import { MobileNavbarComponent } from "../navbar/mobilenavbar";
+import { NavbarContext } from "../navbar/navbarcontext";
+import { Quality, Read, getSettings } from "../settings";
+import { NextPageButton, PreviousPageButton } from "./buttonPage";
+import Fullscreen from "./fullscreen";
+import SelectPageNumber from "./selectPageNumber";
+import { usePageState } from "./usePageState";
 type Volume = {
 	name: string;
 	totalPages: number;
@@ -35,12 +32,23 @@ export default function MangaPage({
 	totalPages,
 	volumes,
 }: MangaPageProps) {
-	const [isLoading, setIsLoading] = useState(true);
-	const [pageNumber, setPageNumber] = useState(initialPageNumber);
+	const {
+		pageNumber,
+		setPageNumber,
+		isLoading,
+		setIsLoading,
+		nextPageExists,
+		nextPage,
+		previousPage,
+	} = usePageState(initialPageNumber, totalPages, volumes, slug);
+
 	const formattedVolume = String(volume).padStart(2, "0");
 	const { read } = getSettings();
 	const [isVertical, setIsVertical] = useState(read === "vertical");
 	const VolumeTome = `Tome ${formattedVolume}`;
+	const { qualityNumber } = getSettings();
+	const [quality, setQuality] = useState(qualityNumber);
+	const [isFullscreen, setIsFullscreen] = useState(false);
 	useEffect(() => {
 		const handleSettingsChange = () => {
 			const { read } = getSettings();
@@ -56,9 +64,6 @@ export default function MangaPage({
 		};
 	}, []);
 
-	const { qualityNumber } = getSettings();
-	const [quality, setQuality] = useState(qualityNumber);
-
 	useEffect(() => {
 		const handleSettingsChange = () => {
 			const { qualityNumber: newQuality } = getSettings();
@@ -71,51 +76,21 @@ export default function MangaPage({
 			window.removeEventListener("settingsUpdated", handleSettingsChange);
 		};
 	}, []);
-	const [nextPageExists, setNextPageExists] = useState(true);
+
+	const currentPath = usePathname();
 
 	const getNextVolume = useCallback(() => {
-		const currentPath = window.location.pathname;
 		const currentVolumeFromUrl = currentPath.split("/").pop();
 		const nextVolume = (
 			Number.parseInt(currentVolumeFromUrl || "0", 10) + 1
 		).toString();
-		return nextVolume;
-	}, []);
 
-	const router = useRouter();
-	const pathname = usePathname();
-	const nextPage = useCallback(() => {
-		if (isLoading) {
-			return;
-		}
-		if (pageNumber < totalPages) {
-			setPageNumber(pageNumber + 1);
-			setIsLoading(true);
-		} else {
-			const nextVolume = getNextVolume();
-			if (nextVolume) {
-				const parts = pathname.split("/");
-				parts[parts.length - 1] = nextVolume;
-				const newPathname = parts.join("/");
-				router.push(newPathname);
-			}
-		}
-	}, [pageNumber, totalPages, isLoading, getNextVolume, pathname, router]);
+		const nextVolumeExists = volumes.some(
+			(volume) => volume.name === nextVolume,
+		);
 
-	const previousPage = useCallback(() => {
-		if (pageNumber > 1) {
-			setPageNumber(pageNumber - 1);
-		}
-	}, [pageNumber]);
-
-	const checkNextPageExists = useCallback(() => {
-		const nextPageNumber = pageNumber + 1;
-		setNextPageExists(nextPageNumber <= totalPages);
-	}, [pageNumber, totalPages]);
-
-	useEffect(() => {
-		checkNextPageExists();
-	}, [checkNextPageExists]);
+		return nextVolumeExists ? nextVolume : false;
+	}, [currentPath, volumes]);
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -173,7 +148,6 @@ export default function MangaPage({
 
 	const formattedPageNumber = String(pageNumber).padStart(3, "0");
 	const formattedVolumeNumber = String(volume).padStart(2, "0");
-	const [isFullscreen, setIsFullscreen] = useState(false);
 	const imageName = `${formattedVolumeNumber}-${formattedPageNumber}`;
 	const images = Array.from({ length: totalPages }, (_, i) => {
 		const pageNumber = i + 1;
@@ -191,7 +165,7 @@ export default function MangaPage({
 			// Scroll to the image corresponding to pageNumber when switching to vertical mode
 			imageRefs.current[pageNumber - 1]?.scrollIntoView();
 		}
-	}, [isVertical, pageNumber]);
+	}, [isVertical, pageNumber, setIsLoading]);
 
 	const nextFormattedPageNumber = String(pageNumber + 1).padStart(3, "0");
 	const nextImageName = `${formattedVolumeNumber}-${nextFormattedPageNumber}`;
@@ -312,7 +286,6 @@ export default function MangaPage({
 												alt={`${slug} Page ${index + 1}`}
 												width={3840}
 												height={2160}
-												sizes="(min-width: 1080px) 1024px, 95.26vw"
 												quality={quality}
 												loading="lazy"
 												placeholder="blur"
@@ -377,124 +350,5 @@ export default function MangaPage({
 				</>
 			</MobileNavbarComponent>
 		</NavbarContext.Provider>
-	);
-}
-//---------------------------------------------
-
-interface FullscreenProps {
-	isFullscreen: boolean;
-	setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-// Utilisez le contexte dans le composant Fullscreen
-export function Fullscreen({ isFullscreen, setIsFullscreen }: FullscreenProps) {
-	const { setIsVisible } = useContext(NavbarContext);
-
-	const goFullScreen = () => {
-		if (document.documentElement.requestFullscreen) {
-			document.documentElement.requestFullscreen();
-		}
-		document.body.classList.add("fullscreen");
-		setIsFullscreen(true);
-		setIsVisible(false);
-	};
-
-	const exitFullScreen = () => {
-		if (document.fullscreenElement && document.exitFullscreen) {
-			document.exitFullscreen();
-		}
-		document.body.classList.remove("fullscreen");
-		setIsFullscreen(false);
-		setIsVisible(true);
-	};
-
-	return (
-		<button
-			type="button"
-			className={
-				"justify-center hover:scale-115 hover:opacity-75 transform transition-transform duration-300 "
-			}
-			onClick={isFullscreen ? exitFullScreen : goFullScreen}
-			title="Fullscreen"
-		>
-			{isFullscreen ? <Minimize2 /> : <Maximize2 />}
-		</button>
-	);
-}
-function SelectPageNumber(
-	pageNumber: number,
-	setPageNumber: (arg0: number) => void,
-	totalPages: number,
-) {
-	const [selectValue, setSelectValue] = useState(pageNumber.toString());
-
-	useEffect(() => {
-		setSelectValue(pageNumber.toString());
-	}, [pageNumber]);
-
-	return (
-		<Select
-			value={selectValue}
-			onValueChange={(value: string) => {
-				setPageNumber(Number(value));
-				setSelectValue(value);
-			}}
-		>
-			<SelectTrigger
-				className="m-2 overflow-hidden max-w-sm p-2 hover:opacity-75 focus:outline-none ease-in-out transition-opacity duration-300 cursor-pointer w-auto"
-				aria-label={`Changer de page. Page actuelle: ${pageNumber} page sur ${totalPages} pages`}
-			>
-				{`${pageNumber} / ${totalPages}`}
-			</SelectTrigger>
-			<SelectContent>
-				{Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-					<SelectItem key={num} value={num.toString()}>
-						{`${num} / ${totalPages}`}
-					</SelectItem>
-				))}
-			</SelectContent>
-		</Select>
-	);
-}
-
-interface PreviousPageButtonProps {
-	previousPage: () => void;
-}
-function PreviousPageButton({ previousPage }: PreviousPageButtonProps) {
-	return (
-		<button
-			type="button"
-			className="absolute top-1/2 left-0 transform -translate-y-1/2 w-5/12 h-full opacity-0 hover:opacity-70 flex items-center justify-start ml-4"
-			onClick={previousPage}
-			style={{
-				cursor:
-					"url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjgwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LWJpZy1sZWZ0Ij48cGF0aCBkPSJNMTggMTVoLTZ2NGwtNy03IDctN3Y0aDZ2NnoiLz48L3N2Zz4='), auto",
-			}}
-		>
-			<ChevronLeft className="w-40 h-40 md:hidden block" />
-		</button>
-	);
-}
-
-function NextPageButton({
-	nextPage,
-	disabled,
-}: {
-	nextPage: () => void;
-	disabled: boolean;
-}) {
-	return (
-		<button
-			type="button"
-			className="absolute top-1/2 right-0 transform -translate-y-1/2 w-5/12 h-full opacity-0 hover:opacity-70 flex items-center justify-end mr-4"
-			onClick={nextPage}
-			disabled={disabled}
-			style={{
-				cursor:
-					"url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjgwMDAiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWFycm93LWJpZy1yaWdodCI+PHBhdGggZD0iTTYgOWg2VjVsNyA3LTcgN3YtNEg2Vjl6Ii8+PC9zdmc+'), auto",
-			}}
-		>
-			<ChevronRight className="w-40 h-40 md:hidden block" />
-		</button>
 	);
 }

@@ -1,9 +1,9 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function LoadingCatalogue() {
 	return (
-		<MobileNavbarComponent activePage="Catalogue">
+		<MobileNavbarComponent>
 			<div className="flex flex-col justify-center mb-4 mx-8">
 				{/* Skeleton for types and categories */}
 				<div className="flex flex-row justify-center items-center">

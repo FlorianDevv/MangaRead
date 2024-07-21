@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/dialog-responsive";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import Image from "next/image";
-import Info from "../detail/[slug]/info";
-import type { ItemDetails } from "../types/getDetails";
+import Info from "../app/detail/[slug]/info";
+import type { ItemDetails } from "../app/types/getDetails";
 
 export type CardProps = Pick<ItemDetails, "name" | "types" | "volumes">;
 
@@ -27,10 +27,11 @@ export default function Card({ name, types, volumes }: CardProps) {
 						<Image
 							src={imagePath}
 							alt={`${imagePath}`}
-							quality={50}
+							quality={75}
 							placeholder="blur"
-							fill
-							className="object-cover w-full "
+							width={225}
+							height={384}
+							className="object-cover w-full h-full"
 							blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="
 						/>
 						{types.includes("manga") && (

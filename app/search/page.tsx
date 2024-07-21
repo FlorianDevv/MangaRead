@@ -1,6 +1,6 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import type { Metadata } from "next";
-import CategorySelector from "../components/catalogue";
+import CategorySelector from "../../components/catalogue";
 import { type ItemDetails, getDetails } from "../types/getDetails";
 
 let itemData: ItemDetails[] = [];
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
 	return (
-		<MobileNavbarComponent activePage="Search">
+		<MobileNavbarComponent>
 			<>
 				<h1 className="text-center text-3xl mb-4 mt-6">{data.search.title}</h1>
 				<CategorySelector itemData={itemData} />

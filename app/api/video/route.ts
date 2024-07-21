@@ -1,7 +1,5 @@
-import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
-import { PassThrough } from "node:stream";
 import { getAnimePathFromDb } from "@/app/types/db/item/getItemDb";
 
 let CHUNK_SIZE_IN_BYTES = 5000000; // 5 MB

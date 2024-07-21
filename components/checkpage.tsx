@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import Loading from "../manga/[slug]/[volume]/loading";
-import MangaPage from "./mangapage";
+import Loading from "../app/manga/[slug]/[volume]/loading";
+import MangaPage from "./manga/mangapage";
 
 interface Volume {
 	name: string;

@@ -1,10 +1,10 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
 	return (
-		<MobileNavbarComponent activePage="Live">
+		<MobileNavbarComponent>
 			<div className="flex flex-col items-center justify-center mt-8">
 				{/* Current Item Skeleton */}
 				<div className="flex flex-row items-center justify-center space-x-2 mb-8">

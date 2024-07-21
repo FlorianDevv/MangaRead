@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import type { ItemDetails } from "../types/getDetails";
+import type { ItemDetails } from "../app/types/getDetails";
 
 export type CardProps = Pick<ItemDetails, "name" | "types" | "volumes"> & {
 	categories?: string[];
@@ -27,10 +27,9 @@ export default function CardClient({
 					<Image
 						src={imagePath}
 						alt={name}
-						quality={50}
-						width={200}
-						height={800}
-						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+						quality={75}
+						width={250}
+						height={300}
 						className="object-cover w-full h-80 sm:h-76 md:h-72 lg:h-76 2xl:h-96"
 						placeholder="blur"
 						blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs="

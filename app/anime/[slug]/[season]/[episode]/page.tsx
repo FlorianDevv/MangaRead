@@ -1,8 +1,8 @@
-import { MobileNavbarComponent } from "@/app/components/navbar/mobilenavbar";
-import Player from "@/app/components/player";
-import EpisodeSelect from "@/app/components/select/episodeselect";
-import { SeasonSelect } from "@/app/components/select/seasonselect";
 import { getDetails } from "@/app/types/getDetails";
+import { MobileNavbarComponent } from "@/components/navbar/mobilenavbar";
+import Player from "@/components/player";
+import EpisodeSelect from "@/components/select/episodeselect";
+import { SeasonSelect } from "@/components/select/seasonselect";
 import type { Metadata } from "next";
 import React, { Suspense } from "react";
 interface Props {
